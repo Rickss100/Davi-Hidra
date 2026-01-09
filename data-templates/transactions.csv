@@ -1,0 +1,7 @@
+date,code,type,quantity,price,total_value,category,notes
+2026-01-07,PETR4,buy,100,35.50,3550.00,acoes,Compra inicial
+2026-01-08,VALE3,buy,50,65.20,3260.00,acoes,
+2026-01-10,ITUB4,buy,200,28.75,5750.00,acoes,Aporte mensal
+2026-01-15,HGLG11,buy,150,145.80,21870.00,fiis,
+2026-01-20,AAPL,buy,10,180.50,1805.00,stocks,Entrada EUA
+2026-01-25,PETR4,sell,30,36.20,1086.00,acoes,Realização parcial

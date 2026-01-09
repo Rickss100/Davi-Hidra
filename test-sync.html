@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Sincronização - DAVI & HYDRA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .error {
+            border-left-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Teste de Sincronização</h1>
+        
+        <h2>Sincronizar Dados:</h2>
+        <button onclick="syncEconomic()">📊 Indicadores Econômicos</button>
+        <button onclick="syncPrices()">💰 Preços (PETR4, VALE3)</button>
+        <button onclick="checkStats()">📈 Ver Estatísticas</button>
+        
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3002/api';
+        const output = document.getElementById('output');
+
+        function showResult(data, isError = false) {
+            output.className = isError ? 'error' : '';
+            output.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function syncEconomic() {
+            try {
+                output.textContent = 'Sincronizando indicadores econômicos...';
+                const response = await fetch(`${API_BASE}/sync/economic`, {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult({ error: error.message }, true);
+            }
+        }
+
+        async function syncPrices() {
+            try {
+                output.textContent = 'Sincronizando preços...';
+                const response = await fetch(`${API_BASE}/sync/prices`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codes: ['PETR4', 'VALE3'] })
+                });
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult({ error: error.message }, true);
+            }
+        }
+
+        async function checkStats() {
+            try {
+                output.textContent = 'Carregando estatísticas...';
+                const response = await fetch(`${API_BASE}/stats`);
+                const data = await response.json();
+                showResult(data);
+            } catch (error) {
+                showResult({ error: error.message }, true);
+            }
+        }
+    </script>
+</body>
+</html>

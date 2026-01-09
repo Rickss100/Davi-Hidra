@@ -1,0 +1,247 @@
+.summary-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+    color: #e1e1e6;
+}
+
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2rem;
+}
+
+.tree-level {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.node-card {
+    background-color: #202024;
+    border: 1px solid #121214; /* Darker border */
+    border-radius: 6px;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    min-width: 140px;
+    transition: all 0.2s;
+    background: #182a1f; /* Dark Greenish tint from screenshot? Or just dark */
+    background: #23362a; /* Closer to screenshot green */
+}
+
+.node-card:hover {
+    filter: brightness(1.2);
+}
+
+.node-icon {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background: #202024;
+    border: 1px solid #737380;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e1e1e6;
+}
+
+.node-title {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #e1e1e6;
+    margin-bottom: 0.25rem;
+}
+
+.node-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Connector Lines */
+.connector-lines {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 30px; /* Space between levels */
+    position: relative;
+    z-index: 1; /* Behind cards */
+    margin-top: -5px; /* Slight overlap fixes */
+    margin-bottom: -5px;
+}
+
+.level-1-lines {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 60%; /* Adjust based on card width */
+}
+
+.line-connector-group {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.line-vertical-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 50%;
+    width: 1px;
+    background-color: #737380;
+    transform: translateX(-50%);
+}
+
+.line-horizontal {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    right: 25%;
+    height: 1px;
+    background-color: #737380;
+}
+
+.line-vertical-left {
+    position: absolute;
+    top: 0;
+    left: 25%;
+    height: 50%;
+    width: 1px;
+    background-color: #737380;
+}
+
+.line-vertical-right {
+    position: absolute;
+    top: 0;
+    right: 25%;
+    height: 50%;
+    width: 1px;
+    background-color: #737380;
+}
+
+
+/* Level 2 styles */
+.level-2 .geography-group {
+    display: flex;
+    gap: 4rem; /* Wide gap between EUA and Brasil */
+}
+
+.level-2 .placeholder-node {
+    width: 140px; /* Match card width */
+    margin-right: 2rem;
+    visibility: hidden;
+}
+
+/* Level 3 Connectors */
+.level-2-lines {
+    display: flex;
+    justify-content: center;
+    gap: 4rem; /* Match geo group gap */
+    padding-left: 170px; /* Offset for placeholder */
+}
+
+.group-left, .group-right {
+    position: relative;
+    width: 140px;
+    height: 100%;
+}
+
+.line-vertical-top {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: 50%;
+    background-color: #737380;
+    transform: translateX(-50%);
+}
+
+.line-horizontal-small {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background-color: #737380;
+}
+
+.line-vertical-small-left {
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    height: 50%;
+    width: 1px;
+    background-color: #737380;
+}
+
+.line-vertical-small-right {
+    position: absolute;
+    top: 50%;
+    right: 20%;
+    height: 50%;
+    width: 1px;
+    background-color: #737380;
+}
+
+/* Level 3 Grouping */
+.level-3 {
+    gap: 2rem;
+}
+
+.level-3 .asset-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.level-3 .placeholder-node {
+    width: 140px;
+    margin-right: 2rem;
+    visibility: hidden;
+}
+
+
+/* Success Message */
+.success-message {
+    text-align: center;
+    margin-top: 3rem;
+    animation: fadeIn 0.5s ease-in;
+}
+
+.success-message h2 {
+    color: #e1e1e6;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.success-message p {
+    color: #a8a8b3;
+}
+
+.instructions {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #737380;
+}
+
+.instructions p {
+    margin: 0.25rem 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

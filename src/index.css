@@ -1,0 +1,132 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  
+  /* === Color Palette - Dark Theme === */
+  --bg-primary: #121214;
+  --bg-secondary: #202024;
+  --bg-tertiary: #29292e;
+  --card-bg: #202024;
+  
+  --text-primary: #e1e1e6;
+  --text-secondary: #a8a8b3;
+  --text-tertiary: #737380;
+  
+  /* Brand Colors */
+  --brand-color: #04d361;
+  --brand-color-light: #00b37e;
+  --brand-color-dark: #00875f;
+  --primary: #04d361;
+  --primary-hover: #00b37e;
+  
+  /* Semantic Colors */
+  --success: #04d361;
+  --warning: #f7b731;
+  --danger: #f75a68;
+  --info: #8257e5;
+  
+  --border-color: #323238;
+  --border-light: #29292e;
+  
+  /* === Gradients Premium === */
+  --gradient-brand: linear-gradient(135deg, #04d361 0%, #00875f 100%);
+  --gradient-accent: linear-gradient(135deg, #8257e5 0%, #6943d6 100%);
+  --gradient-danger: linear-gradient(135deg, #f75a68 0%, #e53e3e 100%);
+  --gradient-warning: linear-gradient(135deg, #f7b731 0%, #f39c12 100%);
+  --gradient-dark: linear-gradient(180deg, #202024 0%, #121214 100%);
+  
+  /* Glassmorphism */
+  --glass-bg: rgba(32, 32, 36, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 12px;
+  
+  /* === Shadows & Elevation === */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+  --shadow-glow-brand: 0 0 20px rgba(4, 211, 97, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(130, 87, 229, 0.3);
+  
+  /* === Animation Timing === */
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 350ms;
+  
+  /* === Typography === */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* === Spacing System === */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* === Border Radius === */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Preparing for sidebar layout */
+}
+
+/* Reset buttons */
+button {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+h1, h2, h3 {
+  color: var(--text-primary);
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;  /* Remove vertical scrollbar */
+  height: 8px; /* Keep horizontal scrollbar */
+  background: transparent; 
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* For Firefox - thin scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bg-tertiary) transparent;
+}

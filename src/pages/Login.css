@@ -1,0 +1,155 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121214;
+  color: #e1e1e6;
+  font-family: "Inter", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Lines Effect (simplified) */
+.login-container::before,
+.login-container::after {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(4, 211, 97, 0.2),
+    transparent
+  );
+  animation: lineScan 8s linear infinite;
+}
+
+.login-container::before {
+  left: 20%;
+  animation-delay: 2s;
+}
+
+.login-container::after {
+  right: 20%;
+  animation-delay: 5s;
+}
+
+@keyframes lineScan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  padding: 2.5rem;
+  z-index: 10;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn var(--duration-slow) var(--ease-smooth);
+}
+
+.login-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.4;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.input-group label {
+  font-size: 0.875rem;
+  color: #a8a8b3;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input {
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid var(--border-color);
+  padding: 0.75rem 0;
+  color: #fff;
+  font-size: 1rem;
+  transition: all var(--duration-normal) var(--ease-smooth);
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-bottom-color: var(--brand-color);
+  box-shadow: 0 4px 8px rgba(4, 211, 97, 0.15);
+}
+
+.toggle-password {
+  position: absolute;
+  right: 0;
+  background: none;
+  border: none;
+  color: #737380;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.forgot-password {
+  font-size: 0.875rem;
+  color: #a8a8b3;
+  text-align: right; /* Changed to match common pattern, though image had it inline-ish */
+  margin-top: -0.5rem;
+}
+
+.forgot-password a {
+  color: #04d361;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-button {
+  background: var(--gradient-brand);
+  color: #000;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  margin-top: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-brand);
+}
+
+.login-button:active {
+  transform: translateY(0);
+}

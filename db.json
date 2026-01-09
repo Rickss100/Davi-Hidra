@@ -1,0 +1,15 @@
+{
+  "transactions": [
+    {
+      "code": "AALR3",
+      "quantity": 3,
+      "price": 20,
+      "date": "2026-01-07",
+      "category": "acoes",
+      "type": "buy",
+      "totalValue": 60,
+      "id": 1767755649721
+    }
+  ],
+  "assets": []
+}

@@ -1,0 +1,10 @@
+code,name,type,market,sector
+PETR4,Petróleo Brasileiro S.A.,acao,BR,Petróleo e Gás
+VALE3,Vale S.A.,acao,BR,Mineração
+ITUB4,Itaú Unibanco,acao,BR,Bancos
+BBDC4,Bradesco,acao,BR,Bancos
+AAPL,Apple Inc.,stock,US,Tecnologia
+MSFT,Microsoft Corporation,stock,US,Tecnologia
+HGLG11,CSHG Logística,fii,BR,Logística
+MXRF11,Maxi Renda,fii,BR,Lajes Corporativas
+O,Realty Income Corp,reit,US,Diversificado

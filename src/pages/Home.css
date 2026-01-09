@@ -1,0 +1,226 @@
+.home-container {
+  padding: 2rem;
+  color: #e1e1e6;
+}
+
+.home-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-welcome {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.user-name {
+  color: #fff; /* White for the name */
+}
+
+.home-header p {
+  color: #a8a8b3;
+  font-size: 1rem;
+}
+
+.dashboard-grid {
+  display: flex; /* Changed to flex wrap for responsiveness or simplistic grid */
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.dashboard-row {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.dashboard-card {
+  background-color: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  border: 1px solid var(--border-color);
+  position: relative;
+  transition: all var(--duration-normal) var(--ease-smooth);
+  animation: fadeInUp var(--duration-slow) var(--ease-smooth);
+}
+
+/* Glassmorphism on hover */
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-light);
+  background: linear-gradient(
+    135deg, 
+    rgba(32, 32, 36, 0.95) 0%, 
+    rgba(41, 41, 46, 0.8) 100%
+  );
+}
+
+/* Sequential animation delays */
+.dashboard-row:nth-child(1) .dashboard-card:nth-child(1) {
+  animation-delay: 100ms;
+}
+
+.dashboard-row:nth-child(1) .dashboard-card:nth-child(2) {
+  animation-delay: 200ms;
+}
+
+.dashboard-row:nth-child(2) .dashboard-card:nth-child(1) {
+  animation-delay: 300ms;
+}
+
+.dashboard-row:nth-child(2) .dashboard-card:nth-child(2) {
+  animation-delay: 400ms;
+}
+
+/* Specific Card Styles */
+.card-total {
+    justify-content: center;
+}
+
+.card-total .card-icon {
+  color: #04d361;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+    color: #a8a8b3;
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.total-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.currency-symbol {
+    color: #a8a8b3;
+    font-size: 1rem;
+    vertical-align: super;
+    margin-right: 0.25rem;
+}
+
+.empty-objectives {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+}
+
+.empty-objectives p {
+    color: #a8a8b3;
+    margin-bottom: 1.5rem;
+}
+
+.create-objective-btn {
+    background: var(--gradient-brand);
+    color: #000;
+    font-weight: var(--font-weight-semibold);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all var(--duration-normal) var(--ease-smooth);
+    display: inline-block;
+}
+
+.create-objective-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow-brand);
+}
+
+.card-renda-passiva {
+    justify-content: flex-start;
+}
+
+.passive-income-value {
+    font-size: 1rem;
+    color: #a8a8b3;
+    margin-top: 0.5rem;
+}
+
+.filter-select {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: #202024;
+    border: none;
+    color: #a8a8b3;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.empty-graph-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Left align text essentially */
+    color: #a8a8b3;
+    padding-top: 2rem;
+}
+
+.card-carteira-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.carteira-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.control-btn:hover {
+    border-color: var(--brand-color);
+    color: var(--text-primary);
+}
+
+.control-btn.active {
+    background: var(--gradient-brand);
+    color: #000;
+    border-color: transparent;
+    font-weight: var(--font-weight-semibold);
+}
+
+.empty-table-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #737380;
+    font-size: 0.875rem;
+}

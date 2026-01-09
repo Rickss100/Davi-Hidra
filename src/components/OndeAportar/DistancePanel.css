@@ -1,0 +1,151 @@
+.distance-panel {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  height: fit-content;
+}
+
+.distance-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon-target {
+  font-size: 1.25rem;
+}
+
+.distance-panel-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #e1e1e6;
+}
+
+.help-icon {
+  color: #737380;
+  cursor: pointer;
+}
+
+.help-icon:hover {
+  color: #a8a8b3;
+}
+
+.distance-list-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: #202024;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: #a8a8b3;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.distance-category {
+  margin-bottom: 0.5rem;
+}
+
+.distance-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #202024;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.distance-item:hover {
+  background: #29292e;
+}
+
+.distance-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-name {
+  color: #e1e1e6;
+  font-weight: 500;
+}
+
+.btn-expand {
+  background: transparent;
+  border: none;
+  color: #737380;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.btn-expand:hover {
+  color: #a8a8b3;
+}
+
+.distance-value {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.distance-value.positive {
+  color: #e83f5b;
+}
+
+.distance-value.negative {
+  color: #04d361;
+}
+
+.asset-details {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  border-left: 2px solid #29292e;
+}
+
+.asset-details-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  color: #737380;
+  font-weight: 600;
+}
+
+.asset-detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: #121214;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.asset-ticker {
+  color: #a8a8b3;
+  font-size: 0.875rem;
+}
+
+.asset-distance {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.asset-distance.positive {
+  color: #e83f5b;
+}
+
+.asset-distance.negative {
+  color: #04d361;
+}

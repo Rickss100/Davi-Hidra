@@ -5,6 +5,16 @@
  */
 
 import { createClient } from '@libsql/client';
+import fs from 'fs';
+
+// Carregar variáveis de ambiente do .env se existir (Node 20+)
+if (fs.existsSync('.env') && typeof process.loadEnvFile === 'function') {
+  try {
+    process.loadEnvFile();
+  } catch (e) {
+    // Silently continue
+  }
+}
 
 let tursoClient = null;
 let isConfigured = false;

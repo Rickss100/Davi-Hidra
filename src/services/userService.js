@@ -5,6 +5,10 @@ export const userService = {
     return api.post('/users/login', { email, password });
   },
 
+  register: async (userData) => {
+    return api.post('/users/register', userData);
+  },
+
   getAll: async () => {
     return api.get('/users');
   },

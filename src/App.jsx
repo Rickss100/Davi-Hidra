@@ -25,6 +25,15 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
+// Admin Protected Route Wrapper (acesso exclusivo para superusuário)
+const AdminRoute = () => {
+  const { user } = useAuth();
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/" replace />;
+  }
+  return <Outlet />;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -45,7 +54,9 @@ function App() {
                   <Route path="resumo" element={<Resumo />} />
                   <Route path="historico" element={<Historico />} />
                   <Route path="radar" element={<RadarAtivos />} />
-                  <Route path="admin" element={<AdminUsers />} />
+                  <Route element={<AdminRoute />}>
+                    <Route path="admin" element={<AdminUsers />} />
+                  </Route>
                 </Route>
               </Route>
             </Routes>

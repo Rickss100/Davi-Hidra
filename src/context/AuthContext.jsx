@@ -45,6 +45,20 @@ export const AuthProvider = ({ children }) => {
     return { success: false, error: 'Login ou senha inválidos' };
   };
 
+  const register = async (name, email, password) => {
+    try {
+      const data = await userService.register({ name, email, password });
+      if (data && data.user) {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        return { success: true, user: data.user };
+      }
+      return { success: false, error: 'Erro ao registrar usuário' };
+    } catch (err) {
+      return { success: false, error: err.message || 'Erro ao criar conta' };
+    }
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
@@ -53,6 +67,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     login,
+    register,
     logout,
     isAuthenticated: !!user
   };

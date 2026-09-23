@@ -655,7 +655,7 @@ function getLastSync(type) {
 
 function getUserByEmail(email) {
   const db = getDatabase();
-  return db.prepare('SELECT * FROM users WHERE email = ?').get(email);
+  return db.prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(?)').get(email.trim());
 }
 
 function getUserById(id) {

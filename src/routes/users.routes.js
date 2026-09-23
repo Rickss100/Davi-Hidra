@@ -43,6 +43,38 @@ router.post('/login', (req, res) => {
   }
 });
 
+// POST /api/users/register - Cadastro público de novo investidor
+router.post('/register', (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    if (!email || !password || !name) {
+      return res.status(400).json({ error: 'Nome, login/e-mail e senha são obrigatórios.' });
+    }
+
+    const existing = getUserByEmail(email.trim());
+    if (existing) {
+      return res.status(409).json({ error: 'Já existe um usuário cadastrado com este login/e-mail.' });
+    }
+
+    const newUser = createUser({
+      email: email.trim(),
+      password: password.trim(),
+      name: name.trim(),
+      role: 'user',
+      status: 'active'
+    });
+
+    const { password: _, ...userSafe } = newUser;
+    res.status(201).json({
+      message: 'Conta criada com sucesso!',
+      user: userSafe
+    });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /api/users - List all users with statistics (Superuser Admin)
 router.get('/', (req, res) => {
   try {

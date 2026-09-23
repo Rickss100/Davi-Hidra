@@ -2,33 +2,58 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, UserPlus, LogIn, ShieldAlert } from 'lucide-react';
 import './Login.css';
 
 const Login = () => {
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+
+  const { login, register } = useAuth();
   const { success, error } = useToast();
   const navigate = useNavigate();
 
-  const handleLoginWithCredentials = async (loginEmail, loginPassword) => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!email.trim() || !password.trim()) {
+      error('Preencha todos os campos obrigatórios.');
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await login(loginEmail, loginPassword);
-      if (res && res.success) {
-        success(`Bem-vindo de volta, ${res.user?.name || 'Investidor'}!`);
-        setTimeout(() => {
-          if (res.user?.role === 'admin') {
-            navigate('/admin');
-          } else {
-            navigate('/');
-          }
-        }, 400);
+      if (isRegistering) {
+        if (!name.trim()) {
+          error('Por favor, informe seu nome.');
+          setLoading(false);
+          return;
+        }
+
+        const res = await register(name.trim(), email.trim(), password.trim());
+        if (res && res.success) {
+          success(`Conta criada com sucesso! Bem-vindo, ${res.user?.name}!`);
+          setTimeout(() => navigate('/'), 400);
+        } else {
+          error(res?.error || 'Erro ao cadastrar usuário.');
+        }
       } else {
-        error(res?.error || 'Login ou senha inválidos!');
+        const res = await login(email.trim(), password.trim());
+        if (res && res.success) {
+          success(`Bem-vindo de volta, ${res.user?.name || 'Investidor'}!`);
+          setTimeout(() => {
+            if (res.user?.role === 'admin') {
+              navigate('/admin');
+            } else {
+              navigate('/');
+            }
+          }, 400);
+        } else {
+          error(res?.error || 'Credenciais inválidas. Verifique seu login e senha.');
+        }
       }
     } catch (err) {
       error(err.message || 'Erro ao conectar ao servidor.');
@@ -37,34 +62,50 @@ const Login = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    handleLoginWithCredentials(email, password);
-  };
-
-  const handleQuickLogin = (quickEmail, quickPassword) => {
-    setEmail(quickEmail);
-    setPassword(quickPassword);
-    handleLoginWithCredentials(quickEmail, quickPassword);
-  };
-
   return (
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <h1>Insira suas informações<br/>para realizar o login</h1>
+          <h1>
+            {isRegistering ? (
+              <>Crie sua conta para<br />começar a investir</>
+            ) : (
+              <>Insira suas informações<br />para realizar o login</>
+            )}
+          </h1>
+          <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '6px' }}>
+            {isRegistering 
+              ? 'Ambiente exclusivo DAVI & HYDRA para controle e aporte inteligente'
+              : 'Acesso seguro à sua carteira e estratégias de alocação'}
+          </p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="login-form">
+          {isRegistering && (
+            <div className="input-group">
+              <label htmlFor="name">Seu Nome Completo</label>
+              <div className="input-wrapper">
+                <input 
+                  type="text" 
+                  id="name" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ex: Carlos Silva"
+                  required
+                />
+              </div>
+            </div>
+          )}
+
           <div className="input-group">
-            <label htmlFor="email">Login / E-mail</label>
+            <label htmlFor="email">Login ou E-mail</label>
             <div className="input-wrapper">
               <input 
                 type="text" 
                 id="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ex: admin@davi.com ou user@davi.com"
+                placeholder={isRegistering ? "Ex: seuemail@exemplo.com" : "Digite seu login ou e-mail"}
                 required
               />
             </div>
@@ -78,90 +119,81 @@ const Login = () => {
                 id="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="Digite sua senha"
                 required
               />
               <button 
                 type="button" 
                 className="toggle-password"
                 onClick={() => setShowPassword(!showPassword)}
+                aria-label="Alternar visibilidade de senha"
               >
-                {showPassword ? <EyeOff size={20}/> : <Eye size={20}/>}
+                {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
               </button>
             </div>
           </div>
 
-          <div className="forgot-password">
-            Esqueceu a senha? <a href="#">clique aqui</a>
-          </div>
-
           <button type="submit" className="login-button" disabled={loading}>
-            {loading ? 'Acessando...' : 'Entrar'}
+            {loading ? (
+              'Processando...'
+            ) : isRegistering ? (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <UserPlus size={18} /> Criar Conta Gratuita
+              </span>
+            ) : (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                <LogIn size={18} /> Entrar
+              </span>
+            )}
           </button>
         </form>
 
-        {/* Atalhos de Acesso Rápido */}
-        <div className="quick-access-section" style={{
-          marginTop: '24px',
-          paddingTop: '20px',
-          borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px'
+        {/* Alternar entre Login e Cadastro */}
+        <div style={{
+          marginTop: '20px',
+          paddingTop: '16px',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+          textAlign: 'center',
+          fontSize: '13px',
+          color: '#cbd5e1'
         }}>
-          <span style={{
-            fontSize: '11px',
-            textTransform: 'uppercase',
-            letterSpacing: '0.05em',
-            color: '#94a3b8',
-            textAlign: 'center',
-            fontWeight: 700
-          }}>
-            ⚡ Acesso Rápido / Atalhos
-          </span>
-
-          <button 
-            type="button"
-            onClick={() => handleQuickLogin('admin@davi.com', '123')}
-            style={{
-              background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.25) 100%)',
-              border: '1px solid rgba(16, 185, 129, 0.4)',
-              color: '#34d399',
-              padding: '10px 14px',
-              borderRadius: '10px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              transition: 'all 0.2s'
-            }}
-          >
-            👑 Entrar como Administrador (Superusuário)
-          </button>
-
-          <button 
-            type="button"
-            onClick={() => handleQuickLogin('user@davi.com', '123')}
-            style={{
-              background: 'rgba(56, 189, 248, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              color: '#38bdf8',
-              padding: '10px 14px',
-              borderRadius: '10px',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              transition: 'all 0.2s'
-            }}
-          >
-            👤 Entrar como Investidor Padrão
-          </button>
+          {isRegistering ? (
+            <span>
+              Já possui uma conta?{' '}
+              <button
+                type="button"
+                onClick={() => { setIsRegistering(false); setShowPassword(false); }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#34d399',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textDecoration: 'underline'
+                }}
+              >
+                Faça login aqui
+              </button>
+            </span>
+          ) : (
+            <span>
+              Primeira vez aqui?{' '}
+              <button
+                type="button"
+                onClick={() => { setIsRegistering(true); setShowPassword(false); }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#38bdf8',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  textDecoration: 'underline'
+                }}
+              >
+                Cadastre-se gratuitamente
+              </button>
+            </span>
+          )}
         </div>
 
       </div>

@@ -1,6 +1,7 @@
 
 import express from 'express';
 import { getDatabase } from '../services/database.service.js';
+import { syncTransactionToTurso, syncTransactionDeleteToTurso } from '../services/turso.service.js';
 
 const router = express.Router();
 const db = getDatabase(); // Pegar instância do banco
@@ -81,6 +82,10 @@ router.post('/', (req, res) => {
       LEFT JOIN assets a ON t.asset_code = a.code 
       WHERE t.id = ?
     `).get(info.lastInsertRowid);
+
+    // Sincronizar transação na nuvem Turso se ativo
+    syncTransactionToTurso(newTransaction).catch(err => console.warn('⚠️ Turso syncTransaction error:', err.message));
+
     res.status(201).json(newTransaction);
   } catch (error) {
     console.error('Error creating transaction:', error);
@@ -95,6 +100,10 @@ router.delete('/:id', (req, res) => {
     if (info.changes === 0) {
       return res.status(404).json({ error: 'Transaction not found' });
     }
+
+    // Sincronizar remoção na nuvem Turso se ativo
+    syncTransactionDeleteToTurso(req.params.id).catch(err => console.warn('⚠️ Turso syncTransactionDelete error:', err.message));
+
     res.json({ message: 'Transaction deleted' });
   } catch (error) {
     console.error('Error deleting transaction:', error);

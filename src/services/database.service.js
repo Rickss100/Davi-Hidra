@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { syncUserToTurso, syncUserDeleteToTurso } from './turso.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -692,7 +693,12 @@ function createUser({ email, password, name, role = 'user', status = 'active' })
     VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `);
   const info = stmt.run(email, password, name, role, status);
-  return getUserById(info.lastInsertRowid);
+  const newUser = getUserById(info.lastInsertRowid);
+  
+  // Sincronizar criação na nuvem Turso se ativo
+  syncUserToTurso(newUser).catch(err => console.warn('⚠️ Turso syncUser error:', err.message));
+  
+  return newUser;
 }
 
 function updateUser(id, { name, email, password, role, status }) {
@@ -712,7 +718,12 @@ function updateUser(id, { name, email, password, role, status }) {
     WHERE id = ?
   `).run(newName, newEmail, newPassword, newRole, newStatus, id);
 
-  return getUserById(id);
+  const updatedUser = getUserById(id);
+
+  // Sincronizar atualização na nuvem Turso se ativo
+  syncUserToTurso(updatedUser).catch(err => console.warn('⚠️ Turso syncUserUpdate error:', err.message));
+
+  return updatedUser;
 }
 
 function deleteUser(id) {
@@ -721,6 +732,10 @@ function deleteUser(id) {
   if (Number(id) === 1) {
     throw new Error('Não é permitido excluir o Administrador principal.');
   }
+
+  // Sincronizar exclusão na nuvem Turso se ativo
+  syncUserDeleteToTurso(id).catch(err => console.warn('⚠️ Turso syncUserDelete error:', err.message));
+
   return db.prepare('DELETE FROM users WHERE id = ?').run(id);
 }
 

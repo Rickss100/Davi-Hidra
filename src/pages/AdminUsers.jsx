@@ -16,7 +16,9 @@ import {
   Trash2, 
   Edit3,
   TrendingUp,
-  Clock
+  Clock,
+  Cloud,
+  Database
 } from 'lucide-react';
 import './AdminUsers.css';
 
@@ -34,6 +36,7 @@ const AdminUsers = () => {
   // Form states
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'user', status: 'active' });
   const [showPasswords, setShowPasswords] = useState({});
+  const [tursoStatus, setTursoStatus] = useState(null);
 
   const { success, error: showError } = useToast();
 
@@ -50,8 +53,21 @@ const AdminUsers = () => {
     }
   };
 
+  const checkTursoStatus = async () => {
+    try {
+      const res = await fetch('/api/admin/turso-status');
+      if (res.ok) {
+        const data = await res.json();
+        setTursoStatus(data);
+      }
+    } catch (err) {
+      console.warn('Erro ao consultar status Turso:', err);
+    }
+  };
+
   useEffect(() => {
     loadUsers();
+    checkTursoStatus();
   }, []);
 
   const togglePasswordVisibility = (id) => {
@@ -215,6 +231,25 @@ const AdminUsers = () => {
             R$ {Number(totalVolume).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="stat-hint">Total somado em carteiras</div>
+        </div>
+      </div>
+
+      {/* Banner de Persistência em Nuvem (Turso Cloud) */}
+      <div className={`turso-cloud-banner ${tursoStatus?.connected ? 'connected' : 'pending'}`}>
+        <div className="turso-banner-left">
+          <Cloud size={20} />
+          <div>
+            <strong>Persistência em Nuvem: </strong>
+            {tursoStatus?.connected ? (
+              <span>Turso Cloud conectado e ativo. Seus dados e cadastros estão salvos de forma definitiva.</span>
+            ) : (
+              <span>Armazenamento local ativo. Para sincronização contínua entre deploys no Render, vincule as variáveis <code>TURSO_DATABASE_URL</code> e <code>TURSO_AUTH_TOKEN</code>.</span>
+            )}
+          </div>
+        </div>
+        <div className={`turso-status-badge ${tursoStatus?.connected ? 'connected' : 'pending'}`}>
+          <Database size={12} />
+          <span>{tursoStatus?.connected ? 'Nuvem Conectada' : 'Modo Local'}</span>
         </div>
       </div>
 

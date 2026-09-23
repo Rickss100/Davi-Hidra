@@ -10,9 +10,11 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "node src/server.js"
+    "server": "node src/server.js",
+    "sync:turso": "node src/scripts/sync_to_turso.js"
   },
   "dependencies": {
+    "@libsql/client": "^0.18.0",
     "better-sqlite3": "^12.5.0",
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",

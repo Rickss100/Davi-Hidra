@@ -8,7 +8,8 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { initDatabase } from './services/database.service.js';
+import { initDatabase, getDatabase } from './services/database.service.js';
+import { syncWithTursoOnStartup, getTursoStatus } from './services/turso.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -86,8 +87,13 @@ if (fs.existsSync(DIST_DIR)) {
 }
 
 // Initialize database on startup
-initDatabase();
+const localDb = initDatabase();
 console.log('✅ Database initialized');
+
+// Background sync with Turso Cloud (se configurado)
+syncWithTursoOnStartup(localDb).catch(err => {
+  console.warn('⚠️ Falha de sincronização com Turso no startup:', err.message);
+});
 
 // Routes - only register if loaded successfully
 if (testRoutes) app.use('/api/test', testRoutes);
@@ -105,6 +111,16 @@ if (resumoRoutes) app.use('/api/resumo', resumoRoutes);
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Turso Cloud status
+app.get('/api/admin/turso-status', async (req, res) => {
+  try {
+    const status = await getTursoStatus();
+    res.json(status);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // SPA Fallback: rotas de página não-API são atendidas pelo index.html do Vite

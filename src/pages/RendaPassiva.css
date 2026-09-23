@@ -1,0 +1,115 @@
+.renda-passiva-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.renda-passiva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.renda-passiva-title h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.renda-passiva-title p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Métricas do Topo */
+.renda-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.renda-metric-card {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.renda-metric-card.primary {
+  border-color: #04d361;
+  background: linear-gradient(180deg, rgba(4, 211, 97, 0.08) 0%, rgba(18, 18, 20, 1) 100%);
+}
+
+.renda-metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.renda-metric-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.renda-metric-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin-bottom: 0.25rem;
+}
+
+.renda-metric-footer {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Abas de Navegação */
+.renda-tabs-nav {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid #29292e;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.btn-renda-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #9ca3af;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-renda-tab:hover {
+  color: #fff;
+}
+
+.btn-renda-tab.active {
+  color: #04d361;
+  border-bottom-color: #04d361;
+}

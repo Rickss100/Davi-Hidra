@@ -1,0 +1,134 @@
+/* Número Mágico */
+.magic-number-container {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.magic-header {
+  margin-bottom: 1.5rem;
+}
+
+.magic-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 0.4rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.magic-header p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.magic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.magic-card {
+  background: #18181c;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s;
+}
+
+.magic-card:hover {
+  border-color: #38bdf8;
+  transform: translateY(-2px);
+}
+
+.magic-card.reached {
+  border-color: #04d361;
+  background: linear-gradient(180deg, rgba(4, 211, 97, 0.06) 0%, rgba(24, 24, 28, 1) 100%);
+}
+
+.magic-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.magic-card-ticker {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+}
+
+.magic-card-name {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.magic-badge {
+  font-size: 0.72rem;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.magic-badge.reached {
+  background: rgba(4, 211, 97, 0.2);
+  color: #04d361;
+}
+
+.magic-badge.progress {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+}
+
+.magic-progress-section {
+  margin-bottom: 1rem;
+}
+
+.magic-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #c4c4cc;
+  margin-bottom: 0.4rem;
+}
+
+.magic-progress-track {
+  height: 8px;
+  background: #202024;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.magic-progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #38bdf8;
+  transition: width 0.5s ease;
+}
+
+.magic-progress-fill.reached {
+  background: #04d361;
+}
+
+.magic-stats-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  border-top: 1px solid #29292e;
+  padding-top: 0.75rem;
+}
+
+.magic-stats-row strong {
+  color: #f3f4f6;
+}

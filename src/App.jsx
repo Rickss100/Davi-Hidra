@@ -12,6 +12,7 @@ import RendaPassiva from './pages/RendaPassiva';
 import Resumo from './pages/Resumo';
 import Historico from './pages/Historico';
 import RadarAtivos from './pages/RadarAtivos';
+import AdminUsers from './pages/AdminUsers';
 import Login from './pages/Login';
 import './App.css';
 
@@ -44,6 +45,7 @@ function App() {
                   <Route path="resumo" element={<Resumo />} />
                   <Route path="historico" element={<Historico />} />
                   <Route path="radar" element={<RadarAtivos />} />
+                  <Route path="admin" element={<AdminUsers />} />
                 </Route>
               </Route>
             </Routes>

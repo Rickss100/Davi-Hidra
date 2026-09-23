@@ -1,0 +1,152 @@
+/* Gráfico de Benchmark Comparativo */
+.benchmark-card {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.benchmark-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.benchmark-title h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 0.35rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.benchmark-title p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.period-buttons-group {
+  display: flex;
+  background: #18181c;
+  border: 1px solid #323238;
+  border-radius: 6px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.btn-period {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  padding: 0.4rem 0.85rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-period:hover {
+  color: #fff;
+}
+
+.btn-period.active {
+  background: #04d361;
+  color: #0c0d0f;
+  font-weight: 700;
+}
+
+/* Indicadores de Benchmarks (Curvas Ativas) */
+.benchmark-toggles-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  background: #18181c;
+  border: 1px solid #29292e;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+}
+
+.benchmark-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #202024;
+  border: 1px solid #323238;
+  color: #9ca3af;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.benchmark-toggle-btn:hover {
+  border-color: #4b5563;
+  color: #fff;
+}
+
+.benchmark-toggle-btn.active {
+  color: #fff;
+  border-color: currentColor;
+}
+
+.toggle-circle {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.chart-wrapper {
+  width: 100%;
+  height: 380px;
+  margin-bottom: 1rem;
+}
+
+/* Resumo Comparativo no Rodapé */
+.benchmark-comparison-footer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  border-top: 1px solid #29292e;
+  padding-top: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.comparison-box {
+  background: #18181c;
+  border: 1px solid #29292e;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.comparison-box-label {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-bottom: 0.25rem;
+}
+
+.comparison-box-val {
+  font-size: 1.15rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.comparison-box-sub {
+  font-size: 0.7rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}

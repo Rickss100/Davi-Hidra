@@ -1,8 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { transactionService } from '../services/transactionService';
-// REMOVIDO: import { updateAllPrices, getUpdateStatus } from '../services/priceUpdater.service';
-// Esse serviço usa Node.js fs e deve rodar apenas no backend
-// TODO: Criar chamada à API /api/prices para atualizar preços
+import { useAuth } from './AuthContext';
 
 const PortfolioContext = createContext();
 
@@ -11,9 +9,12 @@ export const usePortfolio = () => {
 };
 
 export const PortfolioProvider = ({ children }) => {
-  // --- 1. Objectives State (Kept in LocalStorage for now, as per plan only transactions go to DB) ---
+  const { user } = useAuth();
+  const userId = user?.id || 1;
+
+  // --- 1. Objectives State (Isolado por usuário) ---
   const [macroAllocation, setMacroAllocation] = useState(() => {
-    const saved = localStorage.getItem('macroAllocation');
+    const saved = localStorage.getItem(`macroAllocation_${userId}`) || localStorage.getItem('macroAllocation');
     return saved ? JSON.parse(saved) : {
       fixed: 10, variable: 90,
       brasil: 65, usa: 35,
@@ -23,13 +24,37 @@ export const PortfolioProvider = ({ children }) => {
   });
 
   const [assetTargets, setAssetTargets] = useState(() => {
-    const saved = localStorage.getItem('assetTargets');
+    const saved = localStorage.getItem(`assetTargets_${userId}`) || localStorage.getItem('assetTargets');
     return saved ? JSON.parse(saved) : {
-      acoes: [], fiis: [], stocks: [], reits: []
+      acoes: [], fiis: [], stocks: [], reits: [], fixed: []
     };
   });
 
-  // --- 2. Transactions State (From API) ---
+  // --- 1.1 Emergency Reserve Config (Isolado por usuário) ---
+  const [emergencyConfig, setEmergencyConfig] = useState(() => {
+    const saved = localStorage.getItem(`emergencyConfig_${userId}`);
+    return saved ? JSON.parse(saved) : {
+      monthlyExpense: 3000,
+      monthsTarget: 6,
+      profileType: 'clt', // 'clt', 'publico', 'autonomo', 'custom'
+      strategyMode: 'hybrid_70_30', // 'focus_100', 'hybrid_70_30', 'hybrid_50_50', 'free'
+      manualReserveBalance: 0
+    };
+  });
+
+  // Atualizar objetivos e configuração de reserva ao trocar de usuário
+  useEffect(() => {
+    if (userId) {
+      const savedMacro = localStorage.getItem(`macroAllocation_${userId}`);
+      if (savedMacro) setMacroAllocation(JSON.parse(savedMacro));
+      const savedTargets = localStorage.getItem(`assetTargets_${userId}`);
+      if (savedTargets) setAssetTargets(JSON.parse(savedTargets));
+      const savedEmergency = localStorage.getItem(`emergencyConfig_${userId}`);
+      if (savedEmergency) setEmergencyConfig(JSON.parse(savedEmergency));
+    }
+  }, [userId]);
+
+  // --- 2. Transactions State (From API filtrada por usuário) ---
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,15 +65,27 @@ export const PortfolioProvider = ({ children }) => {
 
   // --- 4. Holdings (Derived State) ---
   const [holdings, setHoldings] = useState({
-    acoes: [], fiis: [], stocks: [], reits: []
+    acoes: [], fiis: [], stocks: [], reits: [], fixed: []
   });
 
-  // Load Transactions from API
+  // Helper para normalizar categorias de transações
+  const normalizeCategory = (cat) => {
+    if (!cat) return null;
+    const c = String(cat).toLowerCase();
+    if (c.includes('acao') || c.includes('ação')) return 'acoes';
+    if (c.includes('fii')) return 'fiis';
+    if (c.includes('stock')) return 'stocks';
+    if (c.includes('reit')) return 'reits';
+    if (c.includes('renda') || c.includes('fix')) return 'fixed';
+    return c;
+  };
+
+  // Load Transactions from API filtrado por userId
   useEffect(() => {
     const loadTransactions = async () => {
         try {
             setIsLoading(true);
-            const data = await transactionService.getAll();
+            const data = await transactionService.getAll(userId);
             setTransactions(data);
         } catch (err) {
             console.error("Failed to load transactions", err);
@@ -58,20 +95,24 @@ export const PortfolioProvider = ({ children }) => {
         }
     };
     loadTransactions();
-  }, []);
+  }, [userId]);
 
-  // Persist Objectives Data
+  // Persist Objectives Data e Emergency Config por usuário
   useEffect(() => {
-    localStorage.setItem('macroAllocation', JSON.stringify(macroAllocation));
-    localStorage.setItem('assetTargets', JSON.stringify(assetTargets));
-  }, [macroAllocation, assetTargets]);
+    if (userId) {
+      localStorage.setItem(`macroAllocation_${userId}`, JSON.stringify(macroAllocation));
+      localStorage.setItem(`assetTargets_${userId}`, JSON.stringify(assetTargets));
+      localStorage.setItem(`emergencyConfig_${userId}`, JSON.stringify(emergencyConfig));
+    }
+  }, [macroAllocation, assetTargets, emergencyConfig, userId]);
 
   // Calculate Holdings whenever transactions or prices change
   useEffect(() => {
-    const newHoldings = { acoes: [], fiis: [], stocks: [], reits: [] };
+    const newHoldings = { acoes: [], fiis: [], stocks: [], reits: [], fixed: [] };
     
     // Helper to find or create asset in holdings
     const getAsset = (category, code) => {
+      if (!newHoldings[category]) newHoldings[category] = [];
       let asset = newHoldings[category].find(a => a.code === code);
       if (!asset) {
         asset = { 
@@ -88,26 +129,25 @@ export const PortfolioProvider = ({ children }) => {
 
     // Process transactions
     transactions.forEach(tx => {
-       if (tx.category && newHoldings[tx.category]) {
-         const asset = getAsset(tx.category, tx.code);
+       const cat = normalizeCategory(tx.category || tx.type || tx.asset_type);
+       const targetCode = tx.asset_code || tx.code;
+       if (cat && targetCode && newHoldings[cat]) {
+         const asset = getAsset(cat, targetCode);
          const txQty = Number(tx.quantity);
          const txPrice = Number(tx.price);
-         const txTotal = Number(tx.totalValue);
+         const txTotal = Number(tx.total_value || tx.totalValue || (txQty * txPrice));
 
          if (tx.type === 'buy') {
            asset.quantity += txQty;
            asset.totalInvested += txTotal;
          } else if (tx.type === 'sell') {
            asset.quantity -= txQty;
-           // Average price removal logic
            asset.totalInvested -= (txQty * asset.averagePrice); 
          }
          
          if (asset.quantity > 0) {
             asset.averagePrice = asset.totalInvested / asset.quantity;
-            // Default current price to average if we don't have a live update yet
-            // OR use the last buy price. Let's use last buy price as fallback.
-            if (tx.type === 'buy' && !currentPrices[tx.code]) {
+            if (tx.type === 'buy' && !currentPrices[targetCode]) {
                 asset.currentPrice = txPrice;
             }
          } else {
@@ -137,10 +177,71 @@ export const PortfolioProvider = ({ children }) => {
     setAssetTargets(prev => ({ ...prev, [category]: newAssets }));
   };
 
+  const updateEmergencyConfig = (newConfig) => {
+    setEmergencyConfig(prev => {
+      const updated = typeof newConfig === 'function' ? newConfig(prev) : { ...prev, ...newConfig };
+      if (userId) {
+        localStorage.setItem(`emergencyConfig_${userId}`, JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
+
+  // Helper para identificar ativos destinados à Reserva de Emergência
+  const isEmergencyReserveAsset = (code) => {
+    if (!code) return false;
+    const c = String(code).toUpperCase();
+    return c.includes('SELIC') || 
+           c.includes('LIQ_DIARIA') || 
+           c.includes('DIARIA') || 
+           c.includes('RESERVA') || 
+           c.includes('CDI_DIARIO') || 
+           c.includes('REMUNERADA') || 
+           c.includes('SOBERANO');
+  };
+
+  // Cálculo do Resumo da Reserva de Emergência
+  const emergencyReserveAssets = (holdings.fixed || []).filter(h => isEmergencyReserveAsset(h.code));
+  const reserveInvestedFromAssets = emergencyReserveAssets.reduce((sum, h) => {
+    const price = h.currentPrice > 0 ? h.currentPrice : (h.averagePrice || 1);
+    return sum + (h.quantity * price);
+  }, 0);
+
+  const totalCurrentReserve = reserveInvestedFromAssets + Number(emergencyConfig.manualReserveBalance || 0);
+  const targetReserveAmount = Number(emergencyConfig.monthlyExpense || 0) * Number(emergencyConfig.monthsTarget || 6);
+  const missingReserveAmount = Math.max(0, targetReserveAmount - totalCurrentReserve);
+  const reserveCompletionPercent = targetReserveAmount > 0 
+    ? Math.min(100, (totalCurrentReserve / targetReserveAmount) * 100) 
+    : 100;
+  const reserveMonthsCovered = emergencyConfig.monthlyExpense > 0 
+    ? (totalCurrentReserve / emergencyConfig.monthlyExpense) 
+    : 0;
+
+  let reserveStatus = 'critico';
+  if (reserveCompletionPercent >= 100) reserveStatus = 'blindada';
+  else if (reserveCompletionPercent >= 70) reserveStatus = 'quase_blindada';
+  else if (reserveCompletionPercent >= 30) reserveStatus = 'em_construcao';
+
+  const emergencyReserveSummary = {
+    monthlyExpense: Number(emergencyConfig.monthlyExpense || 0),
+    monthsTarget: Number(emergencyConfig.monthsTarget || 6),
+    profileType: emergencyConfig.profileType || 'clt',
+    strategyMode: emergencyConfig.strategyMode || 'hybrid_70_30',
+    manualReserveBalance: Number(emergencyConfig.manualReserveBalance || 0),
+    totalCurrentReserve,
+    reserveInvestedFromAssets,
+    targetReserveAmount,
+    missingReserveAmount,
+    reserveCompletionPercent,
+    reserveMonthsCovered,
+    reserveStatus,
+    reserveAssets: emergencyReserveAssets
+  };
+
   const addTransaction = async (transaction) => {
     try {
-        // Use logic defined in service (ID generation handled by server or omitted)
-        const newTx = await transactionService.create(transaction);
+        const payload = { ...transaction, user_id: userId };
+        const newTx = await transactionService.create(payload);
         setTransactions(prev => [...prev, newTx]);
     } catch (err) {
         console.error("Failed to add transaction", err);
@@ -240,6 +341,9 @@ export const PortfolioProvider = ({ children }) => {
     updateMacro,
     assetTargets,
     updateAssetTargets,
+    emergencyConfig,
+    updateEmergencyConfig,
+    emergencyReserveSummary,
     transactions,
     addTransaction,
     removeTransaction,

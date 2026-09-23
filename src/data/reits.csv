@@ -1,0 +1,229 @@
+code,name,sector,price,market_cap,pe_ratio,pb_ratio,psr,dividend_yield,p_vpa,ffo_yield,vacancy_rate,payout_ratio,current_ratio,debt_to_equity,property_count
+PLD,"Prologis Inc.","Industrial / Logística",135.88,132087783424,24.50,2.36,13.68,3.15,1.15,4.08,2.80,78.5,1.40,0.52,5500
+STAG,"STAG Industrial","Industrial / Logística",38.45,7120000000,16.20,1.35,8.10,4.12,1.02,6.17,2.30,76.2,1.35,0.72,568
+FR,"First Industrial Realty","Industrial / Logística",52.80,6980000000,18.40,1.85,9.50,3.10,1.08,5.43,3.10,72.4,1.45,0.65,430
+REXR,"Rexford Industrial Realty","Industrial / Logística",44.20,9500000000,19.80,1.55,10.20,3.85,0.98,5.05,2.40,81.0,1.30,0.58,422
+EQIX,"Equinix Inc.","Data Center / Nuvem & IA",1059.26,104518975488,28.60,7.27,10.55,1.95,1.45,3.50,1.80,55.0,1.60,0.88,260
+DLR,"Digital Realty Trust","Data Center / Nuvem & IA",185.65,70113263616,23.40,2.57,10.38,2.62,1.22,4.27,2.10,74.0,1.40,0.82,310
+AMT,"American Tower Corp.","Torres de Telecom & 5G",175.25,81659502592,17.90,21.95,7.46,4.10,1.12,5.59,1.50,75.0,1.25,1.45,224000
+CCI,"Crown Castle Inc.","Torres de Telecom & 5G",72.37,31625691136,11.80,3.20,7.60,5.80,0.95,8.47,1.80,82.0,1.20,1.35,40000
+SBAC,"SBA Communications","Torres de Telecom & 5G",175.84,18654533632,15.20,4.10,6.50,2.83,1.05,6.58,1.40,68.0,1.30,1.65,39500
+IRM,"Iron Mountain Inc.","Armazenamento & Dados",118.13,35167633408,18.50,6.50,4.65,2.96,1.35,5.41,2.00,64.0,1.15,1.75,1450
+O,"Realty Income Corp.","Varejo / Triple Net Lease",56.53,53489704960,13.60,1.35,8.82,5.75,0.98,7.35,1.40,76.5,1.35,0.68,15450
+NNN,"NNN REIT Inc.","Varejo / Triple Net Lease",44.80,8250000000,12.80,1.45,8.50,5.25,0.95,7.81,0.90,73.0,1.40,0.65,3540
+ADC,"Agree Realty Corp.","Varejo / Triple Net Lease",74.15,7650000000,17.20,1.75,11.20,4.15,1.06,5.81,0.40,74.5,1.50,0.48,2200
+SPG,"Simon Property Group","Shopping Centers Premium",205.95,78183456768,14.20,15.16,11.26,4.34,1.10,7.04,4.20,68.0,1.25,1.25,230
+KIM,"Kimco Realty Corp.","Varejo & Supermercados",22.55,15126299648,13.80,1.47,6.92,4.97,0.96,7.25,3.80,75.0,1.30,0.78,525
+REG,"Regency Centers","Shopping Centers Conveniência",73.53,13747076096,16.40,2.02,8.16,4.14,1.02,6.10,4.50,72.0,1.35,0.62,480
+FRT,"Federal Realty Investment","Shopping Centers / Dividend King",110.46,9656228864,15.80,2.99,7.23,4.19,1.04,6.33,5.20,70.0,1.40,0.85,102
+VICI,"Vici Properties Inc.","Cassinos & Entretenimento",23.98,26403837952,10.80,0.91,6.44,7.65,0.92,9.26,0.00,75.0,1.50,0.68,93
+GLPI,"Gaming and Leisure Properties","Cassinos & Jogos",49.20,13800000000,12.10,1.75,7.80,6.25,0.98,8.26,0.00,78.0,1.30,0.82,65
+HST,"Host Hotels & Resorts","Hotéis de Luxo & Resorts",22.28,15478506496,10.50,2.39,2.48,3.59,0.88,9.52,28.50,45.0,1.65,0.55,77
+WELL,"Welltower Inc.","Saúde & Moradia para Idosos",230.39,166012583936,32.50,3.57,13.01,1.46,1.40,3.08,4.50,78.0,1.50,0.48,2100
+VTR,"Ventas Inc.","Saúde & Casas de Repouso",86.86,44554522624,21.80,3.04,6.94,2.39,1.15,4.59,6.20,76.0,1.35,0.78,1400
+DOC,"Healthpeak Properties","Saúde & Consultórios Médicos",20.60,14604313600,11.50,1.81,4.95,5.89,0.85,8.70,5.80,77.0,1.40,0.65,750
+OHI,"Omega Healthcare Investors","Saúde & Clínicas Reabilitação",41.50,11200000000,13.20,1.85,9.20,6.45,0.98,7.58,7.50,86.0,1.25,0.82,900
+AVB,"AvalonBay Communities","Residencial Multifamiliar",184.06,26283393024,16.50,2.17,8.52,3.85,0.98,6.06,4.00,68.0,1.45,0.58,295
+EQR,"Equity Residential","Residencial Multifamiliar",63.66,24611481600,15.80,2.27,7.87,4.25,0.96,6.33,4.20,72.0,1.40,0.59,305
+INVH,"Invitation Homes","Residencial / Casas Aluguel",27.14,16029513728,15.10,1.77,5.63,4.43,0.92,6.62,2.80,71.0,1.35,0.72,85000
+CPT,"Camden Property Trust","Residencial Multifamiliar",99.31,11493401600,14.60,2.68,7.27,4.29,0.94,6.85,4.50,69.0,1.45,0.55,172
+MAA,"Mid-America Apartment","Residencial Multifamiliar",119.15,14174535680,13.50,2.54,6.39,5.15,0.92,7.41,4.80,73.0,1.40,0.52,298
+ESS,"Essex Property Trust","Residencial Costa Oeste",274.76,18940000256,17.80,3.32,9.56,3.82,1.05,5.62,3.50,68.0,1.35,0.64,252
+UDR,"UDR Inc.","Residencial Multifamiliar",34.10,12527119360,13.90,3.78,7.09,5.10,0.90,7.19,4.10,74.0,1.30,0.72,185
+PSA,"Public Storage","Self-Storage / Guarda-Volumes",289.71,54132973568,16.80,10.51,11.02,4.04,1.25,5.95,7.50,75.0,1.55,0.45,3300
+EXR,"Extra Space Storage","Self-Storage / Guarda-Volumes",134.99,29792636928,15.60,2.15,8.49,4.71,1.08,6.41,6.80,79.0,1.35,0.68,3650
+CUBE,"CubeSmart","Self-Storage / Guarda-Volumes",43.20,9800000000,15.10,2.35,8.20,4.85,0.98,6.62,7.20,78.0,1.40,0.62,1420
+ARE,"Alexandria Real Estate","Escritórios / Ciências da Vida",53.85,9267331072,8.90,0.59,3.26,5.40,0.65,11.24,5.80,62.0,1.60,0.65,420
+BXP,"BXP Inc. (Boston Properties)","Escritórios Corporativos AAA",64.31,11632226304,9.20,1.99,3.65,4.37,0.72,10.87,11.50,60.0,1.45,0.95,190
+WY,"Weyerhaeuser Co.","Florestas & Madeira",21.54,15524654080,14.50,1.65,2.27,4.00,0.95,6.90,0.00,65.0,1.65,0.48,11000000
+PCH,"PotlatchDeltic Corp.","Florestas & Madeira",41.20,3300000000,16.80,1.55,2.80,3.95,0.98,5.95,0.00,68.0,1.50,0.42,2200000
+EPR,"EPR Properties","Entretenimento / Teatros & Parques",46.50,3550000000,9.50,1.40,5.80,7.35,0.88,10.53,1.00,74.0,1.40,0.85,360
+WPC,"W. P. Carey Inc.","Net Lease Diversificado",58.20,12750000000,12.20,1.48,7.90,6.05,0.94,8.20,1.80,78.0,1.35,0.68,1425
+BHR,"Braemar Hotels & Resorts","Hotéis & Resorts Luxo",2.85,210000000,7.50,0.45,0.35,7.02,0.55,13.33,32.00,42.0,1.20,1.15,16
+SLG,"SL Green Realty Corp.","Escritórios Manhattan NY",56.40,3850000000,10.40,0.95,4.20,5.32,0.75,9.62,10.80,68.0,1.30,1.25,58
+VNO,"Vornado Realty Trust","Escritórios & Varejo NY",32.80,6350000000,11.20,1.15,3.80,3.85,0.82,8.93,12.40,52.0,1.35,1.10,65
+OUT,"OUTFRONT Media","Mídia Out-of-Home / Painéis",15.40,2550000000,9.80,1.85,1.45,7.79,0.95,10.20,2.00,75.0,1.45,1.55,50000
+LSI,"Life Storage (Extra Space)","Self-Storage",132.50,11400000000,15.80,2.10,8.30,4.60,1.05,6.33,7.00,77.0,1.35,0.65,1200
+VMRK,"Vivmark Residential Common Shares of Beneficial Interest","Residencial",62.04,48856500000,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+AGNCN,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 7.00% Series C Fixed-To-Floating Rate Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.80,30585421333,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AGNCO,"AGNC Investment Corp. Depositary Shares each representing a 1/1000th interest in a share of 6.50% Series E Fixed-to-Floating Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.64,30396337042,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AGNCP,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 6.125% Series F Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.41,30123083568,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AGNCM,"AGNC Investment Corp. Depositary Shares rep 6.875% Series D Fixed-to-Floating Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.39,30099373939,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AGNCL,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 7.75% Series G Fixed-Rate Reset Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.36,30063809496,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AGNCZ,"AGNC Investment Corp. Depositary Shares Each Representing a 1/1000th Interest in a Share of 8.75% Series H Fixed-Rate Cumulative Redeemable Preferred Stock","Mortgage / mREIT",25.23,29909696908,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+NLY,"Annaly Capital Management","Mortgage / mREIT",21.20,15982514743,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+LAMR,"Lamar Advertising Company Class A","Diversificado / Outros",145.34,14759231073,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SUI,"Sun Communities","Residencial",113.27,13796394399,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+AHR,"American Healthcare","Saúde & Hospitais",52.12,12152446698,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+AGNC,"AGNC Investment Corp.","Mortgage / mREIT",9.97,11825177434,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+ELS,"Equity Lifestyle Properties","Diversificado / Outros",59.95,11633203586,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+AMH,"American Homes 4 Rent Common Shares of Beneficial Interest","Residencial",31.12,11177679857,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+EGP,"EastGroup Properties","Diversificado / Outros",203.30,10932249779,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+JAN,"Janus Living Inc. Class A-1","Residencial",29.77,9238907855,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+CTRE,"CareTrust","Saúde & Hospitais",37.25,8801921663,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+BRX,"Brixmor Property Group","Diversificado / Outros",27.78,8524912938,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RHP,"Ryman Hospitality Properties Inc. (REIT)","Hotéis & Lazer",121.14,8356643625,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+LINE,"Lineage","Diversificado / Outros",36.49,8309138338,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MAC,"Macerich Company (The)","Diversificado / Outros",22.66,6425455438,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+HR,"Healthcare Realty Trust Incorporated","Saúde & Hospitais",18.02,6174096476,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+RYN,"Rayonier","Diversificado / Outros",20.21,6013834951,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+EPRT,"Essential Properties Realty Trust","Diversificado / Outros",26.89,5816662443,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+STWD,"STARWOOD PROPERTY TRUST INC. Starwood Property Trust","Florestal & Madeira",14.91,5519219045,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RITM,"Rithm Capital Corp.","Mortgage / mREIT",9.50,5304866795,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SBRA,"Sabra Health Care","Saúde & Hospitais",19.82,5064549138,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+KRG,"Kite Realty Group Trust","Diversificado / Outros",24.88,4983629958,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+PECO,"Phillips Edison & Company","Diversificado / Outros",36.74,4728438000,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CUZ,"Cousins Properties Incorporated","Escritórios Corporativos",28.56,4701034776,9.80,0.72,4.41,6.20,0.72,10.20,12.50,65.00,1.35,0.85,85
+DHCNL,"Diversified Healthcare Trust 6.25% Senior Notes Due 2046","Saúde & Hospitais",18.82,4542211127,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+DHCNI,"Diversified Healthcare Trust 5.625% Senior Notes due 2042","Saúde & Hospitais",17.98,4340654280,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+REGCP,"Regency Centers Corporation 6.25% Series A Cumulative Redeemable Preferred Stock","Diversificado / Outros",22.93,4198972455,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+COLD,"Americold Realty Trust","Diversificado / Outros",14.30,4082371879,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SKT,"Tanger","Diversificado / Outros",35.17,4040868438,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+KRC,"Kilroy Realty Corporation","Diversificado / Outros",34.24,3982419749,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+REGCO,"Regency Centers Corporation 5.875% Series B Cumulative Redeemable Preferred Stock","Diversificado / Outros",21.65,3964559843,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+GEO,"Geo Group Inc (The)","Diversificado / Outros",29.83,3926212191,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+HHH,"Howard Hughes Holdings","Diversificado / Outros",65.15,3890706053,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CDP,"COPT Defense Properties Common Shares of Beneficial Interest","Diversificado / Outros",33.99,3854821467,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+APLE,"Apple Hospitality","Hotéis & Lazer",15.81,3732467455,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+BNL,"Broadstone Net Lease","Diversificado / Outros",18.92,3630615011,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LXP,"LXP Industrial Trust","Industrial / Logística",60.85,3587549514,18.50,1.05,8.33,3.80,1.05,5.41,3.20,75.00,1.35,0.85,250
+IRT,"Independence Realty Trust","Diversificado / Outros",14.64,3451135440,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+HIW,"Highwoods Properties","Florestal & Madeira",30.18,3328489917,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+NHI,"National Health Investors","Saúde & Hospitais",67.10,3295310121,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+FRMI,"Fermi","Diversificado / Outros",4.93,3160706362,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RWTN,"Redwood Trust Inc. 9.125% Senior Notes Due 2029","Saúde & Hospitais",24.14,3119454421,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+CXW,"CoreCivic","Diversificado / Outros",31.18,3083498987,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RWTO,"Redwood Trust Inc. 9.00% Senior Notes Due 2029","Saúde & Hospitais",23.50,3036751404,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+DBRG,"DigitalBridge Group","Data Center & Telecom",15.99,2998049543,22.00,1.25,9.90,3.20,1.25,4.55,2.00,70.00,1.35,0.85,180
+DX,"Dynex Capital","Mortgage / mREIT",11.89,2951945478,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+AKR,"Acadia Realty Trust","Diversificado / Outros",19.16,2631294954,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MFAO,"MFA Financial Inc. 9.000% Senior Notes due 2029","Saúde & Hospitais",25.28,2595464787,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+MFAN,"MFA Financial Inc. 8.875% Senior Notes due 2029","Saúde & Hospitais",25.24,2591358038,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+DRH,"Diamondrock Hospitality Company","Hotéis & Lazer",12.12,2479820854,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+ARR,"ARMOUR Residential","Residencial",14.79,2470535029,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+FCPT,"Four Corners Property Trust","Diversificado / Outros",22.16,2432201957,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+IVT,"InvenTrust Properties Corp.","Diversificado / Outros",30.42,2372103871,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ADAMM,"Adamas Trust Inc. 7.875% Series E Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock","Diversificado / Outros",25.68,2308112904,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LTC,"LTC Properties","Diversificado / Outros",42.45,2288291149,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ADAMI,"Adamas Trust Inc. 9.125% Senior Notes Due 2029","Saúde & Hospitais",25.00,2264486225,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ADAML,"Adamas Trust Inc. 6.875% Series F Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock $0.01 par value per share","Diversificado / Outros",25.04,2250589841,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+UNIT,"Uniti Group","Diversificado / Outros",9.19,2229430365,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+PMTU,"PennyMac Mortgage Investment Trust 8.50% Senior Notes due 2028","Saúde & Hospitais",25.35,2210579877,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ADAMN,"Adamas Trust Inc. 8.00% Series D Fixed-to-Floating Rate Cumulative Redeemable Preferred Stock","Diversificado / Outros",24.58,2208921573,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+BXMT,"Blackstone Mortgage Trust","Mortgage / mREIT",12.85,2164942426,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+MPT,"Medical Properties Trust","Saúde & Hospitais",3.56,2123046000,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+PEB,"Pebblebrook Hotel Trust Common Shares of Beneficial Interest","Hotéis & Lazer",18.19,2052609004,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+CIMN,"Chimera Investment Corporation 9.000% Senior Notes due 2029","Saúde & Hospitais",25.14,2024541697,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+GNL,"Global Net Lease","Diversificado / Outros",8.69,2010152177,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+DHC,"Diversified Healthcare Trust Common Shares of Beneficial Interest","Saúde & Hospitais",8.00,1937031904,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+NTST,"NetSTREIT Corp.","Diversificado / Outros",18.29,1856947083,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+NHPBP,"National Healthcare Properties Inc. 7.125% Series B Cumulative Redeemable Perpetual Preferred Stock","Saúde & Hospitais",25.36,1849232180,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+SMA,"SmartStop Self Storage","Self-Storage",31.95,1769036451,16.50,1.10,7.42,4.30,1.10,6.06,7.00,75.00,1.35,0.85,850
+DEI,"Douglas Emmett","Diversificado / Outros",10.13,1695788328,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RLJ,"RLJ Lodging Trust Common Shares of Beneficial Interest $0.01 par value","Hotéis & Lazer",10.84,1650992573,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+CBL,"CBL & Associates Properties","Diversificado / Outros",52.99,1639656693,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ADAMZ,"Adamas Trust Inc. 7.000% Series G Cumulative Redeemable Preferred Stock $0.01 par value per share","Diversificado / Outros",18.15,1631318116,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+AAT,"American Assets Trust","Diversificado / Outros",21.77,1336462696,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+UMH,"UMH Properties","Diversificado / Outros",15.59,1331161504,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ALX,"Alexander's","Diversificado / Outros",247.01,1261551703,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ORC,"Orchid Island Capital","Mortgage / mREIT",6.04,1204606748,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+NHP,"National Healthcare Properties Inc. Class A","Saúde & Hospitais",16.26,1185433284,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+SCCG,"Sachem Capital Corp. 8.00% Notes due 2027","Mortgage / mREIT",24.85,1176455857,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+LADR,"Ladder Capital Corp Class A","Mortgage / mREIT",9.27,1175407032,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SCCD,"Sachem Capital Corp. 6.00% Notes due 2026","Mortgage / mREIT",24.76,1172195051,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SCCE,"Sachem Capital Corp. 6.00% Notes due 2027","Mortgage / mREIT",24.66,1167669128,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SCCF,"Sachem Capital Corp. 7.125% Notes due 2027","Mortgage / mREIT",24.66,1167224111,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+DEA,"Easterly Government Properties","Diversificado / Outros",22.95,1086031110,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RNP,"Cohen & Steers","Diversificado / Outros",19.31,948876734,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CSR,"D/B/A Centerspace","Diversificado / Outros",55.41,930563907,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SAFE,"Safehold Inc. New","Diversificado / Outros",13.04,923798373,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CIM,"Chimera Investment Corporation","Diversificado / Outros",10.93,914970171,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LANDP,"Gladstone Land Corporation 6.00% Series C Cumulative Redeemable Preferred Stock","Diversificado / Outros",19.90,858417803,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LANDO,"Gladstone Land Corporation 6.00% Series B Cumulative Redeemable Preferred Stock","Diversificado / Outros",19.86,856692340,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SVC,"Service Properties Trust Common Shares of Beneficial Interest","Diversificado / Outros",6.55,848934694,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MFA,"MFA Financial","Diversificado / Outros",8.39,848127800,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ABR,"Arbor Realty Trust","Diversificado / Outros",4.34,809661907,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ARI,"Apollo Commercial Real Estate Finance","Mortgage / mREIT",6.31,809018307,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+JBGS,"JBG SMITH Properties Common Shares","Diversificado / Outros",10.63,793567194,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ADAM,"Adamas Trust","Diversificado / Outros",8.56,769820367,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+PMT,"PennyMac Mortgage Investment Trust Common Shares of Beneficial Interest","Mortgage / mREIT",8.79,766072750,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+CTO,"CTO Realty Growth","Diversificado / Outros",20.27,760017580,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MITP,"TPG Mortgage Investment Trust Inc. 9.500% Senior Notes due 2029","Saúde & Hospitais",25.44,750204186,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+MITN,"TPG Mortgage Investment Trust Inc. 9.500% Senior Notes due 2029","Saúde & Hospitais",25.42,749841422,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+BFS,"Saul Centers","Diversificado / Outros",29.93,739782833,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+PSTL,"Postal Realty Trust Inc. Class A","Diversificado / Outros",23.68,716293313,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+IVR,"INVESCO MORTGAGE CAPITAL","Mortgage / mREIT",6.53,702353721,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+ESRT,"Empire State Realty Trust Inc. Class A","Diversificado / Outros",4.05,698131682,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+FBRT,"Franklin BSP Realty Trust","Diversificado / Outros",7.66,636127887,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CLDT,"Chatham Lodging Trust (REIT) Common Shares of Beneficial Interest","Hotéis & Lazer",13.16,612803480,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+INN,"Summit Hotel Properties","Hotéis & Lazer",5.63,607754264,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+NXRT,"NexPoint Residential Trust","Residencial",21.34,545360758,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+TRTX,"TPG RE Finance Trust","Mortgage / mREIT",7.08,543140739,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+UHT,"Universal Health Realty Income Trust","Saúde & Hospitais",38.45,534404400,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+BRSP,"BrightSpire Capital Inc. Class A","Mortgage / mREIT",4.16,525707968,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+BDN,"Brandywine Realty Trust","Diversificado / Outros",2.90,507145886,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ILPT,"Industrial Logistics Properties Trust Common Shares of Beneficial Interest","Industrial / Logística",7.51,501261566,18.50,1.05,8.33,3.80,1.05,5.41,3.20,75.00,1.35,0.85,250
+OLP,"One Liberty Properties","Diversificado / Outros",22.76,496737546,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RWT,"Redwood Trust","Florestal & Madeira",3.81,478583366,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+XRN,"Chiron Real Estate","Diversificado / Outros",36.02,476760447,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+FPI,"Farmland Partners","Diversificado / Outros",10.80,471429951,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+FVR,"FrontView","Diversificado / Outros",17.80,435315963,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LAND,"Gladstone Land Corporation","Diversificado / Outros",9.61,414542467,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CHCT,"Community Healthcare Trust Incorporated","Saúde & Hospitais",14.31,410179748,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+KREF,"KKR Real Estate Finance Trust","Mortgage / mREIT",6.42,375777536,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+TCI,"Transcontinental Realty Investors","Diversificado / Outros",40.85,358416470,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+AIV,"Apartment Investment and Management Company","Residencial",2.13,308628408,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+NREF,"NexPoint Real Estate Finance","Mortgage / mREIT",16.00,301568464,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+PINE,"Alpine Income Property Trust","Diversificado / Outros",17.06,300609347,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+REFI,"Chicago Atlantic Real Estate Finance","Mortgage / mREIT",10.78,276067848,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+NXDT,"NexPoint Diversified Real Estate Trust","Diversificado / Outros",5.15,273496039,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+BRT,"BRT Apartments Corp. (MD)","Residencial",14.10,264985206,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+RC,"Ready Capital Corporation","Mortgage / mREIT",1.58,261001767,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+ACRE,"Ares Commercial Real Estate Corporation","Diversificado / Outros",4.38,242729869,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MITT,"TPG Mortgage Investment Trust","Mortgage / mREIT",6.32,200994782,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+STRW,"Strawberry Fields","Diversificado / Outros",13.60,192539770,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+AOMR,"Angel Oak Mortgage","Mortgage / mREIT",7.81,181308189,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SEVN,"Seven Hills Realty Trust","Diversificado / Outros",7.31,165635649,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+EARN,"Ellington Credit Company Common Shares of Beneficial Interest","Mortgage / mREIT",4.26,160189967,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SITC,"SITE Centers Corp.","Diversificado / Outros",3.01,157950770,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+NLOP,"Net Lease Office Properties Common Shares of Beneficial Interest","Escritórios Corporativos",10.45,154807084,9.80,0.72,4.41,6.20,0.72,10.20,12.50,65.00,1.35,0.85,85
+ELME,"Elme Communities","Residencial",1.73,153724138,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+ONL,"Orion Properties","Diversificado / Outros",2.52,143467456,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CHMI,"Cherry Hill Mortgage Investment Corporation","Mortgage / mREIT",2.82,104158398,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+SUNS,"Sunrise Realty Trust","Diversificado / Outros",7.63,103125943,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+ACR,"ACRES Commercial Realty Corp.","Diversificado / Outros",12.24,91536375,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+RPT,"Rithm Property Trust","Diversificado / Outros",11.06,85964558,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+IOR,"Income Opportunity Realty Investors","Diversificado / Outros",18.11,73638484,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SELF,"Global Self Storage","Self-Storage",5.07,57906599,16.50,1.10,7.42,4.30,1.10,6.06,7.00,75.00,1.35,0.85,850
+CLPR,"Clipper Realty","Diversificado / Outros",3.42,55258876,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+LOAN,"Manhattan Bridge Capital","Mortgage / mREIT",3.91,44673740,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+BHM,"Bluerock Homes Trust Inc. Class A","Residencial",8.42,34589596,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+LFT,"Lument Finance Trust","Mortgage / mREIT",5.40,28342510,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+WHLRD,"Wheeler Real Estate Investment Trust Inc. Series D Cumulative Preferred Stock","Diversificado / Outros",35.52,20182855,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+NYC,"American Strategic Investment Co. Class A","Diversificado / Outros",6.00,18981792,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MDRR,"Medalist Diversified","Diversificado / Outros",11.01,17933042,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+AHT,"Ashford Hospitality Trust","Hotéis & Lazer",2.60,16821516,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+IHT,"InnSuites Hospitality Trust Shares of Beneficial Interest","Hotéis & Lazer",1.46,16387871,10.50,0.85,4.73,4.80,0.85,9.52,26.00,55.00,1.35,0.85,65
+SQFTP,"Presidio Property Trust Inc. 9.375% Series D Cumulative Redeemable Perpetual Preferred Stock $0.01 par value per share","Diversificado / Outros",6.53,9366841,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CMCT,"Creative Media & Community Trust Corporation","Residencial",2.42,7132933,16.00,0.98,7.20,4.20,0.98,6.25,4.00,70.00,1.35,0.85,120
+WHLRP,"Wheeler Real Estate Investment Trust Inc. Class B Preferred Stock","Diversificado / Outros",9.45,5369594,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+WHLR,"Wheeler Real Estate Investment Trust","Diversificado / Outros",7.18,4079755,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+MKZR,"MacKenzie Realty Capital","Mortgage / mREIT",1.36,3773298,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+PW,"Power","Diversificado / Outros",6.92,2540470,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+SQFT,"Presidio Property Trust Inc. Class A","Diversificado / Outros",1.35,1936483,13.00,0.95,5.85,5.00,0.95,7.69,5.50,74.00,1.35,0.85,150
+CIMO,"Chimera Investment Corporation 9.250% Senior Notes due 2029","Saúde & Hospitais",25.34,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+CIMP,"Chimera Investment Corporation 8.875% Senior Notes due 2030","Saúde & Hospitais",25.10,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+AOMD,"Angel Oak Mortgage","Mortgage / mREIT",25.30,0,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+RWTP,"Redwood Trust Inc. 9.125% Senior Notes Due 2030","Saúde & Hospitais",23.00,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+RWTQ,"Redwood Trust Inc. 9.500% Senior Notes Due 2030","Saúde & Hospitais",21.53,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+RWTS,"Redwood Trust Inc. 9.75% Senior Notes Due 2031","Saúde & Hospitais",21.85,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+AOMN,"Angel Oak Mortgage","Mortgage / mREIT",25.38,0,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+ADAMG,"Adamas Trust Inc. 9.125% Senior Notes Due 2030","Saúde & Hospitais",25.00,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ADAMK,"Adamas Trust Inc. 9.600% Senior Notes Due 2031","Saúde & Hospitais",25.09,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ADAMH,"Adamas Trust Inc. 9.875% Senior Notes Due 2030","Saúde & Hospitais",25.15,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ADAMO,"Adamas Trust Inc. 9.250% Senior Notes Due 2031","Saúde & Hospitais",24.93,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+RCD,"Ready Capital Corporation 9.00% Senior Notes due 2029","Saúde & Hospitais",23.25,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+ELLA,"Ellington Credit Company 8.50% Notes due 2031","Mortgage / mREIT",25.01,0,8.50,0.88,3.83,11.50,0.88,11.76,0.00,92.00,1.35,0.85,0
+PMTV,"PennyMac Mortgage Investment Trust 9.00% Senior Notes due 2030","Saúde & Hospitais",25.39,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+PMTW,"PennyMac Mortgage Investment Trust 9.00% Senior Notes due 2030","Saúde & Hospitais",25.23,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320
+TWOD,"Two Harbors Investments Corp 9.375% Senior Notes due 2030","Saúde & Hospitais",26.28,0,14.00,1.00,6.30,5.20,1.00,7.14,6.00,78.00,1.35,0.85,320

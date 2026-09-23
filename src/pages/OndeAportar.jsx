@@ -1,18 +1,20 @@
 import { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { DollarSign, Copy } from 'lucide-react';
+import { DollarSign, Copy, ShieldAlert, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import MethodExplanationModal from '../components/OndeAportar/MethodExplanationModal';
 import DistancePanel from '../components/OndeAportar/DistancePanel';
 import { suggestInvestments } from '../utils/calculateInvestmentSuggestions';
 import './OndeAportar.css';
 
 const OndeAportar = () => {
-  const { holdings, macroAllocation, assetTargets } = usePortfolio();
+  const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig } = usePortfolio();
   const [showModal, setShowModal] = useState(false);
   const [availableAmount, setAvailableAmount] = useState('');
-  const [numAssets, setNumAssets] = useState(1);
+  const [numAssets, setNumAssets] = useState(2);
   const [suggestions, setSuggestions] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [reserveStrategy, setReserveStrategy] = useState(emergencyReserveSummary?.strategyMode || 'hybrid_70_30');
 
   // Check if modal should be shown on first visit
   useEffect(() => {
@@ -21,6 +23,13 @@ const OndeAportar = () => {
       setShowModal(true);
     }
   }, []);
+
+  // Sincronizar estratégia local com o contexto
+  useEffect(() => {
+    if (emergencyReserveSummary?.strategyMode) {
+      setReserveStrategy(emergencyReserveSummary.strategyMode);
+    }
+  }, [emergencyReserveSummary?.strategyMode]);
 
   // Calculate total portfolio value
   const allHoldings = Object.values(holdings).flat();
@@ -34,12 +43,18 @@ const OndeAportar = () => {
       return;
     }
 
+    // Configurar o resumo da reserva para a chamada com a estratégia selecionada na tela
+    const reserveSummaryForCalc = emergencyReserveSummary && reserveStrategy !== 'free'
+      ? { ...emergencyReserveSummary, strategyMode: reserveStrategy }
+      : null;
+
     const newSuggestions = suggestInvestments(
       amount,
       numAssets,
       holdings,
       macroAllocation,
-      assetTargets
+      assetTargets,
+      reserveSummaryForCalc
     );
     
     setSuggestions(newSuggestions);
@@ -118,6 +133,65 @@ const OndeAportar = () => {
               </div>
             ) : null}
 
+            {/* Banner Inteligente de Reserva de Emergência */}
+            {emergencyReserveSummary && (
+              <div className={`emergency-banner ${emergencyReserveSummary.reserveStatus}`}>
+                <div className="emergency-banner-left">
+                  {emergencyReserveSummary.reserveStatus === 'blindada' ? (
+                    <ShieldCheck className="shield-icon success" size={28} />
+                  ) : (
+                    <ShieldAlert className="shield-icon warning" size={28} />
+                  )}
+                  <div>
+                    <div className="banner-title-row">
+                      <span className="banner-title">
+                        {emergencyReserveSummary.reserveStatus === 'blindada'
+                          ? '🛡️ Reserva de Emergência Blindada (100%)'
+                          : `⚠️ Reserva de Emergência em Construção (${emergencyReserveSummary.reserveCompletionPercent.toFixed(1)}%)`}
+                      </span>
+                      <Link to="/reserva-emergencia" className="banner-link">
+                        Ver detalhes <ArrowRight size={14} />
+                      </Link>
+                    </div>
+                    <p className="banner-subtitle">
+                      {emergencyReserveSummary.reserveStatus === 'blindada'
+                        ? `Parabéns! Sua reserva possui R$ ${emergencyReserveSummary.totalCurrentReserve.toFixed(2)} (${emergencyReserveSummary.reserveMonthsCovered.toFixed(1)} meses de cobertura). Novos aportes liberados 100% para a carteira.`
+                        : `Saldo atual: R$ ${emergencyReserveSummary.totalCurrentReserve.toFixed(2)} de R$ ${emergencyReserveSummary.targetReserveAmount.toFixed(2)} (Faltam R$ ${emergencyReserveSummary.missingReserveAmount.toFixed(2)} / ${emergencyReserveSummary.reserveMonthsCovered.toFixed(1)} meses cobertos).`}
+                    </p>
+                  </div>
+                </div>
+
+                {emergencyReserveSummary.reserveStatus !== 'blindada' && (
+                  <div className="reserve-strategy-picker">
+                    <span className="strategy-label">Prioridade deste aporte:</span>
+                    <div className="strategy-buttons">
+                      <button
+                        type="button"
+                        className={`btn-strategy ${reserveStrategy === 'focus_100' ? 'active' : ''}`}
+                        onClick={() => setReserveStrategy('focus_100')}
+                      >
+                        100% Reserva
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn-strategy ${reserveStrategy === 'hybrid_70_30' ? 'active' : ''}`}
+                        onClick={() => setReserveStrategy('hybrid_70_30')}
+                      >
+                        70% Reserva / 30% Carteira
+                      </button>
+                      <button
+                        type="button"
+                        className={`btn-strategy ${reserveStrategy === 'free' ? 'active' : ''}`}
+                        onClick={() => setReserveStrategy('free')}
+                      >
+                        100% Carteira
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Input Section */}
             <div className="input-section">
               <div className="input-group">
@@ -136,14 +210,14 @@ const OndeAportar = () => {
               </div>
 
               <div className="input-group">
-                <label>Qtd de Ativos para Aportar</label>
+                <label>Qtd de Ativos da Carteira</label>
                 <select
                   value={numAssets}
                   onChange={(e) => setNumAssets(parseInt(e.target.value))}
                 >
-                  <option value={1}>1</option>
-                  <option value={2}>2</option>
-                  <option value={3}>3</option>
+                  <option value={1}>1 Ativo</option>
+                  <option value={2}>2 Ativos</option>
+                  <option value={3}>3 Ativos</option>
                 </select>
               </div>
 
@@ -163,7 +237,8 @@ const OndeAportar = () => {
                 <table className="suggestions-table">
                   <thead>
                     <tr>
-                      <th>CÓDIGO</th>
+                      <th>CÓDIGO / ATIVO</th>
+                      <th>FINALIDADE</th>
                       <th>COTAS</th>
                       <th>VALOR TOTAL</th>
                       <th>APORTAR</th>
@@ -171,8 +246,16 @@ const OndeAportar = () => {
                   </thead>
                   <tbody>
                     {suggestions.map(suggestion => (
-                      <tr key={suggestion.ticker}>
-                        <td className="ticker-cell">{suggestion.ticker}</td>
+                      <tr key={suggestion.ticker} className={suggestion.isEmergencyReserve ? 'row-emergency' : ''}>
+                        <td className="ticker-cell">
+                          {suggestion.ticker}
+                          {suggestion.isEmergencyReserve && (
+                            <span className="emergency-badge">🛡️ Reserva</span>
+                          )}
+                        </td>
+                        <td className="purpose-cell">
+                          {suggestion.reason || (suggestion.isEmergencyReserve ? 'Blindagem' : 'Rebalanceamento')}
+                        </td>
                         <td>{suggestion.cotas || '-'}</td>
                         <td>R$ {suggestion.valorTotal.toFixed(2)}</td>
                         <td>

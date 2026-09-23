@@ -14,7 +14,17 @@ const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue }) 
 
   const getCategoryAssets = (category) => {
     const catDist = categoryDistances.find(c => c.category === category);
-    if (!catDist || category === 'fixed') return [];
+    if (!catDist) return [];
+
+    if (category === 'fixed') {
+      const fixedTargets = assetTargets['fixed'] || [];
+      if (fixedTargets.length === 0) {
+        return [{
+          ticker: 'Reserva / Renda Fixa Geral',
+          distance: catDist.distance
+        }];
+      }
+    }
 
     return calculateAssetDistances(
       holdings,
@@ -48,22 +58,20 @@ const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue }) 
             >
               <div className="distance-item-left">
                 <span className="category-name">{catDist.name}</span>
-                {catDist.category !== 'fixed' && (
-                  <button className="btn-expand">
-                    {expandedCategory === catDist.category ? (
-                      <ChevronUp size={16} />
-                    ) : (
-                      <ChevronDown size={16} />
-                    )}
-                  </button>
-                )}
+                <button className="btn-expand">
+                  {expandedCategory === catDist.category ? (
+                    <ChevronUp size={16} />
+                  ) : (
+                    <ChevronDown size={16} />
+                  )}
+                </button>
               </div>
               <span className={`distance-value ${catDist.distance > 0 ? 'positive' : 'negative'}`}>
                 {catDist.distance > 0 ? '+' : ''}{catDist.distance.toFixed(2)}%
               </span>
             </div>
 
-            {expandedCategory === catDist.category && catDist.category !== 'fixed' && (
+            {expandedCategory === catDist.category && (
               <div className="asset-details">
                 <div className="asset-details-header">
                   <span>Ativo</span>

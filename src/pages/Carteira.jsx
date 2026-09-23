@@ -18,6 +18,7 @@ const Carteira = () => {
         <HoldingsTable category="fiis" title="FIIs" color="#C0C0C0" />
         <HoldingsTable category="stocks" title="Stocks" color="#FFD700" />
         <HoldingsTable category="reits" title="REITs" color="#FFFF00" />
+        <HoldingsTable category="fixed" title="Renda Fixa" color="#4ade80" />
       </section>
     </div>
   );

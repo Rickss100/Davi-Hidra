@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Target, PiggyBank, Briefcase, FileText, History, TrendingUp, Search } from 'lucide-react';
+import { LayoutDashboard, Wallet, Target, PiggyBank, Briefcase, FileText, History, TrendingUp, Search, Shield } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
+  const { user } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -18,6 +20,10 @@ const Sidebar = () => {
     { name: 'Radar de Ativos', path: '/radar', icon: Search },
     { name: 'Histórico', path: '/historico', icon: History },
   ];
+
+  if (user?.role === 'admin') {
+    menuItems.push({ name: 'Painel Admin', path: '/admin', icon: Shield, isAdmin: true });
+  }
 
   return (
     <aside className="sidebar">

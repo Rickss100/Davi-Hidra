@@ -1,0 +1,83 @@
+.resumo-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.resumo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.resumo-title h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.resumo-title p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Cards Executivos do Topo */
+.resumo-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.resumo-metric-card {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.resumo-metric-card.highlight {
+  border-color: #04d361;
+  background: linear-gradient(180deg, rgba(4, 211, 97, 0.08) 0%, rgba(18, 18, 20, 1) 100%);
+}
+
+.resumo-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+}
+
+.resumo-card-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.resumo-card-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #f3f4f6;
+  margin-bottom: 0.25rem;
+  line-height: 1.2;
+}
+
+.resumo-card-sub {
+  font-size: 0.78rem;
+  color: #6b7280;
+}

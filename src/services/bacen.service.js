@@ -12,7 +12,8 @@ const BACEN_BASE_URL = 'https://api.bcb.gov.br/dados/serie/bcdata.sgs';
 
 // Series IDs for economic indicators
 const SERIES_IDS = {
-  SELIC: 11,            // Taxa Selic (%)
+  SELIC: 11,            // Taxa Selic diária (%)
+  SELIC_META: 432,       // Taxa Selic Meta anual (% a.a.)
   IPCA: 433,            // IPCA mensal (%)
   IPCA_12M: 13522,      // IPCA acumulado 12 meses (%)
   CDI: 12,              // CDI diário (%)

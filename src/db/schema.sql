@@ -62,6 +62,16 @@ CREATE TABLE IF NOT EXISTS fundamentals (
   property_count INTEGER,             -- Quantidade de imóveis
   price_per_sqm REAL,                 -- Preço por m²
   rent_per_sqm REAL,                  -- Aluguel por m²
+
+  -- Renda Fixa specific
+  indexer TEXT,                       -- 'SELIC', 'IPCA', 'CDI', 'PREFIXADO'
+  rate_fixed REAL,                    -- Taxa numérica básica (ex: 6.5 para IPCA+ 6.5%, 100 para 100% CDI)
+  rate_description TEXT,              -- Exibição amigável: 'IPCA + 6,50%', '100% do CDI'
+  maturity_date TEXT,                 -- Data de vencimento ou 'Liquidez Diária'
+  liquidity_type TEXT,                -- 'D+0 (Diária)', 'D+1', 'No Vencimento'
+  guarantee TEXT,                     -- 'Tesouro Nacional (Soberano)', 'FGC (até R$ 250k)'
+  tax_free INTEGER DEFAULT 0,         -- 1 = Isento de IR, 0 = Tabela Regressiva
+  min_investment REAL,                -- Valor mínimo de aporte (ex: 35.50)
   
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   
@@ -201,3 +211,21 @@ CREATE TABLE IF NOT EXISTS user_asset_notes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_user_notes_rating ON user_asset_notes(rating);
+
+-- ============================================================================
+-- 10. USERS TABLE - System users and authentication
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  name TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'user',     -- 'admin' ou 'user'
+  status TEXT NOT NULL DEFAULT 'active', -- 'active' ou 'inactive'
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);

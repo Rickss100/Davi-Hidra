@@ -12,6 +12,7 @@ build/
 *.sqlite
 *.sqlite3
 investment-data.db
+!src/db/seed-investment-data.db
 
 # Environment variables
 .env

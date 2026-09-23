@@ -1,0 +1,528 @@
+.reserva-page {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.reserva-header-title h1 {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reserva-header-title p {
+  color: #9ca3af;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.reserva-header-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.btn-reserva-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-reserva-action.primary {
+  background: #04d361;
+  color: #0c0d0f;
+}
+
+.btn-reserva-action.primary:hover {
+  background: #00b352;
+  transform: translateY(-1px);
+}
+
+.btn-reserva-action.secondary {
+  background: #202024;
+  color: #e1e1e6;
+  border: 1px solid #323238;
+}
+
+.btn-reserva-action.secondary:hover {
+  background: #29292e;
+  border-color: #4b5563;
+}
+
+/* Indicadores de Topo (Cards) */
+.reserva-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.reserva-metric-card {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.reserva-metric-card.highlight {
+  border-color: #04d361;
+  background: linear-gradient(180deg, rgba(4, 211, 97, 0.08) 0%, rgba(18, 18, 20, 1) 100%);
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.metric-icon {
+  color: #04d361;
+}
+
+.metric-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin-bottom: 0.25rem;
+}
+
+.metric-footer {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Termômetro e Barra de Progresso */
+.reserva-progress-box {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.progress-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.progress-box-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.progress-badge.blindada {
+  background: rgba(4, 211, 97, 0.15);
+  color: #04d361;
+  border: 1px solid rgba(4, 211, 97, 0.3);
+}
+
+.progress-badge.quase_blindada {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.progress-badge.em_construcao {
+  background: rgba(249, 115, 22, 0.15);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+
+.progress-badge.critico {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.progress-bar-track {
+  height: 20px;
+  background: #202024;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0c0d0f;
+}
+
+.progress-bar-fill.blindada {
+  background: linear-gradient(90deg, #10b981 0%, #04d361 100%);
+}
+
+.progress-bar-fill.quase_blindada {
+  background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+}
+
+.progress-bar-fill.em_construcao {
+  background: linear-gradient(90deg, #ea580c 0%, #f97316 100%);
+}
+
+.progress-bar-fill.critico {
+  background: linear-gradient(90deg, #b91c1c 0%, #ef4444 100%);
+}
+
+.progress-milestones {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.progress-message {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #18181c;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #c4c4cc;
+  line-height: 1.5;
+  border-left: 3px solid #04d361;
+}
+
+/* Duas Colunas: Configuração & Projeção */
+.reserva-main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.reserva-section-card {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.section-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f3f4f6;
+  margin: 0 0 1.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input-money-wrapper {
+  display: flex;
+  align-items: center;
+  background: #202024;
+  border: 1px solid #323238;
+  border-radius: 6px;
+  padding: 0 0.75rem;
+}
+
+.input-money-wrapper span {
+  color: #04d361;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.input-money-wrapper input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 0.7rem 0.5rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* Preset Buttons */
+.profile-preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.btn-profile-preset {
+  background: #202024;
+  border: 1px solid #323238;
+  color: #c4c4cc;
+  padding: 0.6rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.btn-profile-preset:hover {
+  background: #29292e;
+  border-color: #4b5563;
+  color: #fff;
+}
+
+.btn-profile-preset.active {
+  background: rgba(4, 211, 97, 0.15);
+  border-color: #04d361;
+  color: #04d361;
+  font-weight: 700;
+}
+
+.btn-profile-preset small {
+  font-size: 0.7rem;
+  color: #9ca3af;
+}
+
+/* Projeções e Estimativas */
+.projection-box {
+  background: #18181c;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.projection-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.projection-row:last-child {
+  border-bottom: none;
+}
+
+.projection-label {
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.projection-val {
+  color: #f3f4f6;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.projection-val.highlight {
+  color: #04d361;
+}
+
+/* Tabela de Ativos da Reserva */
+.reserva-assets-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.reserva-assets-table th {
+  background: #202024;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.reserva-assets-table td {
+  padding: 0.85rem 1rem;
+  border-top: 1px solid #29292e;
+  color: #e1e1e6;
+  font-size: 0.9rem;
+}
+
+.asset-badge-selic {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: rgba(4, 211, 97, 0.15);
+  color: #04d361;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Guia O Que É vs O Que Não É */
+.reserva-guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.guide-box {
+  background: #121214;
+  border: 1px solid #29292e;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.guide-box.positive {
+  border-top: 3px solid #04d361;
+}
+
+.guide-box.negative {
+  border-top: 3px solid #ef4444;
+}
+
+.guide-box-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.guide-box.positive .guide-box-title {
+  color: #04d361;
+}
+
+.guide-box.negative .guide-box-title {
+  color: #ef4444;
+}
+
+.guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.guide-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #c4c4cc;
+  line-height: 1.4;
+}
+
+/* Modal Rápido de Aporte/Resgate */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: #18181c;
+  border: 1px solid #323238;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 480px;
+  padding: 1.5rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #f3f4f6;
+  font-size: 1.15rem;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 900px) {
+  .reserva-main-grid,
+  .reserva-guide-grid {
+    grid-template-columns: 1fr;
+  }
+}

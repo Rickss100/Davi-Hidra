@@ -49,6 +49,12 @@ const DefinirObjetivos = () => {
             assets={assetTargets.reits} 
             onUpdate={(newAssets) => updateAssetTargets('reits', newAssets)} 
           />
+          <div className="arrow-separator">›</div>
+          <AssetTargetTable 
+            title="Renda Fixa" 
+            assets={assetTargets.fixed || []} 
+            onUpdate={(newAssets) => updateAssetTargets('fixed', newAssets)} 
+          />
         </div>
       </section>
     </div>

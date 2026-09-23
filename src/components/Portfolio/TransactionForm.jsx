@@ -80,6 +80,7 @@ const TransactionForm = () => {
             <option value="fiis">FIIs</option>
             <option value="stocks">Stocks</option>
             <option value="reits">REITs</option>
+            <option value="fixed">Renda Fixa</option>
           </select>
         </div>
 

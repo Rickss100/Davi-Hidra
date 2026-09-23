@@ -265,6 +265,151 @@
   font-size: 1.125rem;
 }
 
+/* Emergency Reserve Banner & Strategy Picker */
+.emergency-banner {
+  background: #18181c;
+  border-radius: 8px;
+  padding: 1.25rem;
+  border-left: 4px solid #f59e0b;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emergency-banner.blindada {
+  border-left-color: #04d361;
+  background: rgba(4, 211, 97, 0.05);
+}
+
+.emergency-banner.critico {
+  border-left-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.emergency-banner-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.shield-icon.warning {
+  color: #f59e0b;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.shield-icon.success {
+  color: #04d361;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.banner-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.banner-title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #f3f4f6;
+}
+
+.banner-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #38bdf8;
+  font-size: 0.8rem;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.banner-link:hover {
+  color: #7dd3fc;
+  text-decoration: underline;
+}
+
+.banner-subtitle {
+  margin: 0.35rem 0 0 0;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.reserve-strategy-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.strategy-label {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.strategy-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-strategy {
+  background: #202024;
+  border: 1px solid #323238;
+  color: #c4c4cc;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-strategy:hover {
+  background: #29292e;
+  color: #fff;
+  border-color: #4b5563;
+}
+
+.btn-strategy.active {
+  background: rgba(4, 211, 97, 0.15);
+  border-color: #04d361;
+  color: #04d361;
+  font-weight: 600;
+}
+
+/* Badges e Células na Tabela */
+.emergency-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.row-emergency {
+  background: rgba(245, 158, 11, 0.03);
+}
+
+.purpose-cell {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  max-width: 280px;
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .onde-aportar-container {

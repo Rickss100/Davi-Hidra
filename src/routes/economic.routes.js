@@ -14,9 +14,27 @@ const router = express.Router();
 // GET /api/economic/:indicator - Get latest value for an indicator
 router.get('/:indicator', (req, res) => {
   try {
-    const indicator = getLatestIndicator(req.params.indicator.toUpperCase());
+    const code = req.params.indicator.toUpperCase();
+    const indicator = getLatestIndicator(code);
     
     if (!indicator) {
+      // Valores de mercado padrão caso ainda não sincronizados pelo Bacen
+      const fallbackValues = {
+        'SELIC': 10.75,
+        'CDI': 10.65,
+        'IPCA': 4.50,
+        'DOLAR': 5.65
+      };
+
+      if (fallbackValues[code] !== undefined) {
+        return res.json({
+          indicator: code,
+          date: new Date().toISOString().split('T')[0],
+          value: fallbackValues[code],
+          is_fallback: true
+        });
+      }
+
       return res.status(404).json({ error: 'Indicator not found' });
     }
     

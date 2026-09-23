@@ -57,7 +57,7 @@ router.get('/metrics', (req, res) => {
         WHERE asset_code IN (${userCodes}) 
           AND payment_date <= date('now')
       `).get();
-      totalDividends = divRow?.total ? Number(divRow.total) * 15 : 450.00; // estimativa realista ponderada
+      totalDividends = divRow?.total ? Number(divRow.total) : 0;
     }
 
     // 3. Benchmarks de mercado de referência do período
@@ -104,7 +104,37 @@ router.get('/metrics', (req, res) => {
  */
 router.get('/benchmark-data', (req, res) => {
   try {
+    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
     const period = req.query.period || '12m'; // '6m', 'ytd', '12m', '24m', 'total'
+    const db = getDatabase();
+
+    // 1. Obter posições reais do usuário para verificar se há aportes e calcular rentabilidade real
+    const holdingsRows = db.prepare(`
+      SELECT 
+        t.asset_code,
+        SUM(CASE WHEN t.type = 'buy' THEN t.quantity ELSE -t.quantity END) as quantity,
+        SUM(CASE WHEN t.type = 'buy' THEN t.total_value ELSE -t.total_value END) as invested,
+        AVG(t.price) as avg_price
+      FROM transactions t
+      WHERE t.user_id = ?
+      GROUP BY t.asset_code
+      HAVING quantity > 0
+    `).all(userId);
+
+    let totalEquity = 0;
+    let investedCapital = 0;
+
+    holdingsRows.forEach(h => {
+      investedCapital += Number(h.invested);
+      const priceRow = db.prepare(`
+        SELECT close FROM prices WHERE asset_code = ? ORDER BY date DESC LIMIT 1
+      `).get(h.asset_code);
+      const currentPrice = priceRow?.close || h.avg_price || 1;
+      totalEquity += (Number(h.quantity) * currentPrice);
+    });
+
+    const hasInvestments = investedCapital > 0;
+    const realReturnPct = hasInvestments ? ((totalEquity - investedCapital) / investedCapital) * 100 : 0;
 
     // Definir quantos meses gerar
     let monthCount = 12;
@@ -116,29 +146,26 @@ router.get('/benchmark-data', (req, res) => {
     const dataPoints = [];
     const now = new Date();
 
-    // Base de retornos mensais médios para compor as séries comparativas
-    // Carteira diversificada DAVI (Ações + FIIs + Stocks + REITs + Renda Fixa) com boa resiliência e retorno superior
-    let carteiraAcum = 0;
+    // Variações mensais aproximadas dos índices de mercado
     let sp500Acum = 0;
     let ibovAcum = 0;
     let cdiAcum = 0;
     let ipcaAcum = 0;
     let ifixAcum = 0;
 
-    // Variações mensais aproximadas de mercado
     const monthlyVariations = [
-      { carteira: 1.4, sp500: 2.1, ibov: 1.8, cdi: 0.88, ipca: 0.35, ifix: 0.75 },
-      { carteira: 1.2, sp500: 1.9, ibov: -0.5, cdi: 0.86, ipca: 0.40, ifix: 0.80 },
-      { carteira: 1.8, sp500: 2.5, ibov: 2.4, cdi: 0.89, ipca: 0.32, ifix: 0.90 },
-      { carteira: -0.4, sp500: -1.2, ibov: -2.8, cdi: 0.87, ipca: 0.38, ifix: 0.45 },
-      { carteira: 2.1, sp500: 3.0, ibov: 1.5, cdi: 0.91, ipca: 0.30, ifix: 0.85 },
-      { carteira: 1.5, sp500: 1.7, ibov: 0.8, cdi: 0.90, ipca: 0.34, ifix: 0.70 },
-      { carteira: 1.7, sp500: 2.2, ibov: 3.1, cdi: 0.92, ipca: 0.28, ifix: 0.95 },
-      { carteira: -0.2, sp500: -0.8, ibov: -1.9, cdi: 0.88, ipca: 0.35, ifix: 0.60 },
-      { carteira: 1.9, sp500: 2.4, ibov: 1.7, cdi: 0.89, ipca: 0.31, ifix: 0.82 },
-      { carteira: 1.3, sp500: 1.5, ibov: 0.4, cdi: 0.87, ipca: 0.36, ifix: 0.78 },
-      { carteira: 2.4, sp500: 3.2, ibov: 2.8, cdi: 0.90, ipca: 0.29, ifix: 0.90 },
-      { carteira: 1.6, sp500: 1.8, ibov: 1.2, cdi: 0.88, ipca: 0.33, ifix: 0.85 }
+      { sp500: 2.1, ibov: 1.8, cdi: 0.88, ipca: 0.35, ifix: 0.75 },
+      { sp500: 1.9, ibov: -0.5, cdi: 0.86, ipca: 0.40, ifix: 0.80 },
+      { sp500: 2.5, ibov: 2.4, cdi: 0.89, ipca: 0.32, ifix: 0.90 },
+      { sp500: -1.2, ibov: -2.8, cdi: 0.87, ipca: 0.38, ifix: 0.45 },
+      { sp500: 3.0, ibov: 1.5, cdi: 0.91, ipca: 0.30, ifix: 0.85 },
+      { sp500: 1.7, ibov: 0.8, cdi: 0.90, ipca: 0.34, ifix: 0.70 },
+      { sp500: 2.2, ibov: 3.1, cdi: 0.92, ipca: 0.28, ifix: 0.95 },
+      { sp500: -0.8, ibov: -1.9, cdi: 0.88, ipca: 0.35, ifix: 0.60 },
+      { sp500: 2.4, ibov: 1.7, cdi: 0.89, ipca: 0.31, ifix: 0.82 },
+      { sp500: 1.5, ibov: 0.4, cdi: 0.87, ipca: 0.36, ifix: 0.78 },
+      { sp500: 3.2, ibov: 2.8, cdi: 0.90, ipca: 0.29, ifix: 0.90 },
+      { sp500: 1.8, ibov: 1.2, cdi: 0.88, ipca: 0.33, ifix: 0.85 }
     ];
 
     for (let i = monthCount; i >= 0; i--) {
@@ -146,7 +173,6 @@ router.get('/benchmark-data', (req, res) => {
       const label = d.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
 
       if (i === monthCount) {
-        // Ponto inicial: 0.00%
         dataPoints.push({
           date: label,
           fullDate: d.toISOString().split('T')[0],
@@ -159,17 +185,24 @@ router.get('/benchmark-data', (req, res) => {
         });
       } else {
         const v = monthlyVariations[(monthCount - i) % monthlyVariations.length];
-        carteiraAcum = ((1 + carteiraAcum / 100) * (1 + v.carteira / 100) - 1) * 100;
         sp500Acum = ((1 + sp500Acum / 100) * (1 + v.sp500 / 100) - 1) * 100;
         ibovAcum = ((1 + ibovAcum / 100) * (1 + v.ibov / 100) - 1) * 100;
         cdiAcum = ((1 + cdiAcum / 100) * (1 + v.cdi / 100) - 1) * 100;
         ipcaAcum = ((1 + ipcaAcum / 100) * (1 + v.ipca / 100) - 1) * 100;
         ifixAcum = ((1 + ifixAcum / 100) * (1 + v.ifix / 100) - 1) * 100;
 
+        // Se o usuário não tem investimentos, a carteira fica zerada (0.00%)
+        // Se possui investimentos, interpola progressivamente até o retorno real
+        let carteiraVal = 0;
+        if (hasInvestments) {
+          const progress = (monthCount - i) / monthCount;
+          carteiraVal = Number((realReturnPct * progress).toFixed(2));
+        }
+
         dataPoints.push({
           date: label,
           fullDate: d.toISOString().split('T')[0],
-          carteira: Number(carteiraAcum.toFixed(2)),
+          carteira: carteiraVal,
           sp500: Number(sp500Acum.toFixed(2)),
           ibov: Number(ibovAcum.toFixed(2)),
           cdi: Number(cdiAcum.toFixed(2)),
@@ -181,6 +214,10 @@ router.get('/benchmark-data', (req, res) => {
 
     res.json({
       period,
+      hasInvestments,
+      realReturnPct: Number(realReturnPct.toFixed(2)),
+      investedCapital: Number(investedCapital.toFixed(2)),
+      totalEquity: Number(totalEquity.toFixed(2)),
       dataPoints
     });
   } catch (err) {

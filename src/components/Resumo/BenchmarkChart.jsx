@@ -27,6 +27,8 @@ const BenchmarkChart = ({ userId = 1 }) => {
     ifix: false // Desligado por padrão para manter o gráfico limpo, clicável para ligar
   });
 
+  const [hasInvestments, setHasInvestments] = useState(false);
+
   useEffect(() => {
     const fetchBenchmark = async () => {
       try {
@@ -35,6 +37,7 @@ const BenchmarkChart = ({ userId = 1 }) => {
         if (res.ok) {
           const data = await res.json();
           setChartData(data.dataPoints || []);
+          setHasInvestments(Boolean(data.hasInvestments));
         }
       } catch (err) {
         console.error('Erro ao buscar benchmark:', err);
@@ -132,6 +135,27 @@ const BenchmarkChart = ({ userId = 1 }) => {
         </div>
       </div>
 
+      {/* Banner de Orientação para Carteira Nova */}
+      {!hasInvestments && (
+        <div style={{
+          margin: '0 0 16px 0',
+          padding: '10px 14px',
+          background: 'rgba(56, 189, 248, 0.08)',
+          border: '1px solid rgba(56, 189, 248, 0.25)',
+          borderRadius: '8px',
+          fontSize: '12px',
+          color: '#bae6fd',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span style={{ fontSize: '15px' }}>💡</span>
+          <span>
+            <strong>Carteira nova sem aportes cadastrados (0,00%).</strong> Os índices de mercado abaixo (S&P 500, Ibovespa, CDI, IPCA) estão exibidos como referência comparativa para quando você registrar seus primeiros investimentos.
+          </span>
+        </div>
+      )}
+
       {/* Barra de Filtro das Curvas do Gráfico */}
       <div className="benchmark-toggles-bar">
         <button
@@ -141,7 +165,7 @@ const BenchmarkChart = ({ userId = 1 }) => {
           style={{ borderColor: visibleSeries.carteira ? '#04d361' : undefined }}
         >
           <span className="toggle-circle" style={{ background: '#04d361' }}></span>
-          <span>Sua Carteira ({lastPoint.carteira != null ? `${lastPoint.carteira > 0 ? '+' : ''}${lastPoint.carteira}%` : '0%'})</span>
+          <span>Sua Carteira ({hasInvestments && lastPoint.carteira != null ? `${lastPoint.carteira > 0 ? '+' : ''}${lastPoint.carteira}%` : '0,00%'})</span>
         </button>
 
         <button
@@ -280,40 +304,50 @@ const BenchmarkChart = ({ userId = 1 }) => {
       <div className="benchmark-comparison-footer">
         <div className="comparison-box">
           <span className="comparison-box-label">Sua Carteira</span>
-          <span className="comparison-box-val" style={{ color: '#04d361' }}>
-            {lastPoint.carteira != null ? `${lastPoint.carteira > 0 ? '+' : ''}${lastPoint.carteira.toFixed(2)}%` : '0%'}
+          <span className="comparison-box-val" style={{ color: hasInvestments ? '#04d361' : '#94a3b8' }}>
+            {hasInvestments && lastPoint.carteira != null 
+              ? `${lastPoint.carteira > 0 ? '+' : ''}${lastPoint.carteira.toFixed(2)}%` 
+              : '0,00%'}
           </span>
-          <span className="comparison-box-sub">Retorno total consolidado</span>
+          <span className="comparison-box-sub">
+            {hasInvestments ? 'Retorno total consolidado' : 'Aguardando primeiros aportes'}
+          </span>
         </div>
 
         <div className="comparison-box">
           <span className="comparison-box-label">Alfa vs. CDI</span>
-          <span className="comparison-box-val" style={{ color: (lastPoint.carteira - lastPoint.cdi) >= 0 ? '#04d361' : '#f87171' }}>
-            {lastPoint.carteira != null && lastPoint.cdi != null 
+          <span className="comparison-box-val" style={{ color: !hasInvestments ? '#94a3b8' : ((lastPoint.carteira - lastPoint.cdi) >= 0 ? '#04d361' : '#f87171') }}>
+            {hasInvestments && lastPoint.carteira != null && lastPoint.cdi != null 
               ? `${(lastPoint.carteira - lastPoint.cdi) > 0 ? '+' : ''}${(lastPoint.carteira - lastPoint.cdi).toFixed(2)}%`
-              : '0%'}
+              : '—'}
           </span>
-          <span className="comparison-box-sub">Retorno excedente ao risco zero</span>
+          <span className="comparison-box-sub">
+            {hasInvestments ? 'Retorno excedente ao risco zero' : 'Sem histórico para comparar'}
+          </span>
         </div>
 
         <div className="comparison-box">
           <span className="comparison-box-label">Alfa vs. Ibovespa</span>
-          <span className="comparison-box-val" style={{ color: (lastPoint.carteira - lastPoint.ibov) >= 0 ? '#04d361' : '#f87171' }}>
-            {lastPoint.carteira != null && lastPoint.ibov != null 
+          <span className="comparison-box-val" style={{ color: !hasInvestments ? '#94a3b8' : ((lastPoint.carteira - lastPoint.ibov) >= 0 ? '#04d361' : '#f87171') }}>
+            {hasInvestments && lastPoint.carteira != null && lastPoint.ibov != null 
               ? `${(lastPoint.carteira - lastPoint.ibov) > 0 ? '+' : ''}${(lastPoint.carteira - lastPoint.ibov).toFixed(2)}%`
-              : '0%'}
+              : '—'}
           </span>
-          <span className="comparison-box-sub">Superação do mercado BR</span>
+          <span className="comparison-box-sub">
+            {hasInvestments ? 'Superação do mercado BR' : 'Sem histórico para comparar'}
+          </span>
         </div>
 
         <div className="comparison-box">
           <span className="comparison-box-label">Ganho Real (Acima do IPCA)</span>
-          <span className="comparison-box-val" style={{ color: (lastPoint.carteira - lastPoint.ipca) >= 0 ? '#04d361' : '#f87171' }}>
-            {lastPoint.carteira != null && lastPoint.ipca != null 
+          <span className="comparison-box-val" style={{ color: !hasInvestments ? '#94a3b8' : ((lastPoint.carteira - lastPoint.ipca) >= 0 ? '#04d361' : '#f87171') }}>
+            {hasInvestments && lastPoint.carteira != null && lastPoint.ipca != null 
               ? `${(lastPoint.carteira - lastPoint.ipca) > 0 ? '+' : ''}${(lastPoint.carteira - lastPoint.ipca).toFixed(2)}%`
-              : '0%'}
+              : '—'}
           </span>
-          <span className="comparison-box-sub">Aumento de poder de compra</span>
+          <span className="comparison-box-sub">
+            {hasInvestments ? 'Aumento de poder de compra' : 'Sem histórico para comparar'}
+          </span>
         </div>
       </div>
     </div>

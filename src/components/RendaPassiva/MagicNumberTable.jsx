@@ -38,8 +38,20 @@ const MagicNumberTable = ({ userId = 1 }) => {
       </div>
 
       {magicData.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '2rem', color: '#9ca3af' }}>
-          <p>Nenhum ativo de renda encontrado na carteira.</p>
+        <div style={{
+          textAlign: 'center',
+          padding: '40px 20px',
+          background: '#18181c',
+          border: '1px solid #27272a',
+          borderRadius: '12px',
+          color: '#94a3b8'
+        }}>
+          <p style={{ margin: '0 0 10px 0', fontSize: '15px', color: '#f1f5f9', fontWeight: 600 }}>
+            Nenhum ativo de renda encontrado em sua custódia.
+          </p>
+          <p style={{ margin: 0, fontSize: '13px', color: '#64748b', maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
+            Adicione ações, FIIs ou REITs na aba <strong>Carteira</strong> para que o sistema calcule automaticamente a quantidade de cotas necessárias para que os proventos comprem novas cotas sozinhos!
+          </p>
         </div>
       ) : (
         <div className="magic-grid">

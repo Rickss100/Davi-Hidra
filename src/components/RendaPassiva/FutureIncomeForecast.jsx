@@ -69,9 +69,47 @@ const FutureIncomeForecast = ({ currentEquity = 50000, monthlyExpense = 3000 }) 
         </p>
       </div>
 
+      {/* Aviso quando carteira está iniciando do zero */}
+      {currentEquity === 0 && (
+        <div style={{
+          margin: '0 0 16px 0',
+          padding: '12px 16px',
+          background: 'rgba(56, 189, 248, 0.08)',
+          border: '1px solid rgba(56, 189, 248, 0.25)',
+          borderRadius: '8px',
+          fontSize: '13px',
+          color: '#bae6fd',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <span style={{ fontSize: '18px' }}>🌱</span>
+          <span>
+            <strong>Iniciando do zero (Patrimônio R$ 0,00):</strong> Este simulador projeta a construção da sua renda passiva futura a partir do seu aporte mensal recorrente e o reinvestimento dos proventos.
+          </span>
+        </div>
+      )}
+
       <div className="forecast-grid">
         {/* Painel Esquerdo: Controles e Parâmetros */}
         <div className="forecast-controls-card">
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.03)',
+            padding: '10px 12px',
+            borderRadius: '6px',
+            marginBottom: '1rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            fontSize: '12px',
+            color: '#9ca3af'
+          }}>
+            <span>Patrimônio Atual em Carteira:</span>
+            <strong style={{ color: currentEquity > 0 ? '#04d361' : '#f1f5f9', fontSize: '13px' }}>
+              R$ {Number(currentEquity || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </strong>
+          </div>
+
           <div className="forecast-form-group">
             <label>Horizonte de Tempo: <strong>{months} meses ({(months / 12).toFixed(1)} anos)</strong></label>
             <input

@@ -34,9 +34,10 @@ export const PortfolioProvider = ({ children }) => {
   const [emergencyConfig, setEmergencyConfig] = useState(() => {
     const saved = localStorage.getItem(`emergencyConfig_${userId}`);
     return saved ? JSON.parse(saved) : {
-      monthlyExpense: 3000,
+      isConfigured: false,
+      monthlyExpense: 0,
       monthsTarget: 6,
-      profileType: 'clt', // 'clt', 'publico', 'autonomo', 'custom'
+      profileType: 'clt', // 'clt', 'publico', 'autonomo', 'empresario', 'custom'
       strategyMode: 'hybrid_70_30', // 'focus_100', 'hybrid_70_30', 'hybrid_50_50', 'free'
       manualReserveBalance: 0
     };
@@ -208,21 +209,30 @@ export const PortfolioProvider = ({ children }) => {
   }, 0);
 
   const totalCurrentReserve = reserveInvestedFromAssets + Number(emergencyConfig.manualReserveBalance || 0);
-  const targetReserveAmount = Number(emergencyConfig.monthlyExpense || 0) * Number(emergencyConfig.monthsTarget || 6);
-  const missingReserveAmount = Math.max(0, targetReserveAmount - totalCurrentReserve);
+  const isConfigured = Boolean(emergencyConfig.isConfigured || (Number(emergencyConfig.monthlyExpense || 0) > 0));
+  const targetReserveAmount = isConfigured 
+    ? Number(emergencyConfig.monthlyExpense || 0) * Number(emergencyConfig.monthsTarget || 6)
+    : 0;
+  const missingReserveAmount = isConfigured 
+    ? Math.max(0, targetReserveAmount - totalCurrentReserve)
+    : 0;
   const reserveCompletionPercent = targetReserveAmount > 0 
     ? Math.min(100, (totalCurrentReserve / targetReserveAmount) * 100) 
-    : 100;
-  const reserveMonthsCovered = emergencyConfig.monthlyExpense > 0 
-    ? (totalCurrentReserve / emergencyConfig.monthlyExpense) 
+    : (totalCurrentReserve > 0 ? 100 : 0);
+  const reserveMonthsCovered = (emergencyConfig.monthlyExpense && Number(emergencyConfig.monthlyExpense) > 0)
+    ? (totalCurrentReserve / Number(emergencyConfig.monthlyExpense)) 
     : 0;
 
-  let reserveStatus = 'critico';
-  if (reserveCompletionPercent >= 100) reserveStatus = 'blindada';
-  else if (reserveCompletionPercent >= 70) reserveStatus = 'quase_blindada';
-  else if (reserveCompletionPercent >= 30) reserveStatus = 'em_construcao';
+  let reserveStatus = 'nao_configurada';
+  if (isConfigured) {
+    if (reserveCompletionPercent >= 100) reserveStatus = 'blindada';
+    else if (reserveCompletionPercent >= 70) reserveStatus = 'quase_blindada';
+    else if (reserveCompletionPercent >= 30) reserveStatus = 'em_construcao';
+    else reserveStatus = 'critico';
+  }
 
   const emergencyReserveSummary = {
+    isConfigured,
     monthlyExpense: Number(emergencyConfig.monthlyExpense || 0),
     monthsTarget: Number(emergencyConfig.monthsTarget || 6),
     profileType: emergencyConfig.profileType || 'clt',

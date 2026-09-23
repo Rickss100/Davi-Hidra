@@ -27,8 +27,8 @@ const ReservaEmergencia = () => {
   } = usePortfolio();
 
   // Estados locais do formulário de configuração da reserva
-  const [monthlyExpense, setMonthlyExpense] = useState(emergencyReserveSummary?.monthlyExpense || 3000);
-  const [monthsTarget, setMonthsTarget] = useState(emergencyReserveSummary?.monthsTarget || 6);
+  const [monthlyExpense, setMonthlyExpense] = useState(emergencyReserveSummary?.monthlyExpense ?? 0);
+  const [monthsTarget, setMonthsTarget] = useState(emergencyReserveSummary?.monthsTarget ?? 6);
   const [profileType, setProfileType] = useState(emergencyReserveSummary?.profileType || 'clt');
   const [strategyMode, setStrategyMode] = useState(emergencyReserveSummary?.strategyMode || 'hybrid_70_30');
   const [manualBalance, setManualBalance] = useState(emergencyReserveSummary?.manualReserveBalance || 0);
@@ -50,8 +50,8 @@ const ReservaEmergencia = () => {
   // Sincronizar com mudanças do context
   useEffect(() => {
     if (emergencyReserveSummary) {
-      setMonthlyExpense(emergencyReserveSummary.monthlyExpense || 3000);
-      setMonthsTarget(emergencyReserveSummary.monthsTarget || 6);
+      setMonthlyExpense(emergencyReserveSummary.monthlyExpense ?? 0);
+      setMonthsTarget(emergencyReserveSummary.monthsTarget ?? 6);
       setProfileType(emergencyReserveSummary.profileType || 'clt');
       setStrategyMode(emergencyReserveSummary.strategyMode || 'hybrid_70_30');
       setManualBalance(emergencyReserveSummary.manualReserveBalance || 0);
@@ -96,7 +96,7 @@ const ReservaEmergencia = () => {
   const missingAmount = Math.max(0, targetReserve - totalReserve);
   const completionPercent = targetReserve > 0 
     ? Math.min(100, (totalReserve / targetReserve) * 100) 
-    : 100;
+    : (totalReserve > 0 ? 100 : 0);
   const monthsCovered = monthlyExpense > 0 ? (totalReserve / monthlyExpense) : 0;
 
   // Projeção de meses restantes para concluir com o aporte informado
@@ -186,6 +186,120 @@ const ReservaEmergencia = () => {
         </div>
       </div>
 
+      {/* Assistente de Cálculo de Perfil (Destaque quando não configurado) */}
+      {(!emergencyReserveSummary?.isConfigured || monthlyExpense === 0) && (
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(4, 211, 97, 0.08) 0%, rgba(56, 189, 248, 0.06) 100%)',
+          border: '1px solid rgba(4, 211, 97, 0.3)',
+          borderRadius: '12px',
+          padding: '20px 24px',
+          marginBottom: '24px'
+        }}>
+          <h3 style={{ margin: '0 0 6px 0', color: '#34d399', fontSize: '17px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            🎯 Calcule sua Reserva de Emergência com base no seu Perfil
+          </h3>
+          <p style={{ margin: '0 0 16px 0', color: '#94a3b8', fontSize: '13px', lineHeight: '1.5' }}>
+            A reserva de emergência não deve ser um valor fixo aleatório: ela depende do seu custo de vida mensal e da sua estabilidade profissional.
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px', marginBottom: '16px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#e2e8f0', marginBottom: '6px' }}>
+                1. Custo de Vida Mensal Essencial (R$)
+              </label>
+              <input
+                type="number"
+                placeholder="Ex: 2500"
+                value={monthlyExpense || ''}
+                onChange={(e) => setMonthlyExpense(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  background: '#121214',
+                  border: '1px solid #323238',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  color: '#fff',
+                  fontSize: '14px',
+                  fontWeight: 700,
+                  outline: 'none'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: '#e2e8f0', marginBottom: '6px' }}>
+                2. Qual a sua estabilidade profissional?
+              </label>
+              <select
+                value={profileType}
+                onChange={(e) => {
+                  const p = e.target.value;
+                  setProfileType(p);
+                  if (p === 'publico') setMonthsTarget(4);
+                  else if (p === 'clt') setMonthsTarget(6);
+                  else if (p === 'autonomo') setMonthsTarget(9);
+                  else if (p === 'empresario') setMonthsTarget(12);
+                }}
+                style={{
+                  width: '100%',
+                  background: '#121214',
+                  border: '1px solid #323238',
+                  borderRadius: '8px',
+                  padding: '10px 14px',
+                  color: '#fff',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="publico">🏛️ Servidor Público Concursado (Sugerido: 3 a 4 meses)</option>
+                <option value="clt">🏢 Funcionário CLT com FGTS (Sugerido: 6 meses)</option>
+                <option value="autonomo">💼 Autônomo / Freelancer / MEI (Sugerido: 9 a 12 meses)</option>
+                <option value="empresario">🚀 Empresário / Dono de Negócio (Sugerido: 12 meses)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', paddingTop: '10px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <div style={{ fontSize: '13px', color: '#cbd5e1' }}>
+              Meta personalizada:{' '}
+              <strong style={{ color: '#04d361', fontSize: '16px' }}>
+                {monthsTarget} meses = R$ {((monthlyExpense || 0) * monthsTarget).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </strong>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (!monthlyExpense || monthlyExpense <= 0) {
+                  alert('Por favor, informe seu custo de vida mensal essencial para calcular a meta.');
+                  return;
+                }
+                handleSaveConfig({
+                  isConfigured: true,
+                  monthlyExpense: Number(monthlyExpense),
+                  monthsTarget: Number(monthsTarget),
+                  profileType
+                });
+              }}
+              style={{
+                background: '#04d361',
+                color: '#000',
+                fontWeight: 700,
+                border: 'none',
+                padding: '10px 18px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '13px'
+              }}
+            >
+              Definir e Salvar Minha Meta
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 2. Grid de Métricas Principais */}
       <div className="reserva-metrics-grid">
         <div className="reserva-metric-card highlight">
@@ -193,8 +307,16 @@ const ReservaEmergencia = () => {
             <span className="metric-label">Meta da Reserva</span>
             <DollarSign size={20} className="metric-icon" />
           </div>
-          <div className="metric-value">R$ {targetReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</div>
-          <div className="metric-footer">{monthsTarget} meses de custo essencial (R$ {Number(monthlyExpense).toFixed(0)}/mês)</div>
+          <div className="metric-value">
+            {monthlyExpense > 0 
+              ? `R$ ${targetReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` 
+              : 'R$ 0,00'}
+          </div>
+          <div className="metric-footer">
+            {monthlyExpense > 0 
+              ? `${monthsTarget} meses de custo essencial (R$ ${Number(monthlyExpense).toFixed(0)}/mês)`
+              : 'Defina seu perfil no assistente acima'}
+          </div>
         </div>
 
         <div className="reserva-metric-card">

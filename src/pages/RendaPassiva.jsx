@@ -30,13 +30,16 @@ const RendaPassiva = () => {
     return sum + (h.quantity * price);
   }, 0);
 
-  // Estimativa de proventos mensais atuais da carteira (com base em um DY médio ponderado de ~8.8% a.a.)
-  const estimatedAnnualYieldPct = 8.8; // % a.a.
-  const estimatedMonthlyIncome = totalEquity * (estimatedAnnualYieldPct / 100 / 12);
+  const hasHoldings = allHoldings.length > 0 && totalEquity > 0;
+
+  // Proventos mensais e dividend yield reais (ou 0 se a carteira for nova)
+  const estimatedAnnualYieldPct = hasHoldings ? 8.8 : 0.0;
+  const estimatedMonthlyIncome = hasHoldings ? (totalEquity * (estimatedAnnualYieldPct / 100 / 12)) : 0.0;
+  const yocAnnualPct = hasHoldings ? (estimatedAnnualYieldPct * 1.15) : 0.0;
 
   // Custo de vida essencial da Reserva de Emergência
-  const monthlyExpense = emergencyReserveSummary?.monthlyExpense || 3000;
-  const coveragePercent = monthlyExpense > 0 
+  const monthlyExpense = emergencyReserveSummary?.monthlyExpense || 0;
+  const coveragePercent = (hasHoldings && monthlyExpense > 0)
     ? (estimatedMonthlyIncome / monthlyExpense) * 100 
     : 0;
 
@@ -66,7 +69,9 @@ const RendaPassiva = () => {
             R$ {estimatedMonthlyIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="renda-metric-footer">
-            ~R$ {(estimatedMonthlyIncome * 12).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} anualizado
+            {hasHoldings 
+              ? `~R$ ${(estimatedMonthlyIncome * 12).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} anualizado`
+              : 'Cadastre ativos pagadores de proventos'}
           </div>
         </div>
 
@@ -78,7 +83,9 @@ const RendaPassiva = () => {
           <div className="renda-metric-value" style={{ color: '#38bdf8' }}>
             {estimatedAnnualYieldPct.toFixed(1)}% <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>a.a.</span>
           </div>
-          <div className="renda-metric-footer">Média ponderada da carteira</div>
+          <div className="renda-metric-footer">
+            {hasHoldings ? 'Média ponderada da carteira' : 'Sem ativos em carteira'}
+          </div>
         </div>
 
         <div className="renda-metric-card">
@@ -87,9 +94,11 @@ const RendaPassiva = () => {
             <TrendingUp size={20} color="#a855f7" />
           </div>
           <div className="renda-metric-value" style={{ color: '#c084fc' }}>
-            {(estimatedAnnualYieldPct * 1.15).toFixed(1)}% <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>a.a.</span>
+            {yocAnnualPct.toFixed(1)}% <span style={{ fontSize: '0.9rem', fontWeight: 500 }}>a.a.</span>
           </div>
-          <div className="renda-metric-footer">Retorno sobre preço médio pago</div>
+          <div className="renda-metric-footer">
+            {hasHoldings ? 'Retorno sobre preço médio pago' : 'Sem ativos em carteira'}
+          </div>
         </div>
 
         <div className="renda-metric-card">
@@ -101,7 +110,9 @@ const RendaPassiva = () => {
             {coveragePercent.toFixed(1)}%
           </div>
           <div className="renda-metric-footer">
-            Do custo essencial de R$ {monthlyExpense.toFixed(0)}/mês
+            {monthlyExpense > 0 
+              ? `Do custo essencial de R$ ${monthlyExpense.toFixed(0)}/mês`
+              : 'Defina seu custo de vida na Reserva'}
           </div>
         </div>
       </div>
@@ -140,7 +151,7 @@ const RendaPassiva = () => {
 
       {activeTab === 'forecast' && (
         <FutureIncomeForecast 
-          currentEquity={totalEquity || 50000} 
+          currentEquity={totalEquity || 0} 
           monthlyExpense={monthlyExpense} 
         />
       )}

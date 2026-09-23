@@ -50,16 +50,22 @@ router.post('/', (req, res) => {
     const total_value = Number(quantity) * Number(price);
     
     // Ensure asset exists (basic check, auto-create stub if doesn't exist)
-    const asset = db.prepare('SELECT code FROM assets WHERE code = ?').get(targetCode);
+    const asset = db.prepare('SELECT code, type FROM assets WHERE code = ?').get(targetCode);
     if (!asset) {
        console.log(`Auto-creating asset ${targetCode} for transaction`);
-       const defaultType = 'acao';
-       const defaultMarket = 'BR';
+       let defaultType = 'acao';
+       const uc = targetCode.toUpperCase();
+       if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || req.body.category === 'fixed') {
+         defaultType = 'RendaFixa';
+       } else if (uc.includes('11') && !uc.includes('34')) {
+         defaultType = 'FII';
+       }
+       const defaultMarket = (req.body.category === 'Stock' || req.body.category === 'REIT') ? 'US' : 'BR';
        
        db.prepare(`
          INSERT INTO assets (code, name, type, market)
          VALUES (?, ?, ?, ?)
-       `).run(targetCode, `Auto-created ${targetCode}`, defaultType, defaultMarket);
+       `).run(targetCode, targetCode, defaultType, defaultMarket);
     }
 
     const stmt = db.prepare(`
@@ -69,7 +75,12 @@ router.post('/', (req, res) => {
     
     const info = stmt.run(targetCode, type, quantity, price, total_value, date, notes, finalUserId);
     
-    const newTransaction = db.prepare('SELECT * FROM transactions WHERE id = ?').get(info.lastInsertRowid);
+    const newTransaction = db.prepare(`
+      SELECT t.*, a.type as category 
+      FROM transactions t 
+      LEFT JOIN assets a ON t.asset_code = a.code 
+      WHERE t.id = ?
+    `).get(info.lastInsertRowid);
     res.status(201).json(newTransaction);
   } catch (error) {
     console.error('Error creating transaction:', error);

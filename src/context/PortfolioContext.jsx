@@ -70,14 +70,15 @@ export const PortfolioProvider = ({ children }) => {
   });
 
   // Helper para normalizar categorias de transações
-  const normalizeCategory = (cat) => {
+  const normalizeCategory = (cat, code) => {
+    if (code && isEmergencyReserveAsset(code)) return 'fixed';
     if (!cat) return null;
     const c = String(cat).toLowerCase();
     if (c.includes('acao') || c.includes('ação')) return 'acoes';
     if (c.includes('fii')) return 'fiis';
     if (c.includes('stock')) return 'stocks';
     if (c.includes('reit')) return 'reits';
-    if (c.includes('renda') || c.includes('fix')) return 'fixed';
+    if (c.includes('renda') || c.includes('fix') || c.includes('cdb') || c.includes('tesouro') || c.includes('lci') || c.includes('lca')) return 'fixed';
     return c;
   };
 
@@ -130,8 +131,8 @@ export const PortfolioProvider = ({ children }) => {
 
     // Process transactions
     transactions.forEach(tx => {
-       const cat = normalizeCategory(tx.category || tx.type || tx.asset_type);
        const targetCode = tx.asset_code || tx.code;
+       const cat = normalizeCategory(tx.category || tx.type || tx.asset_type, targetCode);
        if (cat && targetCode && newHoldings[cat]) {
          const asset = getAsset(cat, targetCode);
          const txQty = Number(tx.quantity);
@@ -191,18 +192,20 @@ export const PortfolioProvider = ({ children }) => {
   // Helper para identificar ativos destinados à Reserva de Emergência
   const isEmergencyReserveAsset = (code) => {
     if (!code) return false;
-    const c = String(code).toUpperCase();
+    const c = String(code).toUpperCase().replace(/[\s\-_]/g, '');
     return c.includes('SELIC') || 
-           c.includes('LIQ_DIARIA') || 
+           c.includes('LIQDIARIA') || 
            c.includes('DIARIA') || 
            c.includes('RESERVA') || 
-           c.includes('CDI_DIARIO') || 
+           c.includes('CDIDIARIO') || 
            c.includes('REMUNERADA') || 
-           c.includes('SOBERANO');
+           c.includes('SOBERANO') ||
+           c.includes('TESOUROSELIC');
   };
 
-  // Cálculo do Resumo da Reserva de Emergência
-  const emergencyReserveAssets = (holdings.fixed || []).filter(h => isEmergencyReserveAsset(h.code));
+  // Cálculo do Resumo da Reserva de Emergência (busca em todas as posições com saldo positivo)
+  const allHoldingsList = Object.values(holdings).flat();
+  const emergencyReserveAssets = allHoldingsList.filter(h => isEmergencyReserveAsset(h.code) && Number(h.quantity) > 0);
   const reserveInvestedFromAssets = emergencyReserveAssets.reduce((sum, h) => {
     const price = h.currentPrice > 0 ? h.currentPrice : (h.averagePrice || 1);
     return sum + (h.quantity * price);
@@ -253,6 +256,10 @@ export const PortfolioProvider = ({ children }) => {
         const payload = { ...transaction, user_id: userId };
         const newTx = await transactionService.create(payload);
         setTransactions(prev => [...prev, newTx]);
+        const fresh = await transactionService.getAll(userId);
+        if (fresh && fresh.length > 0) {
+          setTransactions(fresh);
+        }
     } catch (err) {
         console.error("Failed to add transaction", err);
         alert("Erro ao salvar transação.");

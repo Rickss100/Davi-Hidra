@@ -1,13 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import './ObjectiveWizard.css';
-import { Percent, ArrowLeft } from 'lucide-react';
+import { Percent, ArrowLeft, X } from 'lucide-react';
 import AssetSelectionStep from './AssetSelectionStep';
 import SummaryStep from './SummaryStep';
 
 const ObjectiveWizard = ({ onClose }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 9;
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
 
   // Step 1 State: Fixed vs Variable
   const [rendaFixa, setRendaFixa] = useState(10);
@@ -355,9 +363,13 @@ const ObjectiveWizard = ({ onClose }) => {
   };
 
   return (
-    <div className="wizard-overlay">
-      <div className="wizard-container">
-        <div className="wizard-header">
+    <div 
+      className="wizard-overlay" 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="wizard-container" style={{ cursor: 'default' }}>
+        <div className="wizard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 {currentStep > 1 && (
                     <ArrowLeft 
@@ -368,14 +380,32 @@ const ObjectiveWizard = ({ onClose }) => {
                 )}
                 <h2>Adicionar objetivo</h2>
             </div>
-          <div className="step-indicators">
-            {Array.from({ length: totalSteps }).map((_, i) => (
-              <div 
-                key={i} 
-                className={`step-dot ${i + 1 === currentStep ? 'active' : ''}`} 
-              />
-            ))}
-          </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div className="step-indicators">
+                {Array.from({ length: totalSteps }).map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={`step-dot ${i + 1 === currentStep ? 'active' : ''}`} 
+                  />
+                ))}
+              </div>
+              <button 
+                type="button" 
+                onClick={onClose} 
+                title="Fechar assistente (Esc)"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <X size={20} />
+              </button>
+            </div>
         </div>
 
         <div className="step-content">

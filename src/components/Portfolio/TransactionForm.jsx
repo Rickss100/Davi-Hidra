@@ -1,10 +1,12 @@
 import { useState, useMemo } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { useToast } from '../../context/ToastContext';
 import { getAssetsByCategory } from '../../data/assets';
 import './Portfolio.css';
 
 const TransactionForm = () => {
   const { addTransaction } = usePortfolio();
+  const { success, error } = useToast();
   const [activeTab, setActiveTab] = useState('buy'); // buy, sell, event
 
   const [formData, setFormData] = useState({
@@ -22,7 +24,10 @@ const TransactionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.code || !formData.quantity || !formData.price) return;
+    if (!formData.code || !formData.quantity || !formData.price) {
+      error('Preencha o código do ativo, quantidade e preço unitário.');
+      return;
+    }
 
     const priceNum = Number(formData.price.replace(',', '.'));
     const qtyNum = Number(formData.quantity);
@@ -38,8 +43,10 @@ const TransactionForm = () => {
     });
 
     // Reset form but keep category/date
+    const actionLabel = activeTab === 'buy' ? 'Aporte' : activeTab === 'sell' ? 'Venda' : 'Evento';
+    const ticker = formData.code.toUpperCase();
     setFormData(prev => ({ ...prev, code: '', quantity: '', price: '' }));
-    alert('Transação registrada com sucesso!');
+    success(`${actionLabel} de ${qtyNum}x ${ticker} registrado com sucesso!`);
   };
 
   const handleChange = (e) => {

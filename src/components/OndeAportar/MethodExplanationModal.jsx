@@ -1,7 +1,16 @@
+import { useEffect } from 'react';
 import { X } from 'lucide-react';
 import './MethodExplanationModal.css';
 
 const MethodExplanationModal = ({ onClose }) => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   const handleDontShowAgain = (e) => {
     if (e.target.checked) {
       localStorage.setItem('hideAM2OWarning', 'true');
@@ -11,11 +20,15 @@ const MethodExplanationModal = ({ onClose }) => {
   };
 
   return (
-    <div className="modal-overlay">
-      <div className="method-modal">
+    <div 
+      className="modal-overlay" 
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      style={{ cursor: 'pointer' }}
+    >
+      <div className="method-modal" style={{ cursor: 'default' }}>
         <div className="method-modal-header">
           <h2>Explicação do método</h2>
-          <button className="btn-close" onClick={onClose}>
+          <button className="btn-close" onClick={onClose} title="Fechar modal (Esc)">
             <X size={20} />
           </button>
         </div>

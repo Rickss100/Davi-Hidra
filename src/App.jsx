@@ -13,6 +13,7 @@ import Resumo from './pages/Resumo';
 import Historico from './pages/Historico';
 import RadarAtivos from './pages/RadarAtivos';
 import AdminUsers from './pages/AdminUsers';
+import Tutorial from './pages/Tutorial';
 import Login from './pages/Login';
 import './App.css';
 
@@ -54,6 +55,7 @@ function App() {
                   <Route path="resumo" element={<Resumo />} />
                   <Route path="historico" element={<Historico />} />
                   <Route path="radar" element={<RadarAtivos />} />
+                  <Route path="tutorial" element={<Tutorial />} />
                   <Route element={<AdminRoute />}>
                     <Route path="admin" element={<AdminUsers />} />
                   </Route>

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Wallet, Target, PiggyBank, Briefcase, FileText, History, TrendingUp, Search, Shield } from 'lucide-react';
+import { LayoutDashboard, Wallet, Target, PiggyBank, Briefcase, FileText, History, TrendingUp, Search, Shield, GraduationCap } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Sidebar.css';
 
@@ -19,6 +19,7 @@ const Sidebar = () => {
     { name: 'Resumo', path: '/resumo', icon: FileText },
     { name: 'Radar de Ativos', path: '/radar', icon: Search },
     { name: 'Histórico', path: '/historico', icon: History },
+    { name: 'Tutorial & Método', path: '/tutorial', icon: GraduationCap },
   ];
 
   if (user?.role === 'admin') {

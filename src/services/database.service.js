@@ -661,7 +661,7 @@ function getUserByEmail(email) {
 
 function getUserById(id) {
   const db = getDatabase();
-  return db.prepare('SELECT id, email, name, role, status, created_at, updated_at FROM users WHERE id = ?').get(id);
+  return db.prepare('SELECT * FROM users WHERE id = ?').get(id);
 }
 
 function getAllUsers() {
@@ -693,7 +693,7 @@ function createUser({ email, password, name, role = 'user', status = 'active' })
     VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `);
   const info = stmt.run(email, password, name, role, status);
-  const newUser = getUserById(info.lastInsertRowid);
+  const newUser = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
   
   // Sincronizar criação na nuvem Turso se ativo
   syncUserToTurso(newUser).catch(err => console.warn('⚠️ Turso syncUser error:', err.message));
@@ -718,7 +718,7 @@ function updateUser(id, { name, email, password, role, status }) {
     WHERE id = ?
   `).run(newName, newEmail, newPassword, newRole, newStatus, id);
 
-  const updatedUser = getUserById(id);
+  const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
 
   // Sincronizar atualização na nuvem Turso se ativo
   syncUserToTurso(updatedUser).catch(err => console.warn('⚠️ Turso syncUserUpdate error:', err.message));

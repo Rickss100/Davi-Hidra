@@ -67,10 +67,9 @@ router.post('/register', async (req, res) => {
 
     // ✅ Aguardar confirmação síncrona no Turso antes de retornar
     try {
-      await syncUserToTurso(newUser);
+      await syncUserToTurso({ ...newUser, password: password.trim() });
     } catch (tursoErr) {
       console.error('⚠️ Falha ao sincronizar novo usuário no Turso:', tursoErr.message);
-      // Não bloquear o cadastro — usuário existe no local; startup sync vai tentar de novo
     }
 
     const { password: _, ...userSafe } = newUser;
@@ -120,7 +119,7 @@ router.post('/', async (req, res) => {
 
     // ✅ Aguardar confirmação síncrona no Turso antes de retornar
     try {
-      await syncUserToTurso(newUser);
+      await syncUserToTurso({ ...newUser, password: password.trim() });
     } catch (tursoErr) {
       console.error('⚠️ Falha ao sincronizar novo usuário (admin) no Turso:', tursoErr.message);
     }

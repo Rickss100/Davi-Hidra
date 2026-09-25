@@ -288,15 +288,20 @@ export async function syncUserToTurso(user) {
     return;
   }
 
+  // Garantir que campos obrigatórios nunca sejam undefined ou null
+  const passwordVal = user.password && String(user.password).trim() !== '' ? String(user.password).trim() : '123';
+  const emailVal = String(user.email).trim();
+  const nameVal = String(user.name).trim();
+
   try {
     await client.execute({
       sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         user.id,
-        user.email,
-        user.password,
-        user.name,
+        emailVal,
+        passwordVal,
+        nameVal,
         user.role || 'user',
         user.status || 'active',
         user.created_at || new Date().toISOString(),

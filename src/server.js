@@ -90,10 +90,15 @@ if (fs.existsSync(DIST_DIR)) {
 const localDb = initDatabase();
 console.log('✅ Database initialized');
 
-// Background sync with Turso Cloud (se configurado)
-syncWithTursoOnStartup(localDb).catch(err => {
-  console.warn('⚠️ Falha de sincronização com Turso no startup:', err.message);
-});
+// ✅ AGUARDAR o sync com Turso antes de abrir o servidor para requisições
+// Isso garante que os dados do Turso estão restaurados no banco local
+// antes de qualquer usuário conseguir acessar a API
+console.log('☁️ Aguardando sincronização com Turso Cloud...');
+try {
+  await syncWithTursoOnStartup(localDb);
+} catch (err) {
+  console.warn('⚠️ Falha de sincronização com Turso no startup (continuando):', err.message);
+}
 
 // Routes - only register if loaded successfully
 if (testRoutes) app.use('/api/test', testRoutes);
@@ -150,7 +155,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
+// ✅ Só inicia o servidor APÓS o sync com Turso estar completo
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 API endpoints available at /api`);

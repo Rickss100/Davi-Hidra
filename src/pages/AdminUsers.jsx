@@ -241,15 +241,47 @@ const AdminUsers = () => {
           <div>
             <strong>Persistência em Nuvem: </strong>
             {tursoStatus?.connected ? (
-              <span>Turso Cloud conectado e ativo. Seus dados e cadastros estão salvos de forma definitiva.</span>
+              <span>
+                Turso Cloud conectado e ativo. 
+                {tursoStatus.tursoUsersCount !== undefined ? (
+                  <strong> ({tursoStatus.tursoUsersCount} investidores salvos na nuvem)</strong>
+                ) : null}
+              </span>
             ) : (
               <span>Armazenamento local ativo. Para sincronização contínua entre deploys no Render, vincule as variáveis <code>TURSO_DATABASE_URL</code> e <code>TURSO_AUTH_TOKEN</code>.</span>
             )}
           </div>
         </div>
-        <div className={`turso-status-badge ${tursoStatus?.connected ? 'connected' : 'pending'}`}>
-          <Database size={12} />
-          <span>{tursoStatus?.connected ? 'Nuvem Conectada' : 'Modo Local'}</span>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {tursoStatus?.connected && (
+            <button 
+              className="btn-refresh" 
+              style={{ padding: '4px 10px', fontSize: '0.8rem', height: '28px', background: 'rgba(255,255,255,0.08)' }}
+              title="Forçar sincronização com a Nuvem agora"
+              onClick={async () => {
+                try {
+                  const res = await fetch('/api/admin/turso-force-sync', { method: 'POST' });
+                  const data = await res.json();
+                  if (data.success) {
+                    success('Nuvem e banco local sincronizados com sucesso!');
+                    loadUsers();
+                    checkTursoStatus();
+                  } else {
+                    showError(data.error || 'Falha ao sincronizar com a nuvem.');
+                  }
+                } catch (err) {
+                  showError('Erro de conexão ao sincronizar.');
+                }
+              }}
+            >
+              <RefreshCw size={12} />
+              <span>Sincronizar Nuvem</span>
+            </button>
+          )}
+          <div className={`turso-status-badge ${tursoStatus?.connected ? 'connected' : 'pending'}`}>
+            <Database size={12} />
+            <span>{tursoStatus?.connected ? 'Nuvem Conectada' : 'Modo Local'}</span>
+          </div>
         </div>
       </div>
 

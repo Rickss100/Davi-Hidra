@@ -98,15 +98,19 @@ router.post('/', async (req, res) => {
 });
 
 // DELETE /api/transactions/:id - Remove transaction
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
+    // 1. Sincronizar remoção na nuvem Turso primeiro se ativo
+    try {
+      await syncTransactionDeleteToTurso(req.params.id);
+    } catch (tursoErr) {
+      console.warn('⚠️ Turso syncTransactionDelete error:', tursoErr.message);
+    }
+
     const info = db.prepare('DELETE FROM transactions WHERE id = ?').run(req.params.id);
     if (info.changes === 0) {
       return res.status(404).json({ error: 'Transaction not found' });
     }
-
-    // Sincronizar remoção na nuvem Turso se ativo
-    syncTransactionDeleteToTurso(req.params.id).catch(err => console.warn('⚠️ Turso syncTransactionDelete error:', err.message));
 
     res.json({ message: 'Transaction deleted' });
   } catch (error) {

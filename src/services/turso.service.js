@@ -16,6 +16,15 @@ if (fs.existsSync('.env') && typeof process.loadEnvFile === 'function') {
   }
 }
 
+function cleanEnv(val) {
+  if (!val) return null;
+  let clean = String(val).trim();
+  if ((clean.startsWith('"') && clean.endsWith('"')) || (clean.startsWith("'") && clean.endsWith("'"))) {
+    clean = clean.slice(1, -1).trim();
+  }
+  return clean;
+}
+
 let tursoClient = null;
 let isConfigured = false;
 
@@ -23,8 +32,8 @@ let isConfigured = false;
  * Inicializa e obtém o cliente Turso se as variáveis de ambiente existirem
  */
 export function getTursoClient() {
-  const url = process.env.TURSO_DATABASE_URL;
-  const authToken = process.env.TURSO_AUTH_TOKEN;
+  const url = cleanEnv(process.env.TURSO_DATABASE_URL);
+  const authToken = cleanEnv(process.env.TURSO_AUTH_TOKEN);
 
   if (!url || !authToken) {
     return null;
@@ -47,7 +56,7 @@ export function getTursoClient() {
 }
 
 /**
- * Retorna o status de conexão com o Turso
+ * Retorna o status de conexão com o Turso, incluindo contagem real de usuários na nuvem
  */
 export async function getTursoStatus() {
   const client = getTursoClient();
@@ -61,10 +70,14 @@ export async function getTursoStatus() {
 
   try {
     const res = await client.execute('SELECT 1 as connected');
+    const usersCount = await client.execute('SELECT COUNT(*) as total FROM users');
+    const txCount = await client.execute('SELECT COUNT(*) as total FROM transactions');
     return {
       configured: true,
       connected: res.rows.length > 0,
-      url: process.env.TURSO_DATABASE_URL,
+      url: process.env.TURSO_DATABASE_URL ? process.env.TURSO_DATABASE_URL.split('@').pop() : '',
+      tursoUsersCount: Number(usersCount.rows[0]?.total || 0),
+      tursoTxCount: Number(txCount.rows[0]?.total || 0),
       message: 'Conectado ao Turso Cloud com sucesso.'
     };
   } catch (err) {
@@ -112,11 +125,14 @@ async function ensureTursoSchema(client) {
 
 /**
  * Sincronização executada no startup do servidor.
- * Realiza MERGE BIDIRECIONAL:
- *  - Usuários/transações que estão no Turso mas não no local → criados no local
- *  - Usuários/transações que estão no local mas não no Turso → empurrados para o Turso
- * Isso garante que novos cadastros que não chegaram ao Turso sejam recuperados
- * via seed na próxima inicialização, e que dados do Turso sejam restaurados localmente.
+ * 
+ * Regra de Ouro (Single Source of Truth):
+ * - Se o Turso já possuir usuários: o Turso é a autoridade central!
+ *   1. Todos os usuários/transações do Turso são restaurados/atualizados no banco local.
+ *   2. Usuários/transações do banco local que NÃO existem no Turso são removidos do local
+ *      (evita que usuários excluídos pelo admin ressurjam a partir do seed-investment-data.db).
+ * - Se o Turso estiver completamente vazio:
+ *   1. Migra os dados iniciais do banco local para o Turso (apenas primeira inicialização).
  */
 export async function syncWithTursoOnStartup(localDb) {
   const client = getTursoClient();
@@ -126,22 +142,41 @@ export async function syncWithTursoOnStartup(localDb) {
   }
 
   try {
-    console.log('☁️ Sincronizando com Turso Cloud (merge bidirecional)...');
+    console.log('☁️ Sincronizando com Turso Cloud (Autoridade Central)...');
     await ensureTursoSchema(client);
 
     // ────────────────────────────────────────
-    // USUÁRIOS — Merge bidirecional
+    // USUÁRIOS
     // ────────────────────────────────────────
-    const tursoUsersResult = await client.execute('SELECT * FROM users');
+    const tursoUsersResult = await client.execute('SELECT * FROM users ORDER BY id');
     const tursoUsers = tursoUsersResult.rows;
     const localUsers = localDb.prepare('SELECT * FROM users').all();
 
-    const tursoUserIds = new Set(tursoUsers.map(u => Number(u.id)));
-    const localUserIds = new Set(localUsers.map(u => Number(u.id)));
-
-    // 1a. Usuários do Turso → restaurar/atualizar no local
-    if (tursoUsers.length > 0) {
+    if (tursoUsers.length === 0 && localUsers.length > 0) {
+      // Primeira inicialização: Nuvem vazia → Migra local para Turso
+      console.log(`☁️ Nuvem vazia. Migrando ${localUsers.length} usuários locais para o Turso...`);
+      for (const u of localUsers) {
+        await client.execute({
+          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [u.id, u.email, u.password, u.name, u.role, u.status,
+                 u.created_at || new Date().toISOString(), u.updated_at || new Date().toISOString()]
+        });
+      }
+    } else if (tursoUsers.length > 0) {
+      // Nuvem tem dados: Turso manda!
       console.log(`☁️ Restaurando ${tursoUsers.length} usuários do Turso para o banco local...`);
+      const tursoUserIds = new Set(tursoUsers.map(u => Number(u.id)));
+
+      // 1. Remover do banco local os usuários excluídos (fantasmas do seed)
+      for (const lu of localUsers) {
+        if (!tursoUserIds.has(Number(lu.id))) {
+          console.log(`   🗑️ Removendo usuário residual #${lu.id} (${lu.name}) do banco local...`);
+          localDb.prepare('DELETE FROM users WHERE id = ?').run(lu.id);
+        }
+      }
+
+      // 2. Inserir/Atualizar no banco local todos os usuários da nuvem
       const upsertLocal = localDb.prepare(`
         INSERT INTO users (id, email, password, name, role, status, created_at, updated_at)
         VALUES (@id, @email, @password, @name, @role, @status, @created_at, @updated_at)
@@ -172,37 +207,36 @@ export async function syncWithTursoOnStartup(localDb) {
       }
     }
 
-    // 1b. Usuários do local que NÃO estão no Turso → empurrar para o Turso
-    const usersOnlyLocal = localUsers.filter(u => !tursoUserIds.has(Number(u.id)));
-    if (usersOnlyLocal.length > 0) {
-      console.log(`☁️ Enviando ${usersOnlyLocal.length} usuário(s) local(is) para o Turso...`);
-      for (const u of usersOnlyLocal) {
-        try {
-          await client.execute({
-            sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-            args: [u.id, u.email, u.password, u.name, u.role, u.status,
-                   u.created_at || new Date().toISOString(), u.updated_at || new Date().toISOString()]
-          });
-          console.log(`   ✅ Usuário #${u.id} (${u.name}) enviado para o Turso.`);
-        } catch (tErr) {
-          console.warn(`   ⚠️ Falha ao enviar usuário #${u.id} para o Turso:`, tErr.message);
-        }
-      }
-    }
-
     // ────────────────────────────────────────
-    // TRANSAÇÕES — Merge bidirecional
+    // TRANSAÇÕES
     // ────────────────────────────────────────
-    const tursoTxResult = await client.execute('SELECT * FROM transactions');
+    const tursoTxResult = await client.execute('SELECT * FROM transactions ORDER BY id');
     const tursoTx = tursoTxResult.rows;
     const localTx = localDb.prepare('SELECT * FROM transactions').all();
 
-    const tursoTxIds = new Set(tursoTx.map(t => Number(t.id)));
-
-    // 2a. Transações do Turso → restaurar/atualizar no local
-    if (tursoTx.length > 0) {
+    if (tursoTx.length === 0 && localTx.length > 0) {
+      // Primeira inicialização: Nuvem vazia → Migra local para Turso
+      console.log(`☁️ Nuvem vazia. Migrando ${localTx.length} transações locais para o Turso...`);
+      for (const t of localTx) {
+        await client.execute({
+          sql: `INSERT OR REPLACE INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [t.id, t.asset_code, t.type, t.quantity, t.price, t.total_value,
+                 t.date, t.notes || null, t.created_at || new Date().toISOString(), t.user_id || 1]
+        });
+      }
+    } else if (tursoTx.length > 0) {
       console.log(`☁️ Restaurando ${tursoTx.length} transações do Turso para o banco local...`);
+      const tursoTxIds = new Set(tursoTx.map(t => Number(t.id)));
+
+      // 1. Remover do banco local transações que não existem na nuvem
+      for (const lt of localTx) {
+        if (!tursoTxIds.has(Number(lt.id))) {
+          localDb.prepare('DELETE FROM transactions WHERE id = ?').run(lt.id);
+        }
+      }
+
+      // 2. Inserir/Atualizar do Turso para o local
       const upsertLocalTx = localDb.prepare(`
         INSERT INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
         VALUES (@id, @asset_code, @type, @quantity, @price, @total_value, @date, @notes, @created_at, @user_id)
@@ -237,26 +271,7 @@ export async function syncWithTursoOnStartup(localDb) {
       }
     }
 
-    // 2b. Transações do local que NÃO estão no Turso → empurrar para o Turso
-    const txOnlyLocal = localTx.filter(t => !tursoTxIds.has(Number(t.id)));
-    if (txOnlyLocal.length > 0) {
-      console.log(`☁️ Enviando ${txOnlyLocal.length} transação(ões) local(is) para o Turso...`);
-      for (const t of txOnlyLocal) {
-        try {
-          await client.execute({
-            sql: `INSERT OR REPLACE INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            args: [t.id, t.asset_code, t.type, t.quantity, t.price, t.total_value,
-                   t.date, t.notes || null, t.created_at || new Date().toISOString(), t.user_id || 1]
-          });
-        } catch (tErr) {
-          console.warn(`   ⚠️ Falha ao enviar transação #${t.id} para o Turso:`, tErr.message);
-        }
-      }
-    }
-
-    const totalTursoUsers = tursoUsers.length + usersOnlyLocal.length;
-    console.log(`✅ Sync concluído! Turso: ${tursoUsers.length} usuários | Local: ${localUsers.length} | Enviados ao Turso: ${usersOnlyLocal.length}`);
+    console.log(`✅ Sincronização com Turso concluída com sucesso! (Nuvem: ${tursoUsers.length} usuários, ${tursoTx.length} transações)`);
   } catch (error) {
     console.error('⚠️ Falha ao sincronizar com Turso Cloud no startup:', error.message);
   }
@@ -268,7 +283,10 @@ export async function syncWithTursoOnStartup(localDb) {
  */
 export async function syncUserToTurso(user) {
   const client = getTursoClient();
-  if (!client || !user) return;
+  if (!client || !user) {
+    console.warn('⚠️ syncUserToTurso ignorado: cliente Turso ou usuário ausente.');
+    return;
+  }
 
   try {
     await client.execute({
@@ -285,9 +303,10 @@ export async function syncUserToTurso(user) {
         new Date().toISOString()
       ]
     });
-    console.log(`☁️ Usuário #${user.id} (${user.name}) sincronizado no Turso.`);
+    console.log(`☁️ Usuário #${user.id} (${user.name}) sincronizado com sucesso no Turso.`);
   } catch (err) {
-    console.error(`⚠️ Erro ao sincronizar usuário no Turso:`, err.message);
+    console.error(`❌ Erro ao sincronizar usuário #${user?.id} no Turso:`, err.message);
+    throw err;
   }
 }
 
@@ -299,18 +318,20 @@ export async function syncUserDeleteToTurso(userId) {
   if (!client) return;
 
   try {
-    await client.execute({
-      sql: 'DELETE FROM users WHERE id = ?',
-      args: [userId]
-    });
-    // Remove também as transações associadas
+    // Remove as transações do usuário primeiro
     await client.execute({
       sql: 'DELETE FROM transactions WHERE user_id = ?',
       args: [userId]
     });
-    console.log(`☁️ Usuário #${userId} removido do Turso.`);
+    // Remove o usuário
+    await client.execute({
+      sql: 'DELETE FROM users WHERE id = ?',
+      args: [userId]
+    });
+    console.log(`☁️ Usuário #${userId} removido com sucesso do Turso.`);
   } catch (err) {
-    console.error(`⚠️ Erro ao remover usuário no Turso:`, err.message);
+    console.error(`❌ Erro ao remover usuário #${userId} no Turso:`, err.message);
+    throw err;
   }
 }
 
@@ -338,9 +359,10 @@ export async function syncTransactionToTurso(tx) {
         tx.user_id || 1
       ]
     });
-    console.log(`☁️ Transação #${tx.id} sincronizada no Turso.`);
+    console.log(`☁️ Transação #${tx.id} sincronizada com sucesso no Turso.`);
   } catch (err) {
-    console.error(`⚠️ Erro ao sincronizar transação no Turso:`, err.message);
+    console.error(`❌ Erro ao sincronizar transação #${tx?.id} no Turso:`, err.message);
+    throw err;
   }
 }
 
@@ -356,8 +378,60 @@ export async function syncTransactionDeleteToTurso(txId) {
       sql: 'DELETE FROM transactions WHERE id = ?',
       args: [txId]
     });
-    console.log(`☁️ Transação #${txId} removida do Turso.`);
+    console.log(`☁️ Transação #${txId} removida com sucesso do Turso.`);
   } catch (err) {
-    console.error(`⚠️ Erro ao remover transação no Turso:`, err.message);
+    console.error(`❌ Erro ao remover transação #${txId} no Turso:`, err.message);
+    throw err;
+  }
+}
+
+/**
+ * Diagnóstico completo para conferência administrativa
+ */
+export async function getTursoDiagnostics(localDb) {
+  const client = getTursoClient();
+  if (!client) {
+    return {
+      configured: false,
+      message: 'Turso não configurado'
+    };
+  }
+
+  try {
+    const tursoUsers = await client.execute('SELECT id, email, name, role, status FROM users ORDER BY id');
+    const localUsers = localDb.prepare('SELECT id, email, name, role, status FROM users ORDER BY id').all();
+
+    // Teste de escrita temporária para certificar permissão total
+    let writeOk = false;
+    let writeError = null;
+    const testId = 999999;
+    try {
+      await client.execute({
+        sql: 'INSERT OR REPLACE INTO users (id, email, password, name, role, status) VALUES (?, ?, ?, ?, ?, ?)',
+        args: [testId, '__diag_test@davi.local', '123', 'Diag Test', 'user', 'active']
+      });
+      await client.execute({
+        sql: 'DELETE FROM users WHERE id = ?',
+        args: [testId]
+      });
+      writeOk = true;
+    } catch (wErr) {
+      writeError = wErr.message;
+    }
+
+    return {
+      configured: true,
+      writePermission: writeOk,
+      writeError,
+      tursoUsersCount: tursoUsers.rows.length,
+      localUsersCount: localUsers.length,
+      tursoUsers: tursoUsers.rows,
+      localUsers: localUsers
+    };
+  } catch (err) {
+    return {
+      configured: true,
+      error: err.message
+    };
   }
 }

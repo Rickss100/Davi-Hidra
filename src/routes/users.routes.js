@@ -136,7 +136,7 @@ router.post('/', async (req, res) => {
 });
 
 // PUT /api/users/:id - Update user details, login, password, status (Superuser Admin)
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, password, role, status } = req.body;
@@ -154,6 +154,13 @@ router.put('/:id', (req, res) => {
       return res.status(404).json({ error: 'Usuário não encontrado.' });
     }
 
+    // ✅ Aguardar confirmação de atualização no Turso
+    try {
+      await syncUserToTurso(updated);
+    } catch (tursoErr) {
+      console.warn('⚠️ Falha ao atualizar usuário no Turso:', tursoErr.message);
+    }
+
     res.json({
       message: 'Usuário atualizado com sucesso!',
       user: updated
@@ -165,10 +172,25 @@ router.put('/:id', (req, res) => {
 });
 
 // DELETE /api/users/:id - Delete user (Superuser Admin)
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Não permitir deletar o id 1 (Super Admin inicial)
+    if (Number(id) === 1) {
+      return res.status(400).json({ error: 'Não é permitido excluir o Administrador principal.' });
+    }
+
+    // 1. Deletar do Turso primeiro para garantir persistência na nuvem
+    try {
+      await syncUserDeleteToTurso(id);
+    } catch (tursoErr) {
+      console.warn('⚠️ Falha ao remover usuário no Turso:', tursoErr.message);
+    }
+
+    // 2. Deletar do SQLite local
     deleteUser(id);
+
     res.json({ message: 'Usuário excluído com sucesso.' });
   } catch (error) {
     console.error('Error deleting user:', error);

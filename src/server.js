@@ -9,7 +9,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { initDatabase, getDatabase } from './services/database.service.js';
-import { syncWithTursoOnStartup, getTursoStatus } from './services/turso.service.js';
+import { syncWithTursoOnStartup, getTursoStatus, getTursoDiagnostics } from './services/turso.service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -125,6 +125,27 @@ app.get('/api/admin/turso-status', async (req, res) => {
     res.json(status);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Turso Cloud Diagnostics detalhado
+app.get('/api/admin/turso-diagnostics', async (req, res) => {
+  try {
+    const diag = await getTursoDiagnostics(localDb);
+    res.json(diag);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Forçar ressincronização completa com o Turso Cloud sob demanda
+app.post('/api/admin/turso-force-sync', async (req, res) => {
+  try {
+    await syncWithTursoOnStartup(localDb);
+    const status = await getTursoStatus();
+    res.json({ success: true, message: 'Sincronização forçada concluída com sucesso!', status });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 

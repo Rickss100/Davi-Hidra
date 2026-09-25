@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { userService } from '../services/userService';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { 
   Users, 
@@ -18,7 +19,9 @@ import {
   TrendingUp,
   Clock,
   Cloud,
-  Database
+  Database,
+  Calendar,
+  Lock
 } from 'lucide-react';
 import './AdminUsers.css';
 
@@ -27,18 +30,52 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   
+  const { user: currentUser } = useAuth();
+  const isCurrentUserCollaborator = currentUser?.role === 'collaborator';
+
   // Modais
-  const [editingUser, setEditingUser] = useState(null); // { id, name, email, password, role, status }
+  const [editingUser, setEditingUser] = useState(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [inspectingUser, setInspectingUser] = useState(null); // dados do portfolio do usuário
+  const [inspectingUser, setInspectingUser] = useState(null);
   const [inspectLoading, setInspectLoading] = useState(false);
 
   // Form states
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'user', status: 'active' });
+  const initialForm = { 
+    name: '', 
+    email: '', 
+    password: '', 
+    role: 'user', 
+    status: 'active',
+    plan_period: 'lifetime',
+    plan_expires_at: ''
+  };
+  const [formData, setFormData] = useState(initialForm);
   const [showPasswords, setShowPasswords] = useState({});
   const [tursoStatus, setTursoStatus] = useState(null);
 
   const { success, error: showError } = useToast();
+
+  const calculateExpiryDate = (period) => {
+    if (!period || period === 'lifetime') return '';
+    const d = new Date();
+    if (period === '1_month') d.setMonth(d.getMonth() + 1);
+    else if (period === '3_months') d.setMonth(d.getMonth() + 3);
+    else if (period === '6_months') d.setMonth(d.getMonth() + 6);
+    else if (period === '1_year') d.setFullYear(d.getFullYear() + 1);
+    return d.toISOString().split('T')[0];
+  };
+
+  const getPeriodLabel = (period) => {
+    switch (period) {
+      case '1_month': return '1 Mês';
+      case '3_months': return '3 Meses';
+      case '6_months': return '6 Meses';
+      case '1_year': return '1 Ano';
+      case 'lifetime':
+      default:
+        return 'Vitalício';
+    }
+  };
 
   const loadUsers = async () => {
     setLoading(true);
@@ -76,13 +113,20 @@ const AdminUsers = () => {
 
   // Abrir modal de edição
   const handleOpenEdit = (user) => {
+    if (isCurrentUserCollaborator && (user.role === 'admin' || user.id === 1)) {
+      showError('Colaboradores não têm permissão para editar contas de Administradores.');
+      return;
+    }
+
     setEditingUser(user);
     setFormData({
       name: user.name,
       email: user.email,
       password: user.password || '',
-      role: user.role,
-      status: user.status
+      role: user.role || 'user',
+      status: user.status || 'active',
+      plan_period: user.plan_period || 'lifetime',
+      plan_expires_at: user.plan_expires_at ? user.plan_expires_at.split('T')[0] : ''
     });
   };
 
@@ -90,7 +134,11 @@ const AdminUsers = () => {
   const handleSaveEdit = async (e) => {
     e.preventDefault();
     try {
-      await userService.update(editingUser.id, formData);
+      const payload = {
+        ...formData,
+        plan_expires_at: formData.plan_period === 'lifetime' ? null : (formData.plan_expires_at || null)
+      };
+      await userService.update(editingUser.id, payload);
       success(`Usuário ${formData.name} atualizado com sucesso!`);
       setEditingUser(null);
       loadUsers();
@@ -104,10 +152,14 @@ const AdminUsers = () => {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     try {
-      await userService.create(formData);
+      const payload = {
+        ...formData,
+        plan_expires_at: formData.plan_period === 'lifetime' ? null : (formData.plan_expires_at || null)
+      };
+      await userService.create(payload);
       success('Novo usuário cadastrado com sucesso!');
       setIsCreateOpen(false);
-      setFormData({ name: '', email: '', password: '', role: 'user', status: 'active' });
+      setFormData(initialForm);
       loadUsers();
     } catch (err) {
       console.error('Erro ao criar usuário:', err);
@@ -115,12 +167,23 @@ const AdminUsers = () => {
     }
   };
 
-  // Alternar status ativo/inativo
+  // Alternar status ativo/suspenso/inativo
   const handleToggleStatus = async (user) => {
-    const newStatus = user.status === 'active' ? 'inactive' : 'active';
+    if (isCurrentUserCollaborator && (user.role === 'admin' || user.id === 1)) {
+      showError('Colaboradores não têm permissão para alterar status de Administradores.');
+      return;
+    }
+
+    let nextStatus = 'active';
+    if (user.status === 'active') nextStatus = 'suspended';
+    else if (user.status === 'suspended') nextStatus = 'inactive';
+    else nextStatus = 'active';
+
+    const statusNames = { active: 'Ativo', suspended: 'Suspenso', inactive: 'Inativo' };
+
     try {
-      await userService.update(user.id, { status: newStatus });
-      success(`Status do usuário ${user.name} alterado para ${newStatus === 'active' ? 'Ativo' : 'Inativo'}.`);
+      await userService.update(user.id, { status: nextStatus });
+      success(`Status do usuário ${user.name} alterado para ${statusNames[nextStatus]}.`);
       loadUsers();
     } catch (err) {
       showError(err.message || 'Erro ao alterar status.');
@@ -131,6 +194,11 @@ const AdminUsers = () => {
   const handleDeleteUser = async (user) => {
     if (user.id === 1) {
       showError('Não é permitido excluir o Administrador principal.');
+      return;
+    }
+
+    if (isCurrentUserCollaborator && user.role === 'admin') {
+      showError('Colaboradores não têm permissão para excluir Administradores.');
       return;
     }
 
@@ -170,7 +238,9 @@ const AdminUsers = () => {
   );
 
   const totalUsers = users.length;
-  const activeUsers = users.filter(u => u.status === 'active').length;
+  const activeUsers = users.filter(u => u.status === 'active' && !u.isPlanExpired).length;
+  const suspendedUsers = users.filter(u => u.status === 'suspended' || (u.status === 'active' && u.isPlanExpired)).length;
+  const inactiveUsers = users.filter(u => u.status === 'inactive').length;
   const totalVolume = users.reduce((sum, u) => sum + (Number(u.total_volume) || 0), 0);
   const totalTransactions = users.reduce((sum, u) => sum + (Number(u.total_transactions) || 0), 0);
 
@@ -183,8 +253,12 @@ const AdminUsers = () => {
             <Shield size={24} />
           </div>
           <div>
-            <h1>Painel do Superusuário</h1>
-            <p>Gerencie todos os investidores, credenciais de acesso e audite o banco de dados.</p>
+            <h1>{isCurrentUserCollaborator ? 'Painel de Suporte & Gestão (TI)' : 'Painel do Superusuário'}</h1>
+            <p>
+              {isCurrentUserCollaborator 
+                ? 'Atendimento a investidores: alteração de senhas, inclusão de usuários e auditoria de carteiras.'
+                : 'Gerencie investidores, colaboradores, planos de renovação e audite o banco de dados.'}
+            </p>
           </div>
         </div>
 
@@ -195,7 +269,7 @@ const AdminUsers = () => {
           <button 
             className="btn-create" 
             onClick={() => {
-              setFormData({ name: '', email: '', password: '', role: 'user', status: 'active' });
+              setFormData(initialForm);
               setIsCreateOpen(true);
             }}
           >
@@ -215,8 +289,10 @@ const AdminUsers = () => {
 
         <div className="admin-stat-card">
           <div className="stat-label">Status da Base</div>
-          <div className="stat-value text-emerald">{activeUsers}/{totalUsers}</div>
-          <div className="stat-hint">{totalUsers - activeUsers} contas inativas</div>
+          <div className="stat-value text-emerald">
+            {activeUsers} <span style={{ fontSize: '0.8rem', color: '#fbbf24' }}>({suspendedUsers} suspensos)</span>
+          </div>
+          <div className="stat-hint">{inactiveUsers} desfiliações / inativos</div>
         </div>
 
         <div className="admin-stat-card">
@@ -319,6 +395,7 @@ const AdminUsers = () => {
                 <th>Login / E-mail</th>
                 <th>Senha</th>
                 <th>Perfil</th>
+                <th>Plano & Validade</th>
                 <th>Status</th>
                 <th>Transações</th>
                 <th>Ações</th>
@@ -327,12 +404,15 @@ const AdminUsers = () => {
             <tbody>
               {filteredUsers.map((u) => {
                 const isPassVisible = showPasswords[u.id];
+                const isUserAdmin = u.role === 'admin';
+                const cannotModify = isCurrentUserCollaborator && (isUserAdmin || u.id === 1);
+
                 return (
                   <tr key={u.id} className={u.status === 'inactive' ? 'row-inactive' : ''}>
                     <td className="col-id">#{u.id}</td>
                     <td className="col-name font-bold">
                       <div className="user-name-cell">
-                        <div className={`user-avatar ${u.role === 'admin' ? 'avatar-admin' : ''}`}>
+                        <div className={`user-avatar ${isUserAdmin ? 'avatar-admin' : ''}`}>
                           {u.name?.charAt(0).toUpperCase() || 'U'}
                         </div>
                         <div>
@@ -357,17 +437,31 @@ const AdminUsers = () => {
                       </div>
                     </td>
                     <td>
-                      <span className={`role-badge ${u.role === 'admin' ? 'role-admin' : 'role-user'}`}>
-                        {u.role === 'admin' ? '👑 Admin' : '👤 Investidor'}
+                      <span className={`role-badge role-${u.role || 'user'}`}>
+                        {u.role === 'admin' ? '👑 Admin' : u.role === 'collaborator' ? '🛠️ Colaborador' : '👤 Investidor'}
                       </span>
                     </td>
                     <td>
+                      <div className="plan-info-cell">
+                        <span className="plan-period-badge">
+                          {getPeriodLabel(u.plan_period)}
+                        </span>
+                        {u.plan_period !== 'lifetime' && u.plan_expires_at && (
+                          <span className={`plan-expiry-date ${u.isPlanExpired ? 'plan-expired-warning' : ''}`}>
+                            {u.isPlanExpired ? '⚠️ Expirou em: ' : 'Expira: '}
+                            {new Date(u.plan_expires_at).toLocaleDateString('pt-BR')}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td>
                       <button 
-                        className={`status-badge ${u.status === 'active' ? 'status-active' : 'status-inactive'}`}
+                        className={`status-badge status-${u.status || 'active'}`}
                         onClick={() => handleToggleStatus(u)}
-                        title="Clique para alternar o status do usuário"
+                        disabled={cannotModify}
+                        title={cannotModify ? 'Colaboradores não podem alterar status de administradores' : 'Clique para alternar o status (Ativo / Suspenso / Inativo)'}
                       >
-                        {u.status === 'active' ? '● Ativo' : '○ Inativo'}
+                        {u.status === 'active' ? '● Ativo' : u.status === 'suspended' ? '⏸ Suspenso' : '○ Inativo'}
                       </button>
                     </td>
                     <td>
@@ -388,12 +482,14 @@ const AdminUsers = () => {
                         <button 
                           className="btn-action btn-edit" 
                           onClick={() => handleOpenEdit(u)}
-                          title="Alterar Login, Senha e Dados"
+                          disabled={cannotModify}
+                          title={cannotModify ? 'Apenas o Superusuário pode alterar esta conta' : 'Alterar Login, Senha, Papel e Plano'}
+                          style={cannotModify ? { opacity: 0.35, cursor: 'not-allowed' } : {}}
                         >
                           <Edit3 size={15} />
                         </button>
 
-                        {u.id !== 1 && (
+                        {!cannotModify && u.id !== 1 && (
                           <button 
                             className="btn-action btn-delete" 
                             onClick={() => handleDeleteUser(u)}
@@ -417,7 +513,7 @@ const AdminUsers = () => {
         <div className="modal-overlay">
           <div className="modal-card">
             <div className="modal-header">
-              <h2>Alterar Login e Senha</h2>
+              <h2>Editar Usuário: {editingUser.name}</h2>
               <button className="btn-close" onClick={() => setEditingUser(null)}>✕</button>
             </div>
             <form onSubmit={handleSaveEdit} className="modal-form">
@@ -462,7 +558,8 @@ const AdminUsers = () => {
                     disabled={editingUser.id === 1}
                   >
                     <option value="user">Investidor Padrão</option>
-                    <option value="admin">Administrador (Superusuário)</option>
+                    <option value="collaborator">Colaborador (TI / Suporte)</option>
+                    {!isCurrentUserCollaborator && <option value="admin">Administrador Superusuário</option>}
                   </select>
                 </div>
 
@@ -473,10 +570,46 @@ const AdminUsers = () => {
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                     disabled={editingUser.id === 1}
                   >
-                    <option value="active">Ativo (Permite Login)</option>
-                    <option value="inactive">Inativo (Bloqueado)</option>
+                    <option value="active">Ativo (Acesso Total)</option>
+                    <option value="suspended">Suspenso (Inadimplente - Bloqueio de Aportes)</option>
+                    <option value="inactive">Inativo (Desfiliado - Bloqueio de Login)</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Plano e Período de Validade */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Período do Plano</label>
+                  <select 
+                    value={formData.plan_period} 
+                    onChange={(e) => {
+                      const period = e.target.value;
+                      setFormData({
+                        ...formData,
+                        plan_period: period,
+                        plan_expires_at: calculateExpiryDate(period)
+                      });
+                    }}
+                  >
+                    <option value="lifetime">Vitalício (Sem Expiração)</option>
+                    <option value="1_month">1 Mês</option>
+                    <option value="3_months">3 Meses</option>
+                    <option value="6_months">6 Meses</option>
+                    <option value="1_year">1 Ano</option>
+                  </select>
+                </div>
+
+                {formData.plan_period !== 'lifetime' && (
+                  <div className="form-group">
+                    <label>Data de Expiração</label>
+                    <input
+                      type="date"
+                      value={formData.plan_expires_at}
+                      onChange={(e) => setFormData({ ...formData, plan_expires_at: e.target.value })}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="modal-footer">
@@ -542,7 +675,8 @@ const AdminUsers = () => {
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   >
                     <option value="user">Investidor Padrão</option>
-                    <option value="admin">Administrador</option>
+                    <option value="collaborator">Colaborador (TI / Suporte)</option>
+                    {!isCurrentUserCollaborator && <option value="admin">Administrador</option>}
                   </select>
                 </div>
 
@@ -552,10 +686,46 @@ const AdminUsers = () => {
                     value={formData.status} 
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
                   >
-                    <option value="active">Ativo</option>
+                    <option value="active">Ativo (Acesso Total)</option>
+                    <option value="suspended">Suspenso (Inadimplente)</option>
                     <option value="inactive">Inativo</option>
                   </select>
                 </div>
+              </div>
+
+              {/* Período do Plano */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Período do Plano</label>
+                  <select 
+                    value={formData.plan_period} 
+                    onChange={(e) => {
+                      const period = e.target.value;
+                      setFormData({
+                        ...formData,
+                        plan_period: period,
+                        plan_expires_at: calculateExpiryDate(period)
+                      });
+                    }}
+                  >
+                    <option value="lifetime">Vitalício (Sem Expiração)</option>
+                    <option value="1_month">1 Mês</option>
+                    <option value="3_months">3 Meses</option>
+                    <option value="6_months">6 Meses</option>
+                    <option value="1_year">1 Ano</option>
+                  </select>
+                </div>
+
+                {formData.plan_period !== 'lifetime' && (
+                  <div className="form-group">
+                    <label>Data de Expiração</label>
+                    <input
+                      type="date"
+                      value={formData.plan_expires_at}
+                      onChange={(e) => setFormData({ ...formData, plan_expires_at: e.target.value })}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="modal-footer">

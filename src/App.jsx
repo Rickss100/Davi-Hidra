@@ -26,10 +26,10 @@ const ProtectedRoute = () => {
   return <Outlet />;
 };
 
-// Admin Protected Route Wrapper (acesso exclusivo para superusuário)
+// Admin Protected Route Wrapper (acesso para superusuário e colaborador)
 const AdminRoute = () => {
   const { user } = useAuth();
-  if (!user || user.role !== 'admin') {
+  if (!user || (user.role !== 'admin' && user.role !== 'collaborator')) {
     return <Navigate to="/" replace />;
   }
   return <Outlet />;

@@ -9,6 +9,9 @@ const getAuthHeaders = () => {
             if (user?.id) {
                 headers['X-User-Id'] = String(user.id);
             }
+            if (user?.role) {
+                headers['X-User-Role'] = String(user.role);
+            }
         }
     } catch (e) {
         // ignora erro de parse
@@ -22,7 +25,12 @@ export const api = {
             const response = await fetch(`${API_URL}${endpoint}`, {
                 headers: getAuthHeaders()
             });
-            if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                const err = new Error(errData.message || errData.error || `API Error: ${response.statusText}`);
+                err.code = errData.error;
+                throw err;
+            }
             return response.json();
         } catch (error) {
             console.error('API GET Error:', error);
@@ -38,7 +46,9 @@ export const api = {
             });
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
-                throw new Error(errData.error || `API Error: ${response.statusText}`);
+                const err = new Error(errData.message || errData.error || `API Error: ${response.statusText}`);
+                err.code = errData.error;
+                throw err;
             }
             return response.json();
         } catch (error) {
@@ -55,7 +65,9 @@ export const api = {
             });
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
-                throw new Error(errData.error || `API Error: ${response.statusText}`);
+                const err = new Error(errData.message || errData.error || `API Error: ${response.statusText}`);
+                err.code = errData.error;
+                throw err;
             }
             return response.json();
         } catch (error) {
@@ -71,7 +83,9 @@ export const api = {
             });
             if (!response.ok) {
                 const errData = await response.json().catch(() => ({}));
-                throw new Error(errData.error || `API Error: ${response.statusText}`);
+                const err = new Error(errData.message || errData.error || `API Error: ${response.statusText}`);
+                err.code = errData.error;
+                throw err;
             }
             return response.json();
         } catch (error) {

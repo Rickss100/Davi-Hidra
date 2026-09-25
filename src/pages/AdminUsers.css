@@ -365,6 +365,12 @@
   border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
+.role-collaborator {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
 .role-user {
   background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;
@@ -379,6 +385,9 @@
   border-radius: 20px;
   cursor: pointer;
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .status-active {
@@ -391,6 +400,16 @@
   background: rgba(16, 185, 129, 0.25);
 }
 
+.status-suspended {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-suspended:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
 .status-inactive {
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
@@ -399,6 +418,30 @@
 
 .status-inactive:hover {
   background: rgba(239, 68, 68, 0.25);
+}
+
+.plan-info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.plan-period-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.plan-expiry-date {
+  font-size: 10px;
+  color: #94a3b8;
+  font-family: monospace;
+}
+
+.plan-expired-warning {
+  color: #f87171;
+  font-weight: 700;
 }
 
 .tx-count-badge {

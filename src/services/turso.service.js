@@ -91,7 +91,7 @@ export async function getTursoStatus() {
 }
 
 /**
- * Cria as tabelas essenciais no Turso caso não existam
+ * Cria as tabelas essenciais no Turso caso não existam e executa migrações defensivas
  */
 async function ensureTursoSchema(client) {
   await client.execute(`
@@ -102,10 +102,25 @@ async function ensureTursoSchema(client) {
       name TEXT NOT NULL,
       role TEXT DEFAULT 'user',
       status TEXT DEFAULT 'active',
+      plan_period TEXT DEFAULT 'lifetime',
+      plan_expires_at DATETIME DEFAULT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  // Migrações defensivas de colunas na nuvem Turso
+  try {
+    await client.execute("ALTER TABLE users ADD COLUMN plan_period TEXT DEFAULT 'lifetime'");
+  } catch (e) {
+    // Coluna já existe
+  }
+
+  try {
+    await client.execute("ALTER TABLE users ADD COLUMN plan_expires_at DATETIME DEFAULT NULL");
+  } catch (e) {
+    // Coluna já existe
+  }
 
   await client.execute(`
     CREATE TABLE IF NOT EXISTS transactions (
@@ -157,10 +172,20 @@ export async function syncWithTursoOnStartup(localDb) {
       console.log(`☁️ Nuvem vazia. Migrando ${localUsers.length} usuários locais para o Turso...`);
       for (const u of localUsers) {
         await client.execute({
-          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [u.id, u.email, u.password, u.name, u.role, u.status,
-                 u.created_at || new Date().toISOString(), u.updated_at || new Date().toISOString()]
+          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            u.id, 
+            u.email, 
+            u.password, 
+            u.name, 
+            u.role, 
+            u.status,
+            u.plan_period || 'lifetime',
+            u.plan_expires_at || null,
+            u.created_at || new Date().toISOString(), 
+            u.updated_at || new Date().toISOString()
+          ]
         });
       }
     } else if (tursoUsers.length > 0) {
@@ -178,14 +203,16 @@ export async function syncWithTursoOnStartup(localDb) {
 
       // 2. Inserir/Atualizar no banco local todos os usuários da nuvem
       const upsertLocal = localDb.prepare(`
-        INSERT INTO users (id, email, password, name, role, status, created_at, updated_at)
-        VALUES (@id, @email, @password, @name, @role, @status, @created_at, @updated_at)
+        INSERT INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+        VALUES (@id, @email, @password, @name, @role, @status, @plan_period, @plan_expires_at, @created_at, @updated_at)
         ON CONFLICT(id) DO UPDATE SET
           email = excluded.email,
           password = excluded.password,
           name = excluded.name,
           role = excluded.role,
           status = excluded.status,
+          plan_period = excluded.plan_period,
+          plan_expires_at = excluded.plan_expires_at,
           updated_at = excluded.updated_at
       `);
 
@@ -198,6 +225,8 @@ export async function syncWithTursoOnStartup(localDb) {
             name: String(row.name),
             role: String(row.role || 'user'),
             status: String(row.status || 'active'),
+            plan_period: String(row.plan_period || 'lifetime'),
+            plan_expires_at: row.plan_expires_at ? String(row.plan_expires_at) : null,
             created_at: String(row.created_at || new Date().toISOString()),
             updated_at: String(row.updated_at || new Date().toISOString())
           });
@@ -295,8 +324,8 @@ export async function syncUserToTurso(user) {
 
   try {
     await client.execute({
-      sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         user.id,
         emailVal,
@@ -304,12 +333,41 @@ export async function syncUserToTurso(user) {
         nameVal,
         user.role || 'user',
         user.status || 'active',
+        user.plan_period || 'lifetime',
+        user.plan_expires_at || null,
         user.created_at || new Date().toISOString(),
         new Date().toISOString()
       ]
     });
     console.log(`☁️ Usuário #${user.id} (${user.name}) sincronizado com sucesso no Turso.`);
   } catch (err) {
+    if (err.message && err.message.includes('has no column')) {
+      console.log('🔄 Executando auto-migração do schema no Turso Cloud...');
+      try {
+        await ensureTursoSchema(client);
+        await client.execute({
+          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          args: [
+            user.id,
+            emailVal,
+            passwordVal,
+            nameVal,
+            user.role || 'user',
+            user.status || 'active',
+            user.plan_period || 'lifetime',
+            user.plan_expires_at || null,
+            user.created_at || new Date().toISOString(),
+            new Date().toISOString()
+          ]
+        });
+        console.log(`☁️ Usuário #${user.id} (${user.name}) sincronizado com sucesso no Turso após migração.`);
+        return;
+      } catch (retryErr) {
+        console.error(`❌ Erro persistente ao sincronizar usuário #${user?.id} no Turso:`, retryErr.message);
+        throw retryErr;
+      }
+    }
     console.error(`❌ Erro ao sincronizar usuário #${user?.id} no Turso:`, err.message);
     throw err;
   }

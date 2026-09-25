@@ -24,8 +24,17 @@ export const AuthProvider = ({ children }) => {
         return { success: true, user: data.user };
       }
     } catch (err) {
-      console.warn('API login failed, attempting local fallback:', err.message);
+      console.warn('API login error:', err.message);
       
+      // Se for conta inativa bloqueada, não usar fallback local
+      if (err.code === 'ACCOUNT_INACTIVE' || err.message?.toLowerCase().includes('inativa')) {
+        return { 
+          success: false, 
+          error: err.message || 'Sua conta está inativa por motivos técnicos ou desfiliação do programa.',
+          code: 'ACCOUNT_INACTIVE' 
+        };
+      }
+
       // Fallback local se a API estiver offline
       const foundUser = USERS_DB.find(u => u.email === email && u.password === password);
       if (foundUser) {

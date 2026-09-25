@@ -1,11 +1,16 @@
 import { useState, useMemo } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { getAssetsByCategory } from '../../data/assets';
+import { ShieldAlert } from 'lucide-react';
 import './Portfolio.css';
 
 const TransactionForm = () => {
   const { addTransaction } = usePortfolio();
+  const { user } = useAuth();
+  const isSuspended = user?.role === 'user' && (user?.status === 'suspended' || user?.isSuspended);
+
   const { success, error } = useToast();
   const [activeTab, setActiveTab] = useState('buy'); // buy, sell, event
 
@@ -24,6 +29,11 @@ const TransactionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (isSuspended) {
+      error('Sua conta está suspensa por inadimplência/renovação pendente. Registro de novas ordens bloqueado.');
+      return;
+    }
+
     if (!formData.code || !formData.quantity || !formData.price) {
       error('Preencha o código do ativo, quantidade e preço unitário.');
       return;
@@ -79,10 +89,30 @@ const TransactionForm = () => {
         </button>
       </div>
 
+      {isSuspended && (
+        <div style={{
+          background: 'rgba(245, 158, 11, 0.12)',
+          border: '1px solid rgba(245, 158, 11, 0.35)',
+          borderRadius: '8px',
+          padding: '12px 16px',
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          color: '#fbbf24',
+          fontSize: '0.88rem'
+        }}>
+          <ShieldAlert size={22} style={{ flexShrink: 0 }} />
+          <span>
+            <strong>Conta com Status Suspenso:</strong> A inclusão e edição de novos aportes estão temporariamente desabilitadas.
+          </span>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className={`transaction-form ${activeTab}`}>
         <div className="form-group">
           <label>Categoria</label>
-          <select name="category" value={formData.category} onChange={handleChange}>
+          <select name="category" value={formData.category} onChange={handleChange} disabled={isSuspended}>
             <option value="acoes">Ações</option>
             <option value="fiis">FIIs</option>
             <option value="stocks">Stocks</option>
@@ -141,8 +171,8 @@ const TransactionForm = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn" disabled={!formData.code}>
-          {activeTab === 'buy' ? 'CONFIRMAR APORTE' : activeTab === 'sell' ? 'CONFIRMAR VENDA' : 'REGISTRAR'}
+        <button type="submit" className="submit-btn" disabled={!formData.code || isSuspended}>
+          {isSuspended ? 'CONTA SUSPENSA' : activeTab === 'buy' ? 'CONFIRMAR APORTE' : activeTab === 'sell' ? 'CONFIRMAR VENDA' : 'REGISTRAR'}
         </button>
       </form>
     </div>

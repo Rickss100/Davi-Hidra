@@ -213,15 +213,17 @@ CREATE TABLE IF NOT EXISTS user_asset_notes (
 CREATE INDEX IF NOT EXISTS idx_user_notes_rating ON user_asset_notes(rating);
 
 -- ============================================================================
--- 10. USERS TABLE - System users and authentication
+-- 10. USERS TABLE - System users, roles and subscription plans
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
   name TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'user',     -- 'admin' ou 'user'
-  status TEXT NOT NULL DEFAULT 'active', -- 'active' ou 'inactive'
+  role TEXT NOT NULL DEFAULT 'user',           -- 'admin', 'collaborator', 'user'
+  status TEXT NOT NULL DEFAULT 'active',       -- 'active', 'suspended', 'inactive'
+  plan_period TEXT NOT NULL DEFAULT 'lifetime', -- '1_month', '3_months', '6_months', '1_year', 'lifetime'
+  plan_expires_at DATETIME DEFAULT NULL,       -- Data limite da assinatura (NULL para vitalício)
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

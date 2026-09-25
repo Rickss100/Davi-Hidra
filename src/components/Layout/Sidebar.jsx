@@ -22,8 +22,13 @@ const Sidebar = () => {
     { name: 'Tutorial & Método', path: '/tutorial', icon: GraduationCap },
   ];
 
-  if (user?.role === 'admin') {
-    menuItems.push({ name: 'Painel Admin', path: '/admin', icon: Shield, isAdmin: true });
+  if (user?.role === 'admin' || user?.role === 'collaborator') {
+    menuItems.push({ 
+      name: user.role === 'admin' ? 'Painel Admin' : 'Painel Gestão (TI)', 
+      path: '/admin', 
+      icon: Shield, 
+      isAdmin: true 
+    });
   }
 
   return (

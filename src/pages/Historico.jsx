@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { usePortfolio } from '../context/PortfolioContext';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { 
   History, 
@@ -11,12 +12,15 @@ import {
   Wallet, 
   BarChart3, 
   DollarSign, 
-  Layers 
+  Layers,
+  ShieldAlert
 } from 'lucide-react';
 import './Historico.css';
 
 const Historico = () => {
   const { transactions, removeTransaction } = usePortfolio();
+  const { user } = useAuth();
+  const isSuspended = user?.role === 'user' && (user?.status === 'suspended' || user?.isSuspended);
   const { success, error } = useToast();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,6 +100,11 @@ const Historico = () => {
   }, [transactions, searchTerm, filterCategory, filterType, sortBy]);
 
   const handleDelete = async (id, assetCode) => {
+    if (isSuspended) {
+      error('Sua conta está com status Suspenso. A exclusão de transações está bloqueada.');
+      return;
+    }
+
     if (!window.confirm(`Deseja realmente excluir a transação de ${assetCode}?`)) {
       return;
     }
@@ -296,7 +305,9 @@ const Historico = () => {
                         type="button"
                         className="delete-btn"
                         onClick={() => handleDelete(tx.id, tx.asset_code)}
-                        title="Excluir este aporte"
+                        disabled={isSuspended}
+                        title={isSuspended ? 'Exclusão bloqueada para contas suspensas' : 'Excluir este aporte'}
+                        style={isSuspended ? { opacity: 0.3, cursor: 'not-allowed' } : {}}
                       >
                         <Trash2 size={16} />
                       </button>

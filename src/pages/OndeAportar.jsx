@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
-import { DollarSign, Copy, ShieldAlert, ShieldCheck, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { DollarSign, Copy, ShieldAlert, ShieldCheck, ArrowRight, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import MethodExplanationModal from '../components/OndeAportar/MethodExplanationModal';
 import DistancePanel from '../components/OndeAportar/DistancePanel';
@@ -9,6 +10,9 @@ import './OndeAportar.css';
 
 const OndeAportar = () => {
   const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig } = usePortfolio();
+  const { user } = useAuth();
+  const isSuspended = user?.role === 'user' && (user?.status === 'suspended' || user?.isSuspended);
+
   const [showModal, setShowModal] = useState(false);
   const [availableAmount, setAvailableAmount] = useState('');
   const [numAssets, setNumAssets] = useState(2);
@@ -111,6 +115,59 @@ const OndeAportar = () => {
           </div>
 
           <div className="suggestions-content">
+            {isSuspended ? (
+              <div style={{
+                background: 'rgba(245, 158, 11, 0.1)',
+                border: '1px solid rgba(245, 158, 11, 0.3)',
+                borderRadius: '12px',
+                padding: '36px 24px',
+                textAlign: 'center',
+                margin: '10px 0 20px 0'
+              }}>
+                <div style={{
+                  width: '56px',
+                  height: '56px',
+                  borderRadius: '50%',
+                  background: 'rgba(245, 158, 11, 0.15)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px',
+                  color: '#fbbf24'
+                }}>
+                  <ShieldAlert size={32} />
+                </div>
+                <h3 style={{ color: '#fbbf24', fontSize: '1.25rem', marginBottom: '10px' }}>
+                  Recomendações Bloqueadas (Conta Suspensa)
+                </h3>
+                <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: '1.6', maxWidth: '560px', margin: '0 auto 24px' }}>
+                  Sua conta está no status <strong>Suspenso</strong> (inadimplência ou renovação de plano pendente).
+                  O cálculo automático de onde aportar da metodologia DAVI & HYDRA está temporariamente desativado para o seu usuário.
+                  Sua carteira e seu histórico permanecem disponíveis para consulta básica.
+                </p>
+                <a 
+                  href="https://api.whatsapp.com/send?text=Olá, preciso de suporte para regularizar a assinatura da minha conta no sistema Davi-Hidra."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '12px 24px',
+                    borderRadius: '8px',
+                    background: '#22c55e',
+                    color: '#fff',
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  <MessageCircle size={18} /> Regularizar Acesso com Suporte
+                </a>
+              </div>
+            ) : (
+              <>
             {errorMessage && (
               <div className="error-message">
                 <p>{errorMessage}</p>
@@ -277,6 +334,8 @@ const OndeAportar = () => {
                   <span className="total-value">R$ {totalSuggested.toFixed(2)}</span>
                 </div>
               </div>
+            )}
+              </>
             )}
           </div>
         </div>

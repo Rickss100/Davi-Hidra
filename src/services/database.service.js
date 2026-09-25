@@ -78,6 +78,23 @@ function initDatabase() {
       console.warn('⚠️ Migration check for fundamentals Renda Fixa:', fundMigErr.message);
     }
 
+    // Migration: Add plan_period and plan_expires_at to users if they don't exist
+    try {
+      const userCols = db.pragma('table_info(users)');
+      const userColNames = userCols.map(c => c.name);
+      if (!userColNames.includes('plan_period')) {
+        db.exec("ALTER TABLE users ADD COLUMN plan_period TEXT NOT NULL DEFAULT 'lifetime'");
+        console.log('✅ Column plan_period added to users');
+      }
+      if (!userColNames.includes('plan_expires_at')) {
+        db.exec("ALTER TABLE users ADD COLUMN plan_expires_at DATETIME DEFAULT NULL");
+        console.log('✅ Column plan_expires_at added to users');
+      }
+      db.exec("CREATE INDEX IF NOT EXISTS idx_users_plan_expires ON users(plan_expires_at)");
+    } catch (uMigErr) {
+      console.warn('⚠️ Migration check for users table:', uMigErr.message);
+    }
+
     // Seed default users if users table is empty
     try {
       const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
@@ -654,14 +671,27 @@ function getLastSync(type) {
 // USER MANAGEMENT OPERATIONS (SUPERUSER & AUTH)
 // ============================================================================
 
+function enrichUserWithPlan(user) {
+  if (!user) return null;
+  const now = new Date();
+  const isExpired = user.plan_expires_at && user.plan_period !== 'lifetime' && new Date(user.plan_expires_at) < now;
+  return {
+    ...user,
+    plan_period: user.plan_period || 'lifetime',
+    isPlanExpired: !!isExpired
+  };
+}
+
 function getUserByEmail(email) {
   const db = getDatabase();
-  return db.prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(?)').get(email.trim());
+  const user = db.prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(?)').get(email.trim());
+  return enrichUserWithPlan(user);
 }
 
 function getUserById(id) {
   const db = getDatabase();
-  return db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+  return enrichUserWithPlan(user);
 }
 
 function getAllUsers() {
@@ -673,6 +703,8 @@ function getAllUsers() {
       u.name, 
       u.role, 
       u.status, 
+      u.plan_period,
+      u.plan_expires_at,
       u.created_at, 
       u.updated_at,
       u.password,
@@ -683,16 +715,33 @@ function getAllUsers() {
     GROUP BY u.id
     ORDER BY u.id ASC
   `).all();
-  return users;
+
+  const now = new Date();
+  return users.map(u => {
+    const isExpired = u.plan_expires_at && u.plan_period !== 'lifetime' && new Date(u.plan_expires_at) < now;
+    return {
+      ...u,
+      plan_period: u.plan_period || 'lifetime',
+      isPlanExpired: !!isExpired
+    };
+  });
 }
 
-function createUser({ email, password, name, role = 'user', status = 'active' }) {
+function createUser({ 
+  email, 
+  password, 
+  name, 
+  role = 'user', 
+  status = 'active',
+  plan_period = 'lifetime',
+  plan_expires_at = null 
+}) {
   const db = getDatabase();
   const stmt = db.prepare(`
-    INSERT INTO users (email, password, name, role, status, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    INSERT INTO users (email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `);
-  const info = stmt.run(email, password, name, role, status);
+  const info = stmt.run(email, password, name, role, status, plan_period || 'lifetime', plan_expires_at || null);
   const newUser = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
   
   // Sincronizar criação na nuvem Turso se ativo
@@ -701,7 +750,7 @@ function createUser({ email, password, name, role = 'user', status = 'active' })
   return newUser;
 }
 
-function updateUser(id, { name, email, password, role, status }) {
+function updateUser(id, { name, email, password, role, status, plan_period, plan_expires_at }) {
   const db = getDatabase();
   const existing = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
   if (!existing) return null;
@@ -711,12 +760,14 @@ function updateUser(id, { name, email, password, role, status }) {
   const newPassword = password !== undefined && password.trim() !== '' ? password : existing.password;
   const newRole = role !== undefined ? role : existing.role;
   const newStatus = status !== undefined ? status : existing.status;
+  const newPeriod = plan_period !== undefined ? plan_period : (existing.plan_period || 'lifetime');
+  const newExpiresAt = plan_expires_at !== undefined ? plan_expires_at : existing.plan_expires_at;
 
   db.prepare(`
     UPDATE users 
-    SET name = ?, email = ?, password = ?, role = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+    SET name = ?, email = ?, password = ?, role = ?, status = ?, plan_period = ?, plan_expires_at = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
-  `).run(newName, newEmail, newPassword, newRole, newStatus, id);
+  `).run(newName, newEmail, newPassword, newRole, newStatus, newPeriod, newExpiresAt, id);
 
   const updatedUser = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
 

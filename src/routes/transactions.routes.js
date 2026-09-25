@@ -1,6 +1,6 @@
 
 import express from 'express';
-import { getDatabase } from '../services/database.service.js';
+import { getDatabase, getUserById } from '../services/database.service.js';
 import { syncTransactionToTurso, syncTransactionDeleteToTurso } from '../services/turso.service.js';
 
 const router = express.Router();
@@ -41,6 +41,15 @@ router.post('/', async (req, res) => {
   const { type, quantity, price, date, notes, user_id } = req.body;
   const headerUserId = req.headers['x-user-id'];
   const finalUserId = user_id || headerUserId || 1; // fallback para usuário 1
+
+  // Verificar se a conta está suspensa ou inativa
+  const user = getUserById(finalUserId);
+  if (user && user.role === 'user' && (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')) {
+    return res.status(403).json({ 
+      error: 'ACCOUNT_SUSPENDED', 
+      message: 'Sua conta está suspensa ou inativa. Inclusão de novos ativos e aportes bloqueada.' 
+    });
+  }
 
   if (!targetCode || !type || !quantity || !price || !date) {
     console.error('❌ Missing fields:', { targetCode, type, quantity, price, date });
@@ -100,6 +109,21 @@ router.post('/', async (req, res) => {
 // DELETE /api/transactions/:id - Remove transaction
 router.delete('/:id', async (req, res) => {
   try {
+    const tx = db.prepare('SELECT * FROM transactions WHERE id = ?').get(req.params.id);
+    if (!tx) {
+      return res.status(404).json({ error: 'Transaction not found' });
+    }
+
+    const headerUserId = req.headers['x-user-id'];
+    const callerId = headerUserId || tx.user_id;
+    const user = getUserById(callerId);
+    if (user && user.role === 'user' && (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')) {
+      return res.status(403).json({ 
+        error: 'ACCOUNT_SUSPENDED', 
+        message: 'Sua conta está suspensa ou inativa. Exclusão de transações bloqueada.' 
+      });
+    }
+
     // 1. Sincronizar remoção na nuvem Turso primeiro se ativo
     try {
       await syncTransactionDeleteToTurso(req.params.id);

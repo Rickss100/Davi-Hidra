@@ -11,6 +11,7 @@ import {
   deleteUser, 
   getUserTransactions 
 } from '../services/database.service.js';
+import { syncUserToTurso, syncUserDeleteToTurso } from '../services/turso.service.js';
 
 const router = express.Router();
 
@@ -44,7 +45,7 @@ router.post('/login', (req, res) => {
 });
 
 // POST /api/users/register - Cadastro público de novo investidor
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password || !name) {
@@ -64,6 +65,14 @@ router.post('/register', (req, res) => {
       status: 'active'
     });
 
+    // ✅ Aguardar confirmação síncrona no Turso antes de retornar
+    try {
+      await syncUserToTurso(newUser);
+    } catch (tursoErr) {
+      console.error('⚠️ Falha ao sincronizar novo usuário no Turso:', tursoErr.message);
+      // Não bloquear o cadastro — usuário existe no local; startup sync vai tentar de novo
+    }
+
     const { password: _, ...userSafe } = newUser;
     res.status(201).json({
       message: 'Conta criada com sucesso!',
@@ -74,6 +83,7 @@ router.post('/register', (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 // GET /api/users - List all users with statistics (Superuser Admin)
 router.get('/', (req, res) => {
@@ -88,7 +98,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/users - Create new user (Superuser Admin)
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { email, password, name, role, status } = req.body;
     if (!email || !password || !name) {
@@ -107,6 +117,13 @@ router.post('/', (req, res) => {
       role: role || 'user',
       status: status || 'active'
     });
+
+    // ✅ Aguardar confirmação síncrona no Turso antes de retornar
+    try {
+      await syncUserToTurso(newUser);
+    } catch (tursoErr) {
+      console.error('⚠️ Falha ao sincronizar novo usuário (admin) no Turso:', tursoErr.message);
+    }
 
     res.status(201).json({
       message: 'Usuário criado com sucesso!',

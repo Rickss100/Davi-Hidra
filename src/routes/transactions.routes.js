@@ -34,7 +34,7 @@ router.get('/', (req, res) => {
 });
 
 // POST /api/transactions - Create new transaction
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   console.log('📥 POST /api/transactions payload:', req.body);
 
   const targetCode = req.body.asset_code || req.body.code;
@@ -83,8 +83,12 @@ router.post('/', (req, res) => {
       WHERE t.id = ?
     `).get(info.lastInsertRowid);
 
-    // Sincronizar transação na nuvem Turso se ativo
-    syncTransactionToTurso(newTransaction).catch(err => console.warn('⚠️ Turso syncTransaction error:', err.message));
+    // ✅ Aguardar confirmação síncrona no Turso antes de retornar
+    try {
+      await syncTransactionToTurso(newTransaction);
+    } catch (tursoErr) {
+      console.warn('⚠️ Turso syncTransaction error:', tursoErr.message);
+    }
 
     res.status(201).json(newTransaction);
   } catch (error) {

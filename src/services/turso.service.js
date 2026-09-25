@@ -111,9 +111,12 @@ async function ensureTursoSchema(client) {
 }
 
 /**
- * Sincronização executada no startup do servidor:
- * - Se o Turso estiver vazio: migra os dados do SQLite local para o Turso.
- * - Se o Turso já possuir dados: atualiza o banco local com os dados do Turso.
+ * Sincronização executada no startup do servidor.
+ * Realiza MERGE BIDIRECIONAL:
+ *  - Usuários/transações que estão no Turso mas não no local → criados no local
+ *  - Usuários/transações que estão no local mas não no Turso → empurrados para o Turso
+ * Isso garante que novos cadastros que não chegaram ao Turso sejam recuperados
+ * via seed na próxima inicialização, e que dados do Turso sejam restaurados localmente.
  */
 export async function syncWithTursoOnStartup(localDb) {
   const client = getTursoClient();
@@ -123,25 +126,23 @@ export async function syncWithTursoOnStartup(localDb) {
   }
 
   try {
-    console.log('☁️ Sincronizando com Turso Cloud...');
+    console.log('☁️ Sincronizando com Turso Cloud (merge bidirecional)...');
     await ensureTursoSchema(client);
 
-    // 1. Verificar usuários no Turso
-    const tursoUsers = await client.execute('SELECT * FROM users');
+    // ────────────────────────────────────────
+    // USUÁRIOS — Merge bidirecional
+    // ────────────────────────────────────────
+    const tursoUsersResult = await client.execute('SELECT * FROM users');
+    const tursoUsers = tursoUsersResult.rows;
     const localUsers = localDb.prepare('SELECT * FROM users').all();
 
-    if (tursoUsers.rows.length === 0 && localUsers.length > 0) {
-      console.log(`☁️ Turso está vazio. Migrando ${localUsers.length} usuários locais para o Turso...`);
-      for (const u of localUsers) {
-        await client.execute({
-          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [u.id, u.email, u.password, u.name, u.role, u.status, u.created_at || new Date().toISOString(), u.updated_at || new Date().toISOString()]
-        });
-      }
-    } else if (tursoUsers.rows.length > 0) {
-      console.log(`☁️ Restaurando/Sincronizando ${tursoUsers.rows.length} usuários do Turso para a base local...`);
-      const insertOrUpdate = localDb.prepare(`
+    const tursoUserIds = new Set(tursoUsers.map(u => Number(u.id)));
+    const localUserIds = new Set(localUsers.map(u => Number(u.id)));
+
+    // 1a. Usuários do Turso → restaurar/atualizar no local
+    if (tursoUsers.length > 0) {
+      console.log(`☁️ Restaurando ${tursoUsers.length} usuários do Turso para o banco local...`);
+      const upsertLocal = localDb.prepare(`
         INSERT INTO users (id, email, password, name, role, status, created_at, updated_at)
         VALUES (@id, @email, @password, @name, @role, @status, @created_at, @updated_at)
         ON CONFLICT(id) DO UPDATE SET
@@ -153,40 +154,56 @@ export async function syncWithTursoOnStartup(localDb) {
           updated_at = excluded.updated_at
       `);
 
-      for (const row of tursoUsers.rows) {
+      for (const row of tursoUsers) {
         try {
-          insertOrUpdate.run({
+          upsertLocal.run({
             id: Number(row.id),
             email: String(row.email),
             password: String(row.password),
             name: String(row.name),
-            role: String(row.role),
-            status: String(row.status),
+            role: String(row.role || 'user'),
+            status: String(row.status || 'active'),
             created_at: String(row.created_at || new Date().toISOString()),
             updated_at: String(row.updated_at || new Date().toISOString())
           });
         } catch (uErr) {
-          console.warn('⚠️ Erro ao sincronizar usuário do Turso:', uErr.message);
+          console.warn('⚠️ Erro ao restaurar usuário do Turso:', uErr.message);
         }
       }
     }
 
-    // 2. Verificar transações no Turso
-    const tursoTx = await client.execute('SELECT * FROM transactions');
+    // 1b. Usuários do local que NÃO estão no Turso → empurrar para o Turso
+    const usersOnlyLocal = localUsers.filter(u => !tursoUserIds.has(Number(u.id)));
+    if (usersOnlyLocal.length > 0) {
+      console.log(`☁️ Enviando ${usersOnlyLocal.length} usuário(s) local(is) para o Turso...`);
+      for (const u of usersOnlyLocal) {
+        try {
+          await client.execute({
+            sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, created_at, updated_at)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [u.id, u.email, u.password, u.name, u.role, u.status,
+                   u.created_at || new Date().toISOString(), u.updated_at || new Date().toISOString()]
+          });
+          console.log(`   ✅ Usuário #${u.id} (${u.name}) enviado para o Turso.`);
+        } catch (tErr) {
+          console.warn(`   ⚠️ Falha ao enviar usuário #${u.id} para o Turso:`, tErr.message);
+        }
+      }
+    }
+
+    // ────────────────────────────────────────
+    // TRANSAÇÕES — Merge bidirecional
+    // ────────────────────────────────────────
+    const tursoTxResult = await client.execute('SELECT * FROM transactions');
+    const tursoTx = tursoTxResult.rows;
     const localTx = localDb.prepare('SELECT * FROM transactions').all();
 
-    if (tursoTx.rows.length === 0 && localTx.length > 0) {
-      console.log(`☁️ Migrando ${localTx.length} transações locais para o Turso...`);
-      for (const t of localTx) {
-        await client.execute({
-          sql: `INSERT OR REPLACE INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-          args: [t.id, t.asset_code, t.type, t.quantity, t.price, t.total_value, t.date, t.notes, t.created_at || new Date().toISOString(), t.user_id || 1]
-        });
-      }
-    } else if (tursoTx.rows.length > 0) {
-      console.log(`☁️ Restaurando/Sincronizando ${tursoTx.rows.length} transações do Turso para a base local...`);
-      const insertOrUpdateTx = localDb.prepare(`
+    const tursoTxIds = new Set(tursoTx.map(t => Number(t.id)));
+
+    // 2a. Transações do Turso → restaurar/atualizar no local
+    if (tursoTx.length > 0) {
+      console.log(`☁️ Restaurando ${tursoTx.length} transações do Turso para o banco local...`);
+      const upsertLocalTx = localDb.prepare(`
         INSERT INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
         VALUES (@id, @asset_code, @type, @quantity, @price, @total_value, @date, @notes, @created_at, @user_id)
         ON CONFLICT(id) DO UPDATE SET
@@ -200,9 +217,9 @@ export async function syncWithTursoOnStartup(localDb) {
           user_id = excluded.user_id
       `);
 
-      for (const row of tursoTx.rows) {
+      for (const row of tursoTx) {
         try {
-          insertOrUpdateTx.run({
+          upsertLocalTx.run({
             id: Number(row.id),
             asset_code: String(row.asset_code),
             type: String(row.type),
@@ -215,16 +232,36 @@ export async function syncWithTursoOnStartup(localDb) {
             user_id: Number(row.user_id || 1)
           });
         } catch (tErr) {
-          console.warn('⚠️ Erro ao sincronizar transação do Turso:', tErr.message);
+          console.warn('⚠️ Erro ao restaurar transação do Turso:', tErr.message);
         }
       }
     }
 
-    console.log('✅ Sincronização inicial com Turso Cloud concluída com sucesso!');
+    // 2b. Transações do local que NÃO estão no Turso → empurrar para o Turso
+    const txOnlyLocal = localTx.filter(t => !tursoTxIds.has(Number(t.id)));
+    if (txOnlyLocal.length > 0) {
+      console.log(`☁️ Enviando ${txOnlyLocal.length} transação(ões) local(is) para o Turso...`);
+      for (const t of txOnlyLocal) {
+        try {
+          await client.execute({
+            sql: `INSERT OR REPLACE INTO transactions (id, asset_code, type, quantity, price, total_value, date, notes, created_at, user_id)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            args: [t.id, t.asset_code, t.type, t.quantity, t.price, t.total_value,
+                   t.date, t.notes || null, t.created_at || new Date().toISOString(), t.user_id || 1]
+          });
+        } catch (tErr) {
+          console.warn(`   ⚠️ Falha ao enviar transação #${t.id} para o Turso:`, tErr.message);
+        }
+      }
+    }
+
+    const totalTursoUsers = tursoUsers.length + usersOnlyLocal.length;
+    console.log(`✅ Sync concluído! Turso: ${tursoUsers.length} usuários | Local: ${localUsers.length} | Enviados ao Turso: ${usersOnlyLocal.length}`);
   } catch (error) {
     console.error('⚠️ Falha ao sincronizar com Turso Cloud no startup:', error.message);
   }
 }
+
 
 /**
  * Grava ou atualiza um usuário no Turso em tempo de execução

@@ -34,7 +34,10 @@ const Sidebar = () => {
   return (
     <aside className="sidebar">
       <div className="logo-container">
-        <h2>DAVI & HYDRA</h2>
+        <h2>NORTE INVEST</h2>
+        <span style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          Método Davi & Hydra
+        </span>
       </div>
       <nav>
         <ul>

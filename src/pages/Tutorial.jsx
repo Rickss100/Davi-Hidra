@@ -25,40 +25,44 @@ import {
 import { useToast } from '../context/ToastContext';
 import './Tutorial.css';
 
-const FULL_MANUAL_TEXT = `# DAVI & HYDRA — O GUIA DEFINITIVO DO INVESTIDOR INTELIGENTE
-## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial do Aplicativo
+const FULL_MANUAL_TEXT = `# NORTE INVEST — O GUIA DEFINITIVO DO INVESTIDOR INTELIGENTE
+## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial da Plataforma
 
-### PARTE 1: A FILOSOFIA & O MÉTODO DE INVESTIMENTO
+### PARTE 1: A FILOSOFIA & A TRÍADE PATRIMONIAL
 
-1. O que é o Método DAVI?
-- D — Defesa: Antes de rentabilidade, proteção com Reserva de Emergência dimensionada.
-- A — Alocação de Ativos: Mais de 90% dos retornos de longo prazo vêm da proporção entre classes (Ações, FIIs, Renda Fixa e Mercado Global).
-- V — Valor & Fundamentos: Tornar-se sócio de negócios com lucros consistentes, boa governança e dividendos reais.
-- I — Independência Financeira: Viver de renda passiva crescente que cubra com folga o custo de vida.
+1. O Norte: A Bússola e a Direção
+- O Norte representa a clareza inabalável do seu destino financeiro.
+- Em vez de se perder no caos diário das notícias e cotações, o investidor mantém o rumo fixado na acumulação de ativos geradores de renda passiva.
 
-2. O Algoritmo HYDRA e a Regra AM2O:
-- AM2O significa "Aporte no Mais Distante do Objetivo".
-- Em vez de adivinhar o mercado, você aporta naquilo que ficou para trás, comprando automaticamente na baixa e reequilibrando a carteira sem precisar vender nada.
+2. A Filosofia de Davi (Michelangelo) — A Arte de Lapidar:
+- Quando perguntaram a Michelangelo como esculpiu a perfeição de Davi a partir de um bloco de mármore bruto, ele respondeu:
+  "Davi sempre esteve ali. Eu apenas retirei tudo o que não era Davi."
+- No mercado financeiro, enriquecer não é tentar adivinhar a próxima ação milagrosa, mas sim ter a sabedoria de RETIRAR TUDO O QUE NÃO PRESTA: empresas sem lucro, especulação sem fundamento, ansiedade e ganância. O que sobra é a obra-prima: uma carteira de altíssima qualidade.
 
-3. Pirâmide Patrimonial:
-- Reserva de Emergência (3 a 12 meses de custo de vida em liquidez diária)
+3. O Mecanismo Hydra — Os Tentáculos da Antifragilidade:
+- Na mitologia, quando alguém tenta cortar uma cabeça da Hidra, duas novas nascem no lugar.
+- Não investimos em uma única empresa ou setor: construímos um verdadeiro IMPÉRIO patrimonial com múltiplos tentáculos (Ações, Fundos Imobiliários, Renda Fixa Soberana e Mercado Global).
+- Quando uma crise tenta "cortar a cabeça" de um setor, o Algoritmo AM2O ("Aporte no Mais Distante do Objetivo") se reposiciona automaticamente, comprando com desconto os ativos que ficaram para trás e fortalecendo ainda mais o império.
+
+4. A Pirâmide Patrimonial:
+- Reserva de Emergência (3 a 12 meses de custo de vida blindados em liquidez diária)
 - Renda Fixa Estratégica (Proteção da inflação via IPCA+)
-- Ações & FIIs no Brasil (Crescimento de patrimônio e renda mensal isenta)
-- Stocks & REITs Globais (Dolarização e proteção geográfica)
+- Ações & FIIs no Brasil (Crescimento de patrimônio e dividendos mensais isentos)
+- Stocks & REITs Globais (Dolarização e diversificação geográfica no maior mercado do mundo)
 
-4. A Bola de Neve dos Proventos:
-- Reinvestir 100% dos dividendos no início para atingir o "Ponto Mágico", onde os dividendos passam a comprar novas cotas sozinhos.
+5. O Ponto Mágico da Bola de Neve:
+- O momento em que os rendimentos mensais dos seus ativos passam a comprar novas cotas sozinhos, acelerando exponencialmente a sua independência.
 
 ### PARTE 2: MANUAL PRÁTICO DO APLICATIVO
 
-1. Minha Carteira (/carteira): Registro de aportes e acompanhamento por classe.
-2. Definir Objetivos (/definir-objetivos): Calibração de percentuais macro e alvos por ativo.
-3. Onde Aportar (/onde-aportar): Motor matemático que indica onde investir o dinheiro do mês.
-4. Reserva de Emergência (/reserva-emergencia): Assistente de perfil (CLT, Autônomo, Servidor).
-5. Renda Passiva (/renda-passiva): Acompanhamento de proventos e simulador de futuro.
-6. Radar de Ativos (/radar): Busca e filtros fundamentalistas (P/L, DY, P/VP).
-7. Histórico (/historico): Auditoria e controle de todas as compras e vendas.
-8. Resumo (/resumo): Rentabilidade consolidada contra S&P 500, Ibovespa, CDI, IPCA e IFIX.`;
+1. Minha Carteira (/carteira): Registro de aportes e acompanhamento detalhado por tentáculo da carteira.
+2. Definir Objetivos (/definir-objetivos): Calibração de percentuais macro e alvos ideais por ativo.
+3. Onde Aportar (/onde-aportar): Motor matemático da Hydra que calcula exatamente onde alocar o dinheiro do mês.
+4. Reserva de Emergência (/reserva-emergencia): Assistente de cálculo e blindagem de segurança pessoal.
+5. Renda Passiva (/renda-passiva): Acompanhamento da evolução dos dividendos recebidos e simulador de liberdade financeira.
+6. Radar de Ativos (/radar): Ferramenta de filtro fundamentalista para selecionar apenas os ativos dignos da sua carteira.
+7. Histórico (/historico): Auditoria e controle seguro de todas as suas compras e vendas registradas.
+8. Resumo (/resumo): Comparativo consolidado de performance contra S&P 500, Ibovespa, CDI, IPCA e IFIX.`;
 
 const Tutorial = () => {
   const [activeTab, setActiveTab] = useState('metodo');
@@ -231,14 +235,39 @@ const Tutorial = () => {
             </div>
           </div>
 
+          {/* Card Especial: A Filosofia de Michelangelo & A Força da Hydra */}
+          <div className="tutorial-card" style={{ marginBottom: '24px', background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 41, 59, 0.8) 100%)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+            <span className="card-badge blue">A Filosofia Central</span>
+            <h3 style={{ fontSize: '20px', color: '#38bdf8' }}>O Método Davi & O Mecanismo Hydra: Esculpa o Seu Império</h3>
+            
+            <div style={{ marginTop: '14px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '10px', borderLeft: '3px solid #38bdf8' }}>
+                <h4 style={{ color: '#fff', fontSize: '16px', marginBottom: '6px' }}>🗿 O Princípio de Davi: Retirar tudo o que não presta</h4>
+                <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                  Quando perguntaram a <strong>Michelangelo</strong> como ele esculpiu a perfeição da estátua de Davi em um bloco bruto de mármore, ele respondeu:  
+                  <em style={{ color: '#38bdf8' }}> "Davi sempre esteve ali. Eu apenas retirei tudo o que não era Davi."</em>  
+                  No mercado de investimentos, construir riqueza duradoura não é tentar acertar a próxima ação milagrosa, mas sim ter a disciplina de <strong>eliminar os erros</strong>: empresas ruins, especulação de curto prazo, taxas abusivas e decisões tomadas no pânico. O que sobra é a obra de arte: o seu patrimônio sólido.
+                </p>
+              </div>
+
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '10px', borderLeft: '3px solid #10b981' }}>
+                <h4 style={{ color: '#fff', fontSize: '16px', marginBottom: '6px' }}>🐉 O Mecanismo Hydra: Os tentáculos antifrágeis do seu Império</h4>
+                <p style={{ fontSize: '14px', color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                  Na mitologia, quando alguém tenta cortar uma cabeça da Hidra, novas cabeças nascem ainda mais fortes.  
+                  No <strong>Norte Invest</strong>, você não investe em uma única empresa ou aposta isolada — <strong>você constrói um império patrimonial</strong> distribuído em múltiplos tentáculos: Ações, Fundos Imobiliários, Renda Fixa Soberana e Ativos Globais. Quando o mercado entra em crise e "tenta cortar uma cabeça" (um setor em baixa ou inflação alta), o algoritmo da Hydra automaticamente se reposiciona, aportando com desconto nos ativos mais baratos e fazendo o seu império florescer ainda mais forte.
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="tutorial-card" style={{ marginBottom: '30px' }}>
-            <span className="card-badge green">O Algoritmo Hydra</span>
+            <span className="card-badge green">O Algoritmo de Alocação</span>
             <h3 style={{ fontSize: '20px' }}>A Metodologia AM2O: Por que nunca tentamos adivinhar o mercado?</h3>
             <p style={{ fontSize: '15px' }}>
               <strong>AM2O</strong> significa <em>"Aporte no Mais Distante do Objetivo"</em>. A cada mês, o mercado estará em uma fase diferente: às vezes ações brasileiras caem, enquanto o dólar sobe; em outros momentos, os fundos imobiliários ficam baratos enquanto a renda fixa recua.
             </p>
             <p style={{ fontSize: '15px' }}>
-              Em vez de tentar prever o futuro (o que ninguém consegue com consistência), você abre o aplicativo, informa o valor disponível para investir e a Hydra aponta matematicamente para o ativo que mais se distanciou da sua meta ideal.
+              Em vez de tentar prever o futuro (o que ninguém consegue com consistência), você abre o aplicativo, informa o valor disponível para investir e o sistema aponta matematicamente para o ativo que mais se distanciou da sua meta ideal.
             </p>
             <div className="tutorial-highlight-box" style={{ fontSize: '14px', lineHeight: '1.7' }}>
               🎯 <strong>Resultado Prático:</strong> Você sempre comprará na baixa com desconto, evitará comprar no topo da euforia e nunca precisará vender ativos para rebalancear, economizando impostos e taxas de corretagem!

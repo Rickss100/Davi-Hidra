@@ -143,6 +143,21 @@ const Login = () => {
         ) : (
           <>
             <div className="login-header">
+              <div style={{
+                display: 'inline-block',
+                background: 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                color: '#38bdf8',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                padding: '4px 10px',
+                borderRadius: '20px',
+                marginBottom: '12px'
+              }}>
+                🧭 Norte Invest • Método Davi & Hydra
+              </div>
               <h1>
                 {isRegistering ? (
                   <>Crie sua conta para<br />começar a investir</>
@@ -152,8 +167,8 @@ const Login = () => {
               </h1>
               <p style={{ fontSize: '13px', color: '#94a3b8', marginTop: '6px' }}>
                 {isRegistering 
-                  ? 'Ambiente exclusivo DAVI & HYDRA para controle e aporte inteligente'
-                  : 'Acesso seguro à sua carteira e estratégias de alocação'}
+                  ? 'Ambiente exclusivo Norte Invest para controle, diversificação e aportes inteligentes'
+                  : 'Acesso seguro à sua carteira, metas e estratégias de alocação'}
               </p>
             </div>
 

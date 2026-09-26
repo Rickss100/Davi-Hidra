@@ -16,7 +16,8 @@ export const PortfolioProvider = ({ children }) => {
   const [macroAllocation, setMacroAllocation] = useState(() => {
     const saved = localStorage.getItem(`macroAllocation_${userId}`) || localStorage.getItem('macroAllocation');
     return saved ? JSON.parse(saved) : {
-      fixed: 10, variable: 90,
+      // Padrão Ouro DAVI — Perfil Moderado (default para novos usuários)
+      fixed: 20, variable: 80,
       brasil: 65, usa: 35,
       acoes: 50, fiis: 50,
       stocks: 70, reits: 30
@@ -46,12 +47,34 @@ export const PortfolioProvider = ({ children }) => {
   // Atualizar objetivos e configuração de reserva ao trocar de usuário
   useEffect(() => {
     if (userId) {
-      const savedMacro = localStorage.getItem(`macroAllocation_${userId}`);
-      if (savedMacro) setMacroAllocation(JSON.parse(savedMacro));
-      const savedTargets = localStorage.getItem(`assetTargets_${userId}`);
-      if (savedTargets) setAssetTargets(JSON.parse(savedTargets));
+      // 1. Carregar configuração local (reserva e fallback)
       const savedEmergency = localStorage.getItem(`emergencyConfig_${userId}`);
       if (savedEmergency) setEmergencyConfig(JSON.parse(savedEmergency));
+
+      const savedMacro = localStorage.getItem(`macroAllocation_${userId}`);
+      const savedTargets = localStorage.getItem(`assetTargets_${userId}`);
+
+      // 2. Buscar da API (fonte de verdade para contas de auditoria e sync cross-device)
+      fetch(`/api/objectives/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.found) {
+            setMacroAllocation(data.macroAllocation);
+            setAssetTargets(data.assetTargets);
+            // Salvar localmente o que veio da API
+            localStorage.setItem(`macroAllocation_${userId}`, JSON.stringify(data.macroAllocation));
+            localStorage.setItem(`assetTargets_${userId}`, JSON.stringify(data.assetTargets));
+          } else {
+            // Se não tem na API, usa o localStorage que foi encontrado (se houver)
+            if (savedMacro) setMacroAllocation(JSON.parse(savedMacro));
+            if (savedTargets) setAssetTargets(JSON.parse(savedTargets));
+          }
+        })
+        .catch(err => {
+          console.error("Failed to fetch objectives from API, using localStorage fallback:", err);
+          if (savedMacro) setMacroAllocation(JSON.parse(savedMacro));
+          if (savedTargets) setAssetTargets(JSON.parse(savedTargets));
+        });
     }
   }, [userId]);
 
@@ -173,10 +196,31 @@ export const PortfolioProvider = ({ children }) => {
   }, [transactions, currentPrices]);
 
   // --- Actions ---
-  const updateMacro = (newMacro) => setMacroAllocation(newMacro);
+  const updateMacro = (newMacro) => {
+    setMacroAllocation(newMacro);
+    if (userId) {
+      localStorage.setItem(`macroAllocation_${userId}`, JSON.stringify(newMacro));
+      fetch(`/api/objectives/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ macroAllocation: newMacro })
+      }).catch(err => console.error('Erro ao salvar macro na API:', err));
+    }
+  };
   
   const updateAssetTargets = (category, newAssets) => {
-    setAssetTargets(prev => ({ ...prev, [category]: newAssets }));
+    setAssetTargets(prev => {
+      const updated = { ...prev, [category]: newAssets };
+      if (userId) {
+        localStorage.setItem(`assetTargets_${userId}`, JSON.stringify(updated));
+        fetch(`/api/objectives/${userId}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ assetTargets: updated })
+        }).catch(err => console.error('Erro ao salvar targets na API:', err));
+      }
+      return updated;
+    });
   };
 
   const updateEmergencyConfig = (newConfig) => {

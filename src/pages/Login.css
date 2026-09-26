@@ -153,3 +153,23 @@
 .login-button:active {
   transform: translateY(0);
 }
+
+.domain-shortcuts {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.domain-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.domain-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+

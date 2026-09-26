@@ -5,7 +5,7 @@ import './Sidebar.css';
 
 const Sidebar = () => {
   const location = useLocation();
-  const { user } = useAuth();
+  const { user, exitImpersonation } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -39,6 +39,17 @@ const Sidebar = () => {
           Método Davi & Hydra
         </span>
       </div>
+      {user?.isImpersonated && (
+        <div style={{ background: '#ef4444', color: '#fff', padding: '12px 10px', margin: '10px', borderRadius: '6px', textAlign: 'center', fontSize: '12px', border: '1px solid #7f1d1d' }}>
+          <strong style={{ display: 'block', marginBottom: '4px' }}>🛡️ MODO AUDITORIA</strong>
+          Acessando: {user.name?.split(' ')[0]}
+          <button 
+            onClick={() => { exitImpersonation(); window.location.href = '/admin'; }}
+            style={{ display: 'block', width: '100%', marginTop: '8px', padding: '6px 8px', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(0,0,0,0.4)', color: '#fff', cursor: 'pointer', borderRadius: '4px', fontWeight: 'bold' }}>
+            Encerrar Sessão
+          </button>
+        </div>
+      )}
       <nav>
         <ul>
           {menuItems.map((item) => {

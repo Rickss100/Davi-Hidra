@@ -56,10 +56,10 @@ const MacroAllocation = () => {
           { label: 'Renda Variável', value: macroAllocation.variable, key: 'variable' }
         ]}
         onChange={handleChange}
-        orientation="Mínimo 20% em renda fixa"
+        orientation="Conservador: 30% RF | Moderado: 20% RF | Agressivo: 10% RF"
       />
       
-      <div className="arrow-separator">›</div>
+      
 
       <AllocationCard
         title="Brasil vs EUA"
@@ -68,12 +68,12 @@ const MacroAllocation = () => {
           { label: 'EUA', value: macroAllocation.usa, key: 'usa' }
         ]}
         onChange={handleChange}
-        orientation="Mínimo 20% e máximo 40% nos EUA"
+        orientation="Mínimo 25% e máximo 40% alocado nos EUA"
       />
 
-      <div className="arrow-separator">›</div>
+      
 
-      <div className="vertical-stack">
+      
         <AllocationCard
           title="Brasil: Ações vs FIIs"
           inputs={[
@@ -81,7 +81,7 @@ const MacroAllocation = () => {
             { label: 'FIIs', value: macroAllocation.fiis, key: 'fiis' }
           ]}
           onChange={handleChange}
-          orientation="30% a 70% em cada"
+          orientation="Mínimo 30% e máximo 70% em cada classe"
         />
         <AllocationCard
           title="EUA: Stocks vs REITs"
@@ -90,9 +90,9 @@ const MacroAllocation = () => {
             { label: 'REITs', value: macroAllocation.reits, key: 'reits' }
           ]}
           onChange={handleChange}
-          orientation="30% a 70% em cada"
+          orientation="Mínimo 25% e máximo 75% em cada classe"
         />
-      </div>
+      
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePortfolio } from '../context/PortfolioContext';
 import { Sparkles } from 'lucide-react';
 import MacroAllocation from '../components/Strategy/MacroAllocation';
@@ -9,6 +9,14 @@ import '../components/Strategy/Strategy.css';
 const DefinirObjetivos = () => {
   const { assetTargets, updateAssetTargets } = usePortfolio();
   const [showWizard, setShowWizard] = useState(false);
+  const [allAssetsInfo, setAllAssetsInfo] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/assets')
+      .then(res => res.json())
+      .then(data => setAllAssetsInfo(data))
+      .catch(err => console.error('Error fetching assets:', err));
+  }, []);
 
   return (
     <div className="definir-objetivos-page">
@@ -51,31 +59,31 @@ const DefinirObjetivos = () => {
       <section className="strategy-section">
         <h2>2. Definição por Ativos</h2>
         <div className="assets-container">
-          <AssetTargetTable 
+          <AssetTargetTable availableAssets={allAssetsInfo} 
             title="Ações" 
             assets={assetTargets.acoes} 
             onUpdate={(newAssets) => updateAssetTargets('acoes', newAssets)} 
           />
-          <div className="arrow-separator">›</div>
-          <AssetTargetTable 
+          
+          <AssetTargetTable availableAssets={allAssetsInfo} 
             title="FIIs" 
             assets={assetTargets.fiis} 
             onUpdate={(newAssets) => updateAssetTargets('fiis', newAssets)} 
           />
-          <div className="arrow-separator">›</div>
-          <AssetTargetTable 
+          
+          <AssetTargetTable availableAssets={allAssetsInfo} 
             title="Stocks" 
             assets={assetTargets.stocks} 
             onUpdate={(newAssets) => updateAssetTargets('stocks', newAssets)} 
           />
-          <div className="arrow-separator">›</div>
-          <AssetTargetTable 
+          
+          <AssetTargetTable availableAssets={allAssetsInfo} 
             title="REITs" 
             assets={assetTargets.reits} 
             onUpdate={(newAssets) => updateAssetTargets('reits', newAssets)} 
           />
-          <div className="arrow-separator">›</div>
-          <AssetTargetTable 
+          
+          <AssetTargetTable availableAssets={allAssetsInfo} 
             title="Renda Fixa" 
             assets={assetTargets.fixed || []} 
             onUpdate={(newAssets) => updateAssetTargets('fixed', newAssets)} 

@@ -15,6 +15,9 @@ import RadarAtivos from './pages/RadarAtivos';
 import AdminUsers from './pages/AdminUsers';
 import Tutorial from './pages/Tutorial';
 import Login from './pages/Login';
+import RecuperarSenha from './pages/RecuperarSenha';
+import RedefinirSenha from './pages/RedefinirSenha';
+import Termos from './pages/Termos';
 import './App.css';
 
 // Protected Route Wrapper
@@ -43,6 +46,9 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<Login />} />
+              <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+              <Route path="/redefinir-senha" element={<RedefinirSenha />} />
+              <Route path="/termos" element={<Termos />} />
               
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<MainLayout />}>

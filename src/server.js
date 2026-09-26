@@ -16,7 +16,12 @@ const __dirname = path.dirname(__filename);
 const DIST_DIR = path.resolve(__dirname, '../dist');
 
 // Import routes with error handling
-let testRoutes, assetsRoutes, pricesRoutes, fundamentalsRoutes, economicRoutes, statsRoutes, syncRoutes, transactionsRoutes, usersRoutes, dividendsRoutes, resumoRoutes;
+let testRoutes, assetsRoutes, pricesRoutes, fundamentalsRoutes, economicRoutes, statsRoutes, syncRoutes, transactionsRoutes, usersRoutes, dividendsRoutes, resumoRoutes, objectivesRoutes;
+
+try {
+  objectivesRoutes = (await import('./routes/objectives.routes.js')).default;
+  console.log('✅ objectives.routes loaded');
+} catch (err) { console.error('❌ objectives.routes failed:', err.message); }
 
 try {
   usersRoutes = (await import('./routes/users.routes.js')).default;
@@ -80,6 +85,29 @@ const PORT = process.env.PORT || 3002;
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  const impersonatorId = req.headers['x-impersonator-id'];
+  if (impersonatorId && req.method !== 'GET') {
+    const targetUserId = req.headers['x-user-id'] || 'unknown';
+    const logLine = `[${new Date().toISOString()}] ADMIN_ID: ${impersonatorId} | TARGET_USER_ID: ${targetUserId} | METHOD: ${req.method} | PATH: ${req.originalUrl} | BODY: ${JSON.stringify(req.body)}\n`;
+    try {
+      fs.appendFileSync(path.resolve(__dirname, '../audit_historico.log'), logLine);
+    } catch (e) {
+      console.error('Audit Log failed:', e);
+    }
+  }
+  next();
+});
+
+
+
+// Servir relatórios em PDF e HTML
+const RELATORIOS_DIR = path.resolve(__dirname, '../public/relatorios');
+if (fs.existsSync(RELATORIOS_DIR)) {
+  app.use('/relatorios', express.static(RELATORIOS_DIR));
+  console.log('📄 Relatórios estáticos ativos em /relatorios');
+}
+
 // Servir arquivos estáticos do frontend (quando compilado para produção)
 if (fs.existsSync(DIST_DIR)) {
   app.use(express.static(DIST_DIR));
@@ -112,6 +140,7 @@ if (transactionsRoutes) app.use('/api/transactions', transactionsRoutes);
 if (usersRoutes) app.use('/api/users', usersRoutes);
 if (dividendsRoutes) app.use('/api/dividends', dividendsRoutes);
 if (resumoRoutes) app.use('/api/resumo', resumoRoutes);
+if (objectivesRoutes) app.use('/api/objectives', objectivesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

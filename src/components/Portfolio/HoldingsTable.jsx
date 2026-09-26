@@ -1,14 +1,27 @@
 import { usePortfolio } from '../../context/PortfolioContext';
 import './Portfolio.css';
 
-const HoldingsTable = ({ category, title, color }) => {
+const HoldingsTable = ({ category, title, color, ...props }) => {
   const { holdings } = usePortfolio();
-  const assets = holdings[category] || [];
+  const { emergencyReserveSummary } = usePortfolio();
+  let assets = holdings[category] || [];
+  
+  if (category === 'fixed') {
+    const reserveCodes = (emergencyReserveSummary?.reserveAssets || []).map(a => a.code);
+    if (props.excludeReserve) {
+      assets = assets.filter(a => !reserveCodes.includes(a.code));
+    }
+    if (props.onlyReserve) {
+      assets = assets.filter(a => reserveCodes.includes(a.code));
+    }
+  }
 
   // Calculate totals for % Real
   const categoryTotal = assets.reduce((sum, asset) => sum + (asset.quantity * asset.currentPrice), 0);
   const portfolioTotal = Object.values(holdings).flat().reduce((sum, asset) => sum + (asset.quantity * asset.currentPrice), 0);
 
+  if (props.onlyReserve && assets.length === 0) return null;
+  
   return (
     <div className="holdings-card" style={{ borderTop: `4px solid ${color}` }}>
       <div className="card-header-row">

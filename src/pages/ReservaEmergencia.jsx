@@ -30,7 +30,7 @@ const ReservaEmergencia = () => {
   const [monthlyExpense, setMonthlyExpense] = useState(emergencyReserveSummary?.monthlyExpense ?? 0);
   const [monthsTarget, setMonthsTarget] = useState(emergencyReserveSummary?.monthsTarget ?? 6);
   const [profileType, setProfileType] = useState(emergencyReserveSummary?.profileType || 'clt');
-  const [strategyMode, setStrategyMode] = useState(emergencyReserveSummary?.strategyMode || 'hybrid_70_30');
+  const [strategyMode, setStrategyMode] = useState(emergencyReserveSummary?.strategyMode || 'focus_100');
   const [manualBalance, setManualBalance] = useState(emergencyReserveSummary?.manualReserveBalance || 0);
 
   // Projeção de aporte mensal
@@ -53,7 +53,7 @@ const ReservaEmergencia = () => {
       setMonthlyExpense(emergencyReserveSummary.monthlyExpense ?? 0);
       setMonthsTarget(emergencyReserveSummary.monthsTarget ?? 6);
       setProfileType(emergencyReserveSummary.profileType || 'clt');
-      setStrategyMode(emergencyReserveSummary.strategyMode || 'hybrid_70_30');
+      setStrategyMode(emergencyReserveSummary.strategyMode || 'focus_100');
       setManualBalance(emergencyReserveSummary.manualReserveBalance || 0);
     }
   }, [emergencyReserveSummary]);
@@ -253,10 +253,10 @@ const ReservaEmergencia = () => {
                   cursor: 'pointer'
                 }}
               >
-                <option value="publico">🏛️ Servidor Público Concursado (Sugerido: 3 a 4 meses)</option>
-                <option value="clt">🏢 Funcionário CLT com FGTS (Sugerido: 6 meses)</option>
+                <option value="publico">🏛️ Servidor Público Concursado (Sugerido: 3 a 6 meses)</option>
+                <option value="clt">🏢 Funcionário CLT com FGTS (Sugerido: 6 a 9 meses)</option>
                 <option value="autonomo">💼 Autônomo / Freelancer / MEI (Sugerido: 9 a 12 meses)</option>
-                <option value="empresario">🚀 Empresário / Dono de Negócio (Sugerido: 12 meses)</option>
+                <option value="empresario">🚀 Empresário / Dono de Negócio (Sugerido: 12 meses ou mais)</option>
               </select>
             </div>
           </div>

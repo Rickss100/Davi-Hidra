@@ -190,16 +190,32 @@ const Login = () => {
           )}
 
           <div className="input-group">
-            <label htmlFor="email">Login ou E-mail</label>
+            <label htmlFor="email">E-mail</label>
             <div className="input-wrapper">
               <input 
                 type="text" 
                 id="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder={isRegistering ? "Ex: seuemail@exemplo.com" : "Digite seu login ou e-mail"}
+                placeholder={isRegistering ? "Ex: seuemail@exemplo.com" : "Digite seu e-mail de acesso"}
                 required
               />
+            </div>
+            {/* 🚀 UX: Encurtadores de domínio para reduzir fricção */}
+            <div className="domain-shortcuts">
+              {['@gmail.com', '@hotmail.com', '@outlook.com'].map(domain => (
+                <button
+                  key={domain}
+                  type="button"
+                  className="domain-btn"
+                  onClick={() => {
+                    const base = email.split('@')[0];
+                    setEmail(`${base}${domain}`);
+                  }}
+                >
+                  {domain}
+                </button>
+              ))}
             </div>
           </div>
 

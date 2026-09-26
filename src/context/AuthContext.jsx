@@ -68,9 +68,30 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const impersonateUser = (targetUser) => {
+    localStorage.setItem('original_user', JSON.stringify(user));
+    localStorage.setItem('impersonator_id', String(user.id));
+    const fakeUser = { ...targetUser, isImpersonated: true };
+    setUser(fakeUser);
+    localStorage.setItem('user', JSON.stringify(fakeUser));
+  };
+
+  const exitImpersonation = () => {
+    const original = localStorage.getItem('original_user');
+    if (original) {
+      const origUser = JSON.parse(original);
+      setUser(origUser);
+      localStorage.setItem('user', JSON.stringify(origUser));
+      localStorage.removeItem('original_user');
+      localStorage.removeItem('impersonator_id');
+    }
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+      localStorage.removeItem('original_user');
+      localStorage.removeItem('impersonator_id');
   };
 
   const value = {
@@ -78,7 +99,9 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user,
+      impersonateUser,
+      exitImpersonation
   };
 
   return (

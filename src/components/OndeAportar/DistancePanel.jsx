@@ -66,9 +66,20 @@ const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue }) 
                   )}
                 </button>
               </div>
-              <span className={`distance-value ${catDist.distance > 0 ? 'positive' : 'negative'}`}>
-                {catDist.distance > 0 ? '+' : ''}{catDist.distance.toFixed(2)}%
-              </span>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', width: '120px' }}>
+                <span className={`distance-value ${catDist.distance > 0 ? 'positive' : 'negative'}`}>
+                  {catDist.distance > 0 ? '+' : ''}{catDist.distance.toFixed(2)}%
+                </span>
+                <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '4px', overflow: 'hidden' }}>
+                   <div style={{
+                     height: '100%',
+                     width: `${Math.min(100, (catDist.currentPercent / (catDist.targetPercent || 1)) * 100)}%`,
+                     background: catDist.distance > 0 ? '#ef4444' : '#10b981', 
+                     transition: 'width 0.3s'
+                   }} />
+                </div>
+              </div>
             </div>
 
             {expandedCategory === catDist.category && (
@@ -80,9 +91,20 @@ const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue }) 
                 {getCategoryAssets(catDist.category).map(asset => (
                   <div key={asset.ticker} className="asset-detail-row">
                     <span className="asset-ticker">{asset.ticker}</span>
-                    <span className={`asset-distance ${asset.distance > 0 ? 'positive' : 'negative'}`}>
-                      {asset.distance > 0 ? '+' : ''}{asset.distance.toFixed(2)}%
-                    </span>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', width: '120px' }}>
+                      <span className={`asset-distance ${asset.distance > 0 ? 'positive' : 'negative'}`}>
+                        {asset.distance > 0 ? '+' : ''}{asset.distance.toFixed(2)}%
+                      </span>
+                      <div style={{ width: '100%', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginTop: '4px', overflow: 'hidden' }}>
+                         <div style={{
+                           height: '100%',
+                           width: `${Math.min(100, (asset.currentPercent / (asset.targetPercent || 1)) * 100)}%`,
+                           background: asset.distance > 0 ? '#ef4444' : '#10b981', // if distance > 0 it means it's above target (overweight)
+                           transition: 'width 0.3s'
+                         }} />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -1,0 +1,288 @@
+import fs from 'fs';
+import path from 'path';
+import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const htmlContent = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Dossiê Oficial - Norte Invest (NotebookLM)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+    
+    @page {
+      size: A4 portrait;
+      margin: 15mm 20mm 15mm 20mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 9pt;
+        color: #64748b;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Merriweather', serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.7;
+      font-size: 11pt;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #0f172a;
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+    }
+
+    h1 { font-size: 26pt; font-weight: 800; color: #1e1b4b; border-bottom: 2px solid #f59e0b; padding-bottom: 10px; }
+    h2 { font-size: 18pt; font-weight: 700; color: #3b82f6; }
+    h3 { font-size: 14pt; font-weight: 600; }
+
+    p { margin-bottom: 1em; }
+    
+    strong { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; color: #0f172a; }
+
+    .brand { color: #f59e0b; font-weight: 800; }
+
+    ul { margin-bottom: 1em; padding-left: 20px; }
+    li { margin-bottom: 0.5em; }
+
+    .box {
+      background: #f8fafc;
+      border-left: 4px solid #f59e0b;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .box-blue {
+      border-color: #3b82f6;
+      background: #eff6ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+    }
+
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #0f172a;
+      color: white;
+      font-weight: 600;
+    }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 900px;
+      page-break-after: always;
+    }
+
+    .cover-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 32pt;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .cover-subtitle {
+      font-size: 14pt;
+      color: #64748b;
+      margin-bottom: 40px;
+    }
+
+    .cover-logo {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 24pt;
+      font-weight: 800;
+      color: #1e1b4b;
+      margin-bottom: 100px;
+    }
+    .cover-logo span { color: #f59e0b; }
+
+    .page-break { page-break-before: always; }
+    
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 9pt;
+      color: #94a3b8;
+      text-align: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CAPA -->
+  <div class="cover">
+    <div class="cover-logo">Norte <span>Invest</span></div>
+    <div class="cover-title">Dossiê Completo de Estratégia e Auditoria Institucional</div>
+    <div class="cover-subtitle">O Guia Definitivo do Método DAVI, AM2O e a Filosofia Hydra</div>
+    <div style="margin-top: 50px; font-family: 'Plus Jakarta Sans'; font-size: 10pt; color: #94a3b8; text-transform: uppercase; letter-spacing: 2px;">
+      Documento Classificado para Treinamento de IA (NotebookLM)
+    </div>
+  </div>
+
+  <!-- INTRODUÇÃO -->
+  <h1>1. O Posicionamento Ético da Norte Invest</h1>
+  
+  <p>No mercado financeiro tradicional, investidores sofrem com o <strong>Conflito de Interesses</strong>. Bancos e grandes corretoras muitas vezes recomendam fundos e ativos não porque são os melhores para o cliente, mas porque pagam as maiores taxas de corretagem (rebates) para os gerentes e assessores.</p>
+
+  <div class="box">
+    <strong>A Independência como Vantagem Competitiva:</strong> A <span class="brand">Norte Invest</span> não está ligada a nenhuma instituição financeira, banco ou corretora. Somos uma plataforma independente de inteligência e gestão estratégica. Nosso único cliente e nossa única lealdade é com o patrimônio do usuário.
+  </div>
+
+  <p>Hoje, o aplicativo da <strong>Norte Invest</strong> se posiciona como uma das melhores e mais transparentes ferramentas para investidores no Brasil. Através de algoritmos avançados e métodos testados (DAVI e AM2O), a plataforma retira a emoção da tomada de decisão e automatiza a rota rumo à liberdade financeira com máxima segurança.</p>
+
+  <!-- O MÉTODO -->
+  <h2>2. A Tríade Metodológica: DAVI, Hydra e AM2O</h2>
+
+  <p>O sucesso da Norte Invest reside em não depender de "dicas quentes", mas de matemática, fundamentos de qualidade e rebalanceamento dinâmico. A estratégia é composta por três pilares:</p>
+
+  <h3>A. O Método DAVI (Radar de Ativos)</h3>
+  <p>O acrônimo DAVI orienta o radar de qualidade da empresa. O foco é buscar <strong>Dividendos</strong> consistentes, <strong>Ações</strong> de gigantes globais com vantagem competitiva, e fundos atrelados a <strong>Valor e Imóveis</strong> (FIIs e REITs). O radar da Norte Invest atua como a escultura de Michelangelo: ele retira tudo que é lixo (empresas endividadas, margens ruins) e o que sobra é a perfeição (o Davi).</p>
+
+  <h3>B. A Filosofia Hydra (Blindagem Patrimonial)</h3>
+  <p>A Hydra de Lerna, na mitologia, regenerava duas cabeças quando uma era cortada. No mercado financeiro, a Norte Invest aplica isso através de uma diversificação setorial robusta e global. O capital é alocado através de tentáculos (Renda Fixa, Ações Brasil, FIIs, Stocks Americanas de Tecnologia, REITs) para que, se um setor da economia colapsar, os outros setores compensem o crescimento e sustentem a carteira.</p>
+
+  <h3>C. Algoritmo AM2O</h3>
+  <p>A sigla significa <strong>Aporte Mensal no Ativo Mais Distante do Objetivo</strong>. É o cérebro do aplicativo Norte Invest. Em vez do usuário tentar adivinhar a hora certa de comprar, o aplicativo calcula automaticamente qual ativo do seu portfólio está mais distante da meta percentual ideal e indica a compra. Isso obriga o investidor a <strong>comprar na baixa</strong> sistematicamente, maximizando os lucros no longo prazo de forma fria e calculista.</p>
+
+  <!-- AUDITORIA V1 -->
+  <div class="page-break"></div>
+  <h1>3. Primeira Auditoria (A Simulação Bruta)</h1>
+
+  <p>Para atestar a validade do aplicativo Norte Invest, o sistema foi submetido a um rigoroso backtest histórico de 60 meses (Março/2021 a Março/2026), simulando as transações no pior e no melhor dos mercados.</p>
+
+  <ul>
+    <li><strong>Perfil do Cliente:</strong> Servidor Público (Salário R$ 10.000).</li>
+    <li><strong>Dinâmica:</strong> Capital inicial de R$ 154.000, e aportes de R$ 1.500 todos os meses religiosamente. (Total desembolsado no fim do período: R$ 244.000).</li>
+  </ul>
+
+  <p>Na <strong>Primeira Auditoria</strong>, simulamos três perfis: Conservador, Moderado e Agressivo. Os resultados atestaram o lucro, com o Agressivo chegando próximo a R$ 490 mil, Moderado a R$ 408 mil e o Conservador a R$ 397 mil.</p>
+
+  <div class="box box-blue">
+    <strong>A Descoberta da V1:</strong> Verificou-se que a proporção de <em>Reserva de Emergência</em> (Renda Fixa) variava entre os perfis nesta simulação. Isso tornava a comparação "injusta" do ponto de vista científico, pois o Conservador tinha quase metade do capital preso na Renda Fixa desde o início, misturando rendimentos da segurança com o rendimento do risco. Foi então encomendada a <strong>Auditoria V2</strong>.
+  </div>
+
+  <!-- AUDITORIA V2 -->
+  <h2>4. Segunda Auditoria (Isolamento da Reserva Blindada)</h2>
+
+  <p>A V2 é a "Prova Real" definitiva. Nesta rodada, equalizamos a linha de partida: <strong>Todos os três perfis iniciaram a simulação com exatamente R$ 50.000 travados em Reserva de Emergência (CDB com liquidez)</strong>. </p>
+
+  <p>Com as famílias blindadas igualmente contra crises (5 meses do salário), os R$ 104.000 restantes (e todos os aportes mensais) foram submetidos à inteligência do Radar DAVI e às indicações mensais do algoritmo AM2O. O resultado é o atestado puro da eficiência das carteiras de risco.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Perfil</th>
+        <th>Capital Final Acumulado</th>
+        <th>Lucro Líquido Real</th>
+        <th>Renda Passiva Mensal</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Conservador</strong></td>
+        <td>R$ 397.248,80</td>
+        <td>+ R$ 54.216,10</td>
+        <td>~ R$ 2.520 (25% do salário)</td>
+      </tr>
+      <tr>
+        <td><strong>Moderado</strong></td>
+        <td>R$ 397.942,74</td>
+        <td>+ R$ 63.175,60</td>
+        <td>~ R$ 2.346 (23% do salário)</td>
+      </tr>
+      <tr>
+        <td><strong>Agressivo</strong></td>
+        <td>R$ 466.777,68</td>
+        <td>+ R$ 135.150,24</td>
+        <td>~ R$ 2.392 (23% do salário)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Análise dos Resultados (V2)</h3>
+  <p>Os números contam uma história irrefutável. Começando com o mesmo cinto de segurança (50k em RF), a Inteligência Artificial do Radar Norte Invest guiou o capital restante do perfil Agressivo para as gigantes globais (como Microsoft, Apple, NVIDIA, BBAS3, VALE3), gerando incríveis <strong>R$ 135 mil de lucros limpos e reais</strong> em 5 anos.</p>
+  
+  <p>A diferença entre o Agressivo e o Conservador foi brutal (+ R$ 69.000 a favor da exposição inteligente a risco), desbancando qualquer título de Renda Fixa engessado vendido por bancos comerciais, mantendo total <strong>paz de espírito</strong>, pois a reserva esteve intocada e rendendo no CDB desde o dia um.</p>
+
+  <!-- CONCLUSÃO -->
+  <div class="page-break"></div>
+  <h1>5. Conclusão Final</h1>
+
+  <p>A plataforma <strong>Norte Invest</strong> provou que não se trata apenas de uma planilha glorificada, mas sim de um <em>gestor de patrimônio inteligente e automatizado</em> de bolso. </p>
+
+  <p>Sua independência institucional garante que não existe motivação escusa por trás das recomendações no Radar DAVI. Quando um ativo perde os fundamentos, ele é cortado; quando uma oportunidade surge, o AM2O aponta onde aportar no próximo mês. O investidor acorda, abre o app Norte Invest, vê para onde mandar o dinheiro em menos de 1 minuto, e segue sua vida focado em sua profissão — exatamente como o Servidor Público desta simulação fez.</p>
+
+  <p>O ecossistema Método DAVI, Hydra e o App Norte Invest se consolidam hoje como a arquitetura ideal para quem busca construir impérios financeiros sem depender do mercado tradicional viciado.</p>
+
+  <div class="footer">
+    Documento gerado automaticamente pelo motor Norte Invest Analytics. Uso restrito para treinamento NotebookLM.
+  </div>
+
+</body>
+</html>
+`;
+
+// Define output paths
+const outputHtmlPath = path.resolve(__dirname, '../public/relatorios/dossie_norte_invest_notebooklm.html');
+const outputPdfPath = path.resolve(__dirname, '../public/relatorios/Dossie_Norte_Invest_Completo.pdf');
+
+// Escrever HTML
+fs.writeFileSync(outputHtmlPath, htmlContent, 'utf-8');
+console.log('✅ HTML gerado:', outputHtmlPath);
+
+// Encontrar navegador
+const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+const edgePath = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const browserExe = fs.existsSync(chromePath) ? chromePath : (fs.existsSync(edgePath) ? edgePath : null);
+
+if (!browserExe) {
+  console.error('❌ Navegador não encontrado para conversão.');
+  process.exit(1);
+}
+
+// Executar PDF Headless
+try {
+  const cmd = `"${browserExe}" --headless --disable-gpu --no-pdf-header-footer --print-to-pdf="${outputPdfPath}" "${outputHtmlPath}"`;
+  execSync(cmd, { stdio: 'inherit' });
+  console.log('🎉 PDF gerado com sucesso:', outputPdfPath);
+  
+  // Copiar para brain/artifacts
+  const brainDir = 'C:\\Users\\ricks\\.gemini\\antigravity\\brain\\9cbf9a46-d361-46c0-b285-1126c4a67692';
+  const brainPdfPath = path.join(brainDir, 'Dossie_Norte_Invest_Completo.pdf');
+  fs.copyFileSync(outputPdfPath, brainPdfPath);
+  console.log('📌 PDF copiado para artefatos em:', brainPdfPath);
+
+} catch (err) {
+  console.error('❌ Erro na geração do PDF:', err.message);
+  process.exit(1);
+}

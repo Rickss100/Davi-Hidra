@@ -1,7 +1,9 @@
+import crypto from 'crypto';
 /**
  * Users Routes (Authentication and Superuser Admin Management)
  */
 import express from 'express';
+import bcrypt from 'bcryptjs';
 import { 
   getUserByEmail, 
   getUserById, 
@@ -22,7 +24,7 @@ function getRequester(req) {
 }
 
 // POST /api/users/login - Authenticate user
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -30,8 +32,33 @@ router.post('/login', (req, res) => {
     }
 
     const user = getUserByEmail(email.trim());
-    if (!user || user.password !== password) {
+    if (!user) {
       return res.status(401).json({ error: 'Credenciais inválidas. Verifique seu login e senha.' });
+    }
+
+    // Identificar se a senha atual está em hash bcrypt (inicia com $2a$ ou $2b$)
+    const isHashed = user.password && (user.password.startsWith('$2a$') || user.password.startsWith('$2b$'));
+    
+    let isMatch = false;
+    if (isHashed) {
+      isMatch = bcrypt.compareSync(password, user.password);
+    } else {
+      isMatch = (user.password === password);
+    }
+
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Credenciais inválidas. Verifique seu login e senha.' });
+    }
+
+    // Se a senha estiver em texto plano e bateu, migra pra hash automaticamente (Migração Silenciosa)
+    if (!isHashed) {
+      const newHash = bcrypt.hashSync(password, 10);
+      const updatedUser = updateUser(user.id, { password: newHash });
+      try {
+        await syncUserToTurso(updatedUser);
+      } catch (e) {
+        console.warn('⚠️ Falha ao migrar senha para Turso:', e.message);
+      }
     }
 
     if (user.status === 'inactive') {
@@ -73,9 +100,11 @@ router.post('/register', async (req, res) => {
       return res.status(409).json({ error: 'Já existe um usuário cadastrado com este login/e-mail.' });
     }
 
+    const hashedPassword = bcrypt.hashSync(password.trim(), 10);
+
     const newUser = createUser({
       email: email.trim(),
-      password: password.trim(),
+      password: hashedPassword,
       name: name.trim(),
       role: 'user',
       status: 'active',
@@ -85,7 +114,7 @@ router.post('/register', async (req, res) => {
 
     // ✅ Aguardar confirmação síncrona no Turso antes de retornar
     try {
-      await syncUserToTurso({ ...newUser, password: password.trim() });
+      await syncUserToTurso({ ...newUser, password: hashedPassword });
     } catch (tursoErr) {
       console.error('⚠️ Falha ao sincronizar novo usuário no Turso:', tursoErr.message);
     }
@@ -111,7 +140,10 @@ router.get('/', (req, res) => {
     }
 
     const users = getAllUsers();
-    res.json(users);
+    // 🛡️ Segurança: Remover o campo password de todos os usuários
+    const safeUsers = users.map(({ password, ...userSafe }) => userSafe);
+    
+    res.json(safeUsers);
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: error.message });
@@ -155,9 +187,11 @@ router.post('/', async (req, res) => {
       finalExpiresAt = null;
     }
 
+    const hashedPassword = bcrypt.hashSync(password.trim(), 10);
+
     const newUser = createUser({
       email: email.trim(),
-      password: password.trim(),
+      password: hashedPassword,
       name: name.trim(),
       role: role || 'user',
       status: status || 'active',
@@ -167,7 +201,7 @@ router.post('/', async (req, res) => {
 
     // ✅ Aguardar confirmação síncrona no Turso antes de retornar
     try {
-      await syncUserToTurso({ ...newUser, password: password.trim() });
+      await syncUserToTurso({ ...newUser, password: hashedPassword });
     } catch (tursoErr) {
       console.error('⚠️ Falha ao sincronizar novo usuário no Turso:', tursoErr.message);
     }
@@ -229,10 +263,16 @@ router.put('/:id', async (req, res) => {
       }
     }
 
+    // Se forneceu uma nova senha, fazemos o hash
+    let finalPassword = password;
+    if (password && password.trim() !== '') {
+      finalPassword = bcrypt.hashSync(password.trim(), 10);
+    }
+
     const updated = updateUser(id, { 
       name, 
       email, 
-      password, 
+      password: finalPassword, 
       role, 
       status, 
       plan_period: finalPeriod, 
@@ -320,6 +360,68 @@ router.get('/:id/portfolio', (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching user portfolio:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// POST /api/users/forgot-password
+router.post('/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const db = getDatabase();
+    const user = db.prepare('SELECT id FROM users WHERE email = ?').get(email);
+    
+    if (!user) {
+      // Para não revelar se o e-mail existe, retorna sucesso falso (blindagem)
+      return res.json({ message: 'Se o e-mail existir, um link de recuperação será enviado.' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 3600000).toISOString(); // 1 hora
+    
+    db.prepare('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?').run(resetToken, expires, user.id);
+    
+    // Simulação de e-mail (Em dev)
+    console.log('\n====================================');
+    console.log('EMAIL SIMULADO DE RECUPERAÇÃO:');
+    console.log(`Para: ${email}`);
+    console.log(`Link: http://localhost:8080/redefinir-senha?token=${resetToken}`);
+    console.log('====================================\n');
+
+    res.json({ 
+      message: 'Se o e-mail existir, um link de recuperação será enviado.',
+      devLink: `/redefinir-senha?token=${resetToken}`
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/users/reset-password
+router.post('/reset-password', async (req, res) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) return res.status(400).json({ error: 'Faltam dados' });
+
+    const db = getDatabase();
+    const user = db.prepare('SELECT id, reset_expires FROM users WHERE reset_token = ?').get(token);
+
+    if (!user) {
+      return res.status(400).json({ error: 'Token inválido ou não encontrado.' });
+    }
+
+    if (new Date() > new Date(user.reset_expires)) {
+      return res.status(400).json({ error: 'Token expirado.' });
+    }
+
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(newPassword, salt);
+
+    db.prepare('UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?').run(hash, user.id);
+    
+    res.json({ message: 'Senha redefinida com sucesso' });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });

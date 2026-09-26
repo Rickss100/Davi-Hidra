@@ -13,6 +13,10 @@ const getAuthHeaders = () => {
                 headers['X-User-Role'] = String(user.role);
             }
         }
+      const impersonatorId = localStorage.getItem('impersonator_id');
+        if (impersonatorId) {
+            headers['X-Impersonator-Id'] = String(impersonatorId);
+        }
     } catch (e) {
         // ignora erro de parse
     }

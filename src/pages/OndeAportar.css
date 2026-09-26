@@ -136,9 +136,12 @@
 
 .currency {
   position: absolute;
-  left: 1rem;
+  left: 0.75rem;
   color: #737380;
   font-weight: 600;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
 }
 
 .input-wrapper input {
@@ -420,3 +423,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+.davi-warning {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  max-width: 280px;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  line-height: 1.4;
+}
+

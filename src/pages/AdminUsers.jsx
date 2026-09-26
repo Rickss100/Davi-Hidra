@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { userService } from '../services/userService';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -13,7 +14,8 @@ import {
   XCircle, 
   Search, 
   RefreshCw, 
-  FolderSearch, 
+  FolderSearch,
+  LogIn, 
   Trash2, 
   Edit3,
   TrendingUp,
@@ -30,7 +32,8 @@ const AdminUsers = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   
-  const { user: currentUser } = useAuth();
+  const { user: currentUser, impersonateUser } = useAuth();
+  const navigate = useNavigate();
   const isCurrentUserCollaborator = currentUser?.role === 'collaborator';
 
   // Modais
@@ -477,6 +480,19 @@ const AdminUsers = () => {
                           title="Inspecionar Carteira e Ordens"
                         >
                           <FolderSearch size={15} />
+                        </button>
+
+                        <button 
+                          className="btn-action" 
+                          onClick={() => {
+                            impersonateUser(u);
+                            navigate('/');
+                            window.location.reload();
+                          }}
+                          title="Entrar na Conta (Ações ficarão registradas no audit_historico.log)"
+                          style={{ color: '#60a5fa', background: 'rgba(96, 165, 250, 0.1)', borderColor: 'rgba(96, 165, 250, 0.2)' }}
+                        >
+                          <LogIn size={15} />
                         </button>
 
                         <button 

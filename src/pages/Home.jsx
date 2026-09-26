@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import SetupChecklist from '../components/Onboarding/SetupChecklist';
 import { useAuth } from '../context/AuthContext';
 import { usePortfolio } from '../context/PortfolioContext';
 import { RefreshCcw, Wallet } from 'lucide-react';

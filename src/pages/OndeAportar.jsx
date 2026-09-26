@@ -15,6 +15,7 @@ const OndeAportar = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [availableAmount, setAvailableAmount] = useState('');
+  const [displayAmount, setDisplayAmount] = useState('');
   const [numAssets, setNumAssets] = useState(2);
   const [suggestions, setSuggestions] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
@@ -39,6 +40,15 @@ const OndeAportar = () => {
   const allHoldings = Object.values(holdings).flat();
   const totalValue = allHoldings.reduce((sum, h) => sum + (h.quantity * h.currentPrice), 0);
 
+  const handleAmountChange = (e) => {
+    // Remove tudo que não é dígito, ponto ou vírgula
+    let raw = e.target.value.replace(/[^0-9.,]/g, '');
+    // Troca vírgula por ponto para parseFloat
+    const normalized = raw.replace(',', '.');
+    setDisplayAmount(raw);
+    setAvailableAmount(normalized);
+  };
+
   const handleGenerateSuggestions = () => {
     const amount = parseFloat(availableAmount) || 0;
     
@@ -61,7 +71,42 @@ const OndeAportar = () => {
       reserveSummaryForCalc
     );
     
-    setSuggestions(newSuggestions);
+    // Checar Qualidade DAVI (Item 9 da Auditoria)
+    const checkQuality = async (sugs) => {
+      try {
+        const res = await fetch('/api/assets/with-fundamentals?type=all');
+        if (res.ok) {
+          const allAssets = await res.json();
+          const checkedSugs = sugs.map(s => {
+            if (s.categoria === 'fixed' || s.isEmergencyReserve) return s;
+            const assetData = allAssets.find(a => a.code === s.ticker);
+            if (assetData && assetData.fundamentals) {
+              const f = assetData.fundamentals;
+              let reason = '';
+              if (f.net_margin < 0 || f.roe < 0) {
+                reason = 'Prejuízo/ROE negativo';
+              } else if (f.dividend_yield === 0 && !String(s.categoria).toLowerCase().includes('stock')) {
+                reason = 'Corte de dividendos';
+              } else if (f.p_vp > 3.0 || (String(s.categoria).toLowerCase().includes('fii') && f.p_vp > 1.15)) {
+                reason = 'P/VP fora do teto';
+              }
+              
+              if (reason) {
+                return { ...s, warning: `${s.ticker} não passa mais no filtro DAVI (${reason}). Revise antes de aportar.` };
+              }
+            }
+            return s;
+          });
+          setSuggestions(checkedSugs);
+        } else {
+          setSuggestions(sugs);
+        }
+      } catch (e) {
+        setSuggestions(sugs);
+      }
+    };
+    
+    checkQuality(newSuggestions);
     setErrorMessage(''); // Clear previous errors
     
     // Check for potential issues if no suggestions returned
@@ -256,12 +301,11 @@ const OndeAportar = () => {
                 <div className="input-wrapper">
                   <span className="currency">R$</span>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="0,00"
-                    value={availableAmount}
-                    onChange={(e) => setAvailableAmount(e.target.value)}
-                    min="0"
-                    step="0.01"
+                    value={displayAmount}
+                    onChange={handleAmountChange}
                   />
                 </div>
               </div>
@@ -304,12 +348,17 @@ const OndeAportar = () => {
                   <tbody>
                     {suggestions.map(suggestion => (
                       <tr key={suggestion.ticker} className={suggestion.isEmergencyReserve ? 'row-emergency' : ''}>
-                        <td className="ticker-cell">
-                          {suggestion.ticker}
-                          {suggestion.isEmergencyReserve && (
-                            <span className="emergency-badge">🛡️ Reserva</span>
-                          )}
-                        </td>
+                                                  <td className="ticker-cell">
+                            {suggestion.ticker}
+                            {suggestion.isEmergencyReserve && (
+                              <span className="emergency-badge">🛡️ Reserva</span>
+                            )}
+                            {suggestion.warning && (
+                              <div className="davi-warning">
+                                ⚠️ {suggestion.warning}
+                              </div>
+                            )}
+                          </td>
                         <td className="purpose-cell">
                           {suggestion.reason || (suggestion.isEmergencyReserve ? 'Blindagem' : 'Rebalanceamento')}
                         </td>

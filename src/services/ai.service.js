@@ -62,7 +62,7 @@ ${userDataContext ? `- Dados Reais do Banco de Dados do Usuário: ${userDataCont
 Responda diretamente a pergunta do usuário de forma útil e direta, considerando os dados acima. Se os dados forem úteis para a resposta, mencione-os sutilmente. Formate a resposta usando Markdown limpo (negritos, listas) para facilitar a leitura no chat.`;
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
     const chat = model.startChat({
       history: [
         {

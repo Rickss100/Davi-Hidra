@@ -129,35 +129,34 @@
 }
 
 .input-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
+  background: #202024;
+  border: 1px solid #29292e;
+  border-radius: 4px;
+  padding-left: 1rem;
+}
+.input-wrapper:focus-within {
+  border-color: #04d361;
 }
 
 .currency {
-  position: absolute;
-  left: 0.75rem;
   color: #737380;
   font-weight: 600;
-  z-index: 1;
-  pointer-events: none;
-  user-select: none;
+  margin-right: 0.5rem;
 }
 
 .input-wrapper input {
-  width: 100%;
-  background: #202024;
-  border: 1px solid #29292e;
+  background: transparent;
+  border: none;
   color: #e1e1e6;
-  padding: 0.75rem 1rem 0.75rem 3rem;
-  border-radius: 4px;
+  padding: 0.75rem 1rem 0.75rem 0;
   font-size: 1rem;
+  width: 100%;
+  outline: none;
 }
 
-.input-wrapper input:focus {
-  outline: none;
-  border-color: #04d361;
-}
+
 
 .input-group select {
   background: #202024;

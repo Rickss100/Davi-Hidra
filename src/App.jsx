@@ -19,6 +19,7 @@ import RecuperarSenha from './pages/RecuperarSenha';
 import RedefinirSenha from './pages/RedefinirSenha';
 import Termos from './pages/Termos';
 import './App.css';
+import FloatingChat from './components/Chat/FloatingChat';
 
 // Protected Route Wrapper
 const ProtectedRoute = () => {

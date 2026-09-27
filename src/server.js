@@ -142,6 +142,10 @@ if (dividendsRoutes) app.use('/api/dividends', dividendsRoutes);
 if (resumoRoutes) app.use('/api/resumo', resumoRoutes);
 if (objectivesRoutes) app.use('/api/objectives', objectivesRoutes);
 
+  // Chat Route
+  const chatRoutes = (await import('./routes/chat.routes.js')).default;
+  app.use('/api/chat', chatRoutes);
+
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

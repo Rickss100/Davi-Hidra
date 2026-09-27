@@ -1,5 +1,6 @@
 import express from 'express';
 import { getDatabase } from '../services/database.service.js';
+import { getTursoClient } from '../services/turso.service.js';
 
 const router = express.Router();
 
@@ -55,7 +56,7 @@ router.get('/:userId', (req, res) => {
  * Salva ou atualiza macroAllocation e/ou assetTargets do usuário
  * Body: { macroAllocation?, assetTargets? }
  */
-router.post('/:userId', (req, res) => {
+router.post('/:userId', async (req, res) => {
   try {
     const userId = parseInt(req.params.userId, 10);
     if (!userId || isNaN(userId)) {
@@ -93,6 +94,37 @@ router.post('/:userId', (req, res) => {
         asset_targets    = excluded.asset_targets,
         updated_at       = excluded.updated_at
     `).run(userId, JSON.stringify(newMacro), JSON.stringify(newTargets));
+
+    // SYNC TO TURSO IMMEDIATELY SO RENDER DOES NOT LOSE IT ON RESTART
+    try {
+      const tClient = getTursoClient();
+      if (tClient) {
+        // Ensure table exists in Turso just in case
+        await tClient.execute(`
+          CREATE TABLE IF NOT EXISTS user_objectives (
+            user_id INTEGER PRIMARY KEY,
+            macro_allocation TEXT,
+            asset_targets TEXT,
+            updated_at TEXT
+          );
+        `);
+        
+        await tClient.execute({
+          sql: `
+            INSERT INTO user_objectives (user_id, macro_allocation, asset_targets, updated_at)
+            VALUES (?, ?, ?, ?)
+            ON CONFLICT(user_id) DO UPDATE SET
+              macro_allocation = excluded.macro_allocation,
+              asset_targets = excluded.asset_targets,
+              updated_at = excluded.updated_at
+          `,
+          args: [userId, JSON.stringify(newMacro), JSON.stringify(newTargets), new Date().toISOString()]
+        });
+        console.log(`✅ Objetivos sincronizados no Turso para user ${userId}`);
+      }
+    } catch (tErr) {
+      console.warn('⚠️ Erro ao espelhar objetivos no Turso:', tErr.message);
+    }
 
     res.json({ success: true, macroAllocation: newMacro, assetTargets: newTargets });
   } catch (err) {

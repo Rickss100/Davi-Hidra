@@ -94,6 +94,14 @@ export async function getTursoStatus() {
  * Cria as tabelas essenciais no Turso caso não existam e executa migrações defensivas
  */
 async function ensureTursoSchema(client) {
+    await client.execute(`
+      CREATE TABLE IF NOT EXISTS user_objectives (
+        user_id INTEGER PRIMARY KEY,
+        macro_allocation TEXT,
+        asset_targets TEXT,
+        updated_at TEXT
+      );
+    `);
   await client.execute(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

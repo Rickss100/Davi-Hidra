@@ -231,3 +231,13 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
 CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+
+
+-- User Objectives Table
+CREATE TABLE IF NOT EXISTS user_objectives (
+  user_id INTEGER PRIMARY KEY,
+  macro_allocation TEXT,
+  asset_targets TEXT,
+  updated_at TEXT,
+  FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+);

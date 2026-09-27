@@ -68,8 +68,9 @@ function App() {
                 </Route>
               </Route>
             </Routes>
-          </BrowserRouter>
-          <FloatingChat />
+            <FloatingChat />
+            </BrowserRouter>
+          
             </PortfolioProvider>
       </ToastProvider>
     </AuthProvider>

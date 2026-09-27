@@ -14,6 +14,7 @@
     "sync:turso": "node src/scripts/sync_to_turso.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@libsql/client": "^0.18.0",
     "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.5.0",
@@ -24,6 +25,7 @@
     "node-fetch": "^3.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^6.22.3",
     "recharts": "^2.12.3",
     "sql.js": "^1.13.0"

@@ -69,7 +69,8 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
-        </PortfolioProvider>
+          <FloatingChat />
+            </PortfolioProvider>
       </ToastProvider>
     </AuthProvider>
   );

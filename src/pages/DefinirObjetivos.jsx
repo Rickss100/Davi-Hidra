@@ -58,7 +58,7 @@ const DefinirObjetivos = () => {
 
       <section className="strategy-section">
         <h2>2. Definição por Ativos</h2>
-        <div className="assets-container">
+        <div className="assets-row-3">
           <AssetTargetTable availableAssets={allAssetsInfo} 
             title="Ações" 
             assets={assetTargets.acoes} 
@@ -77,6 +77,8 @@ const DefinirObjetivos = () => {
             onUpdate={(newAssets) => updateAssetTargets('stocks', newAssets)} 
           />
           
+          </div>
+        <div className="assets-row-2">
           <AssetTargetTable availableAssets={allAssetsInfo} 
             title="REITs" 
             assets={assetTargets.reits} 

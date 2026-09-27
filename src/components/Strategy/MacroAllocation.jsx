@@ -1,9 +1,9 @@
 import { usePortfolio } from '../../context/PortfolioContext';
 import './Strategy.css';
 
-const AllocationCard = ({ title, inputs, onChange, orientation, expectedTotal = 100 }) => {
+const AllocationCard = ({ title, inputs, onChange, orientation }) => {
   const total = inputs.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
-  const isValid = total === expectedTotal;
+  const isValid = total === 100;
 
   return (
     <div className="strategy-card">
@@ -26,7 +26,7 @@ const AllocationCard = ({ title, inputs, onChange, orientation, expectedTotal = 
         ))}
         <div className={`total-row ${isValid ? 'valid' : 'invalid'}`}>
           <span>Somatório</span>
-          <span>{total}% {expectedTotal !== 100 && !isValid ? `(Alvo: ${expectedTotal}%)` : ""}</span>
+          <span>{total}%</span>
         </div>
       </div>
       {orientation && (

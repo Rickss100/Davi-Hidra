@@ -146,3 +146,5 @@
   padding: 20px;
   font-style: italic;
 }
+
+.tab-btn.import.active { background: #3b82f6; color: white; }

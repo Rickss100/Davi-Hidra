@@ -3,7 +3,8 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { getAssetsByCategory } from '../../data/assets';
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Download } from 'lucide-react';
+import ImportarPlanilha from './ImportarPlanilha';
 import './Portfolio.css';
 
 const TransactionForm = () => {
@@ -87,9 +88,22 @@ const TransactionForm = () => {
         >
           Registrar Evento
         </button>
+        <button 
+          className={`tab-btn import ${activeTab === 'import' ? 'active' : ''}`}
+          onClick={() => setActiveTab('import')}
+        >
+          Importar Planilha
+        </button>
       </div>
 
-      {isSuspended && (
+      {activeTab === 'import' ? (
+        <ImportarPlanilha onImportSuccess={(count) => {
+          success(`Importação concluída! ${count} transações adicionadas.`);
+          setTimeout(() => window.location.reload(), 1500);
+        }} />
+      ) : (
+      <form onSubmit={handleSubmit} className="transaction-form">
+{isSuspended && (
         <div style={{
           background: 'rgba(245, 158, 11, 0.12)',
           border: '1px solid rgba(245, 158, 11, 0.35)',

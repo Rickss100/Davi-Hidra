@@ -149,11 +149,12 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  word-break: break-word;
 }
 
 .historico-table th {
   background: #121214;
-  padding: 14px 16px;
+  padding: 10px 8px;
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
@@ -163,7 +164,7 @@
 }
 
 .historico-table td {
-  padding: 14px 16px;
+  padding: 10px 8px;
   font-size: 13px;
   color: #e2e8f0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);

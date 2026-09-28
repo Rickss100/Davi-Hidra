@@ -27,7 +27,7 @@ export const PortfolioProvider = ({ children }) => {
   const [assetTargets, setAssetTargets] = useState(() => {
     const saved = localStorage.getItem(`assetTargets_${userId}`) || localStorage.getItem('assetTargets');
     return saved ? JSON.parse(saved) : {
-      acoes: [], fiis: [], stocks: [], reits: [], fixed: []
+      acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: []
     };
   });
 
@@ -89,7 +89,7 @@ export const PortfolioProvider = ({ children }) => {
 
   // --- 4. Holdings (Derived State) ---
   const [holdings, setHoldings] = useState({
-    acoes: [], fiis: [], stocks: [], reits: [], fixed: []
+    acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: []
   });
 
   // Helper para normalizar categorias de transações
@@ -133,7 +133,7 @@ export const PortfolioProvider = ({ children }) => {
 
   // Calculate Holdings whenever transactions or prices change
   useEffect(() => {
-    const newHoldings = { acoes: [], fiis: [], stocks: [], reits: [], fixed: [] };
+    const newHoldings = { acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: [] };
     
     // Helper to find or create asset in holdings
     const getAsset = (category, code) => {
@@ -338,7 +338,7 @@ export const PortfolioProvider = ({ children }) => {
         acoes: 50, fiis: 50,
         stocks: 70, reits: 30
       };
-      const defaultTargets = { acoes: [], fiis: [], stocks: [], reits: [] };
+      const defaultTargets = { acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: [] };
       
       setMacroAllocation(defaultMacro);
       setAssetTargets(defaultTargets);

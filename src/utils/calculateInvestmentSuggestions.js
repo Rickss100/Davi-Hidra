@@ -169,7 +169,7 @@ export const suggestInvestments = (
   // Se a Reserva de Emergência foi informada e está incompleta (< 100%), aplicar a estratégia escolhida
   if (emergencyReserveSummary && emergencyReserveSummary.reserveCompletionPercent < 100) {
     const strategy = emergencyReserveSummary.strategyMode || 'hybrid_70_30';
-    const reserveAssetCode = emergencyReserveSummary.reserveAssets?.[0]?.code || 'TESOURO_SELIC_2029';
+    const reserveAssetCode = assetTargets?.reserva?.[0]?.ticker || assetTargets?.reserva?.[0]?.code || emergencyReserveSummary.reserveAssets?.[0]?.code || 'TESOURO_SELIC_2029';
     const missing = emergencyReserveSummary.missingReserveAmount;
     const currentPct = emergencyReserveSummary.reserveCompletionPercent.toFixed(1);
 

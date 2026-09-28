@@ -80,7 +80,7 @@ router.post('/:userId', async (req, res) => {
       stocks: 70, reits: 30
     };
     const currentTargets = existing ? JSON.parse(existing.asset_targets) : {
-      acoes: [], fiis: [], stocks: [], reits: [], fixed: []
+      acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: []
     };
 
     const newMacro = macroAllocation ? { ...currentMacro, ...macroAllocation } : currentMacro;

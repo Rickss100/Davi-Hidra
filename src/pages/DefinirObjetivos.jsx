@@ -78,7 +78,7 @@ const DefinirObjetivos = () => {
           />
           
           </div>
-        <div className="assets-row-2">
+        <div className="assets-row-3">
           <AssetTargetTable availableAssets={allAssetsInfo} 
             title="REITs" 
             assets={assetTargets.reits} 
@@ -89,6 +89,12 @@ const DefinirObjetivos = () => {
             title="Renda Fixa" 
             assets={assetTargets.fixed || []} 
             onUpdate={(newAssets) => updateAssetTargets('fixed', newAssets)} 
+          />
+          
+          <AssetTargetTable availableAssets={allAssetsInfo} 
+            title="Reserva de Emergência" 
+            assets={assetTargets.reserva || []} 
+            onUpdate={(newAssets) => updateAssetTargets('reserva', newAssets)} 
           />
         </div>
       </section>

@@ -189,6 +189,7 @@ const TransactionForm = () => {
           {isSuspended ? 'CONTA SUSPENSA' : activeTab === 'buy' ? 'CONFIRMAR APORTE' : activeTab === 'sell' ? 'CONFIRMAR VENDA' : 'REGISTRAR'}
         </button>
       </form>
+      )}
     </div>
   );
 };

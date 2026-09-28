@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { UploadCloud, CheckCircle, AlertCircle, FileSpreadsheet } from 'lucide-react';
-import { usePortfolio } from '../../context/PortfolioContext';
 import * as XLSX from 'xlsx';
 
 const ImportarPlanilha = ({ onImportSuccess }) => {
@@ -9,7 +8,6 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
   const [previewData, setPreviewData] = useState(null);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
-  const { fetchObjectives } = usePortfolio(); // or any generic refresh function we have
 
   const handleFileDrop = (e) => {
     e.preventDefault();
@@ -67,11 +65,11 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
 
       const movUpper = mov.toString().toUpperCase();
       
-      // Ignorar juros sobre capital, dividendos, rendimentos (isso é renda passiva, não aporte/venda de principal)
+      // Ignorar juros sobre capital, dividendos, rendimentos
       if (movUpper.includes('JUROS') || movUpper.includes('DIVIDENDO') || movUpper.includes('RENDIMENTO') || movUpper.includes('AMORTIZAÇÃO')) return;
 
-      // Determinar o Tipo (Compra ou Venda)
-      let type = 'buy'; // Default
+      // Determinar o Tipo
+      let type = 'buy';
       if (es === 'DEBITO' || es === 'DÉBITO') {
         type = 'sell';
       } else if (es === 'CREDITO' || es === 'CRÉDITO') {
@@ -89,310 +87,34 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
         if (firstPart === 'CDB' || firstPart === 'RDB' || firstPart === 'LC' || firstPart === 'LCI' || firstPart === 'LCA') {
           assetCode = parts.length > 1 ? parts[1] : parts[0];
         } else {
-          // Para ações/FIIs, o código costuma ser a última parte (ex: PETROBRAS PN N2 - PETR4)
           assetCode = parts[parts.length - 1];
         }
       }
       
-      // Se tiver espaços extras, pegar o primeiro pedaço
       if (assetCode.includes(' ') && assetCode.length > 15) {
         assetCode = assetCode.split(' ')[0];
       }
 
-      // Converter Data de DD/MM/YYYY para YYYY-MM-DD
+      // Converter Data
       let isoDate = new Date().toISOString().split('T')[0];
       if (dataStr) {
         const parts = dataStr.toString().split('/');
         if (parts.length === 3) {
-          isoDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+          isoDate = \`\${parts[2]}-\${parts[1]}-\${parts[0]}\`;
         }
       }
 
-      let quantity = 0;
-      if (typeof qty === 'number') {
-        quantity = Math.abs(qty);
-      } else {
-        quantity = Math.abs(parseFloat(qty.toString().replace(/\./g, '').replace(',', '.'))) || 0;
-      }
-
-      let price = 0;
-      if (typeof preco === 'number') {
-        price = Math.abs(preco);
-      } else {
-        price = Math.abs(parseFloat(preco.toString().replace('R
-
-      // Importar apenas se tiver código e quantidade válida
-      if (assetCode && quantity > 0) {
-        parsedTransactions.push({
-          asset_code: assetCode,
-          type: type,
-          quantity: quantity,
-          price: price,
-          total_value: quantity * price,
-          date: isoDate,
-          notes: `Importado B3: ${mov}`
-        });
-        count++;
-      }
-    });
-
-    if (parsedTransactions.length === 0) {
-      setError('Nenhuma transação de Compra ou Venda válida foi encontrada na planilha.');
-      return;
-    }
-
-    setPreviewData(parsedTransactions);
-  };
-
-  const handleConfirmImport = async () => {
-    setIsProcessing(true);
-    setError('');
-    
-    try {
-      const response = await fetch('/api/transactions/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions: previewData })
-      });
+      let quantity = typeof qty === 'number' ? Math.abs(qty) : Math.abs(parseFloat(qty.toString().replace(/\\./g, '').replace(',', '.'))) || 0;
       
-      const result = await response.json();
+      let price = typeof preco === 'number' ? Math.abs(preco) : Math.abs(parseFloat(preco.toString().replace('R$', '').replace(/\\./g, '').replace(',', '.'))) || 0;
       
-      if (response.ok) {
-        if (onImportSuccess) onImportSuccess(result.count);
-        setFile(null);
-        setPreviewData(null);
-      } else {
-        setError(result.error || 'Falha ao importar transações.');
-      }
-    } catch (err) {
-      setError('Erro de conexão com o servidor.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  return (
-    <div className="import-container" style={{ padding: '20px', background: '#121214', borderRadius: '12px', border: '1px solid #27272a' }}>
-      <h3 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <FileSpreadsheet size={20} color="#10b981" /> 
-        Importar Histórico da B3
-      </h3>
-      <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>
-        Baixe sua planilha de movimentações na Área do Investidor da B3 e faça o upload aqui. O sistema lerá as colunas automaticamente.
-      </p>
-
-      {!previewData ? (
-        <div 
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleFileDrop}
-          style={{ 
-            border: '2px dashed #27272a', 
-            borderRadius: '8px', 
-            padding: '40px 20px', 
-            textAlign: 'center',
-            cursor: 'pointer',
-            background: 'rgba(255,255,255,0.02)'
-          }}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <UploadCloud size={40} color="#94a3b8" style={{ marginBottom: '12px' }} />
-          <p style={{ margin: '0 0 8px 0', fontWeight: '600' }}>Arraste o arquivo .xlsx ou .csv aqui</p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>ou clique para procurar no computador</p>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileSelect} 
-            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
-            style={{ display: 'none' }} 
-          />
-        </div>
-      ) : (
-        <div className="preview-container">
-          <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', marginBottom: '16px' }}>
-            <p style={{ margin: 0, color: '#34d399', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={16} />
-              Planilha lida com sucesso!
-            </p>
-            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#e2e8f0' }}>
-              Encontramos <strong>{previewData.length}</strong> transações (compras/vendas) prontas para serem importadas.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button 
-              onClick={() => setPreviewData(null)} 
-              style={{ flex: 1, padding: '10px', background: '#27272a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-              disabled={isProcessing}
-            >
-              Cancelar
-            </button>
-            <button 
-              onClick={handleConfirmImport} 
-              style={{ flex: 2, padding: '10px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Importando...' : 'Confirmar Importação'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#f87171', fontSize: '13px', background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '8px' }}>
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default ImportarPlanilha;
-, '').replace(/\./g, '').replace(',', '.'))) || 0;
-      }
-
       const valOp = row['Valor da Operação'] || row['Valor'] || 0;
-      let totalVal = 0;
-      if (typeof valOp === 'number') {
-        totalVal = Math.abs(valOp);
-      } else {
-        totalVal = Math.abs(parseFloat(valOp.toString().replace('R
-
-      // Importar apenas se tiver código e quantidade válida
-      if (assetCode && quantity > 0) {
-        parsedTransactions.push({
-          asset_code: assetCode,
-          type: type,
-          quantity: quantity,
-          price: price,
-          total_value: quantity * price,
-          date: isoDate,
-          notes: `Importado B3: ${mov}`
-        });
-        count++;
-      }
-    });
-
-    if (parsedTransactions.length === 0) {
-      setError('Nenhuma transação de Compra ou Venda válida foi encontrada na planilha.');
-      return;
-    }
-
-    setPreviewData(parsedTransactions);
-  };
-
-  const handleConfirmImport = async () => {
-    setIsProcessing(true);
-    setError('');
-    
-    try {
-      const response = await fetch('/api/transactions/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions: previewData })
-      });
-      
-      const result = await response.json();
-      
-      if (response.ok) {
-        if (onImportSuccess) onImportSuccess(result.count);
-        setFile(null);
-        setPreviewData(null);
-      } else {
-        setError(result.error || 'Falha ao importar transações.');
-      }
-    } catch (err) {
-      setError('Erro de conexão com o servidor.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  return (
-    <div className="import-container" style={{ padding: '20px', background: '#121214', borderRadius: '12px', border: '1px solid #27272a' }}>
-      <h3 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <FileSpreadsheet size={20} color="#10b981" /> 
-        Importar Histórico da B3
-      </h3>
-      <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>
-        Baixe sua planilha de movimentações na Área do Investidor da B3 e faça o upload aqui. O sistema lerá as colunas automaticamente.
-      </p>
-
-      {!previewData ? (
-        <div 
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={handleFileDrop}
-          style={{ 
-            border: '2px dashed #27272a', 
-            borderRadius: '8px', 
-            padding: '40px 20px', 
-            textAlign: 'center',
-            cursor: 'pointer',
-            background: 'rgba(255,255,255,0.02)'
-          }}
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <UploadCloud size={40} color="#94a3b8" style={{ marginBottom: '12px' }} />
-          <p style={{ margin: '0 0 8px 0', fontWeight: '600' }}>Arraste o arquivo .xlsx ou .csv aqui</p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>ou clique para procurar no computador</p>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileSelect} 
-            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
-            style={{ display: 'none' }} 
-          />
-        </div>
-      ) : (
-        <div className="preview-container">
-          <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', marginBottom: '16px' }}>
-            <p style={{ margin: 0, color: '#34d399', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={16} />
-              Planilha lida com sucesso!
-            </p>
-            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#e2e8f0' }}>
-              Encontramos <strong>{previewData.length}</strong> transações (compras/vendas) prontas para serem importadas.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button 
-              onClick={() => setPreviewData(null)} 
-              style={{ flex: 1, padding: '10px', background: '#27272a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-              disabled={isProcessing}
-            >
-              Cancelar
-            </button>
-            <button 
-              onClick={handleConfirmImport} 
-              style={{ flex: 2, padding: '10px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-              disabled={isProcessing}
-            >
-              {isProcessing ? 'Importando...' : 'Confirmar Importação'}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {error && (
-        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#f87171', fontSize: '13px', background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '8px' }}>
-          <AlertCircle size={16} />
-          {error}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default ImportarPlanilha;
-, '').replace(/\./g, '').replace(',', '.'))) || 0;
-      }
+      let totalVal = typeof valOp === 'number' ? Math.abs(valOp) : Math.abs(parseFloat(valOp.toString().replace('R$', '').replace(/\\./g, '').replace(',', '.'))) || 0;
 
       if (price === 0 && quantity > 0 && totalVal > 0) {
         price = totalVal / quantity;
       }
 
-      // Importar apenas se tiver código e quantidade válida
       if (assetCode && quantity > 0) {
         parsedTransactions.push({
           asset_code: assetCode,
@@ -401,14 +123,14 @@ export default ImportarPlanilha;
           price: price,
           total_value: quantity * price,
           date: isoDate,
-          notes: `Importado B3: ${mov}`
+          notes: \`Importado B3: \${mov}\`
         });
         count++;
       }
     });
 
     if (parsedTransactions.length === 0) {
-      setError('Nenhuma transação de Compra ou Venda válida foi encontrada na planilha.');
+      setError('Nenhuma transação de Compra ou Venda válida encontrada.');
       return;
     }
 
@@ -429,7 +151,7 @@ export default ImportarPlanilha;
       const result = await response.json();
       
       if (response.ok) {
-        if (onImportSuccess) onImportSuccess(result.count);
+        if (onImportSuccess) onImportSuccess(result.count || previewData.length);
         setFile(null);
         setPreviewData(null);
       } else {
@@ -449,7 +171,7 @@ export default ImportarPlanilha;
         Importar Histórico da B3
       </h3>
       <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>
-        Baixe sua planilha de movimentações na Área do Investidor da B3 e faça o upload aqui. O sistema lerá as colunas automaticamente.
+        Baixe sua planilha da B3 e faça o upload aqui. O sistema lerá as colunas automaticamente.
       </p>
 
       {!previewData ? (
@@ -457,51 +179,30 @@ export default ImportarPlanilha;
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleFileDrop}
           style={{ 
-            border: '2px dashed #27272a', 
-            borderRadius: '8px', 
-            padding: '40px 20px', 
-            textAlign: 'center',
-            cursor: 'pointer',
-            background: 'rgba(255,255,255,0.02)'
+            border: '2px dashed #27272a', borderRadius: '8px', padding: '40px 20px', textAlign: 'center', cursor: 'pointer', background: 'rgba(255,255,255,0.02)'
           }}
           onClick={() => fileInputRef.current?.click()}
         >
           <UploadCloud size={40} color="#94a3b8" style={{ marginBottom: '12px' }} />
           <p style={{ margin: '0 0 8px 0', fontWeight: '600' }}>Arraste o arquivo .xlsx ou .csv aqui</p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>ou clique para procurar no computador</p>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileSelect} 
-            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
-            style={{ display: 'none' }} 
-          />
+          <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept=".csv, .xlsx" style={{ display: 'none' }} />
         </div>
       ) : (
         <div className="preview-container">
           <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', marginBottom: '16px' }}>
             <p style={{ margin: 0, color: '#34d399', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={16} />
-              Planilha lida com sucesso!
+              <CheckCircle size={16} /> Planilha lida com sucesso!
             </p>
             <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#e2e8f0' }}>
-              Encontramos <strong>{previewData.length}</strong> transações (compras/vendas) prontas para serem importadas.
+              Encontramos <strong>{previewData.length}</strong> transações prontas para importação.
             </p>
           </div>
 
           <div style={{ display: 'flex', gap: '12px' }}>
-            <button 
-              onClick={() => setPreviewData(null)} 
-              style={{ flex: 1, padding: '10px', background: '#27272a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
-              disabled={isProcessing}
-            >
+            <button onClick={() => setPreviewData(null)} style={{ flex: 1, padding: '10px', background: '#27272a', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }} disabled={isProcessing}>
               Cancelar
             </button>
-            <button 
-              onClick={handleConfirmImport} 
-              style={{ flex: 2, padding: '10px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }}
-              disabled={isProcessing}
-            >
+            <button onClick={handleConfirmImport} style={{ flex: 2, padding: '10px', background: '#10b981', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold' }} disabled={isProcessing}>
               {isProcessing ? 'Importando...' : 'Confirmar Importação'}
             </button>
           </div>
@@ -510,8 +211,7 @@ export default ImportarPlanilha;
 
       {error && (
         <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px', color: '#f87171', fontSize: '13px', background: 'rgba(239, 68, 68, 0.1)', padding: '12px', borderRadius: '8px' }}>
-          <AlertCircle size={16} />
-          {error}
+          <AlertCircle size={16} /> {error}
         </div>
       )}
     </div>

@@ -118,7 +118,7 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
       if (dataStr) {
         const parts = dataStr.toString().split('/');
         if (parts.length === 3) {
-          isoDate = \`\${parts[2]}-\${parts[1]}-\${parts[0]}\`;
+          isoDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
         }
       }
 
@@ -139,7 +139,7 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
           price: price,
           total_value: quantity * price,
           date: isoDate,
-          notes: \`Importado B3: \${mov}\`
+          notes: `Importado B3: ${mov}`
         });
         count++;
       }

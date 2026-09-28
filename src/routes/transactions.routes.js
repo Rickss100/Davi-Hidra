@@ -1,7 +1,7 @@
 
 import express from 'express';
 import { getDatabase, getUserById } from '../services/database.service.js';
-import { syncTransactionToTurso, syncTransactionDeleteToTurso } from '../services/turso.service.js';
+import { syncTransactionToTurso, syncTransactionDeleteToTurso, syncAssetToTurso } from '../services/turso.service.js';
 
 const router = express.Router();
 const db = getDatabase(); // Pegar instância do banco
@@ -176,6 +176,7 @@ router.post('/bulk', async (req, res) => {
             defaultType = 'FII';
           }
           insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
+            try { await syncAssetToTurso({ code: tx.asset_code, name: tx.asset_code, type: defaultType, market: 'BR' }); } catch(e) {}
         }
 
         insert.run(
@@ -193,19 +194,31 @@ router.post('/bulk', async (req, res) => {
     
     insertMany(transactions);
     
-    // Attempt Turso sync (best effort)
-    try {
-      // In a real scenario we'd do a bulk insert in Turso too, but for simplicity let's just trigger a full sync later or let it be.
-      // We will do a generic Turso sync if needed, but for now local insert is done.
-      // Wait, we should sync each to Turso or do a batch. To avoid rate limits, we might skip Turso bulk here and let the background job handle it, 
-      // but we don't have a background job. Let's do individual syncs in the background so it doesn't block the request.
-      transactions.forEach(async (tx) => {
-        // Find the inserted ID (SQLite doesn't easily return all inserted IDs in a transaction)
-        // This is a limitation, but it will sync on next app restart anyway.
-      });
-    } catch (e) {
-      console.warn("Turso bulk sync deferred", e);
-    }
+    // Sincronizar com o Turso para cada transação inserida (e ativos inéditos)
+      try {
+        const getTx = db.prepare("SELECT t.*, a.type as category FROM transactions t LEFT JOIN assets a ON t.asset_code = a.code WHERE t.id = ?");
+        const getAsset = db.prepare("SELECT * FROM assets WHERE code = ?");
+        
+        for (const tx of transactions) {
+          // Sync asset if it was auto-created
+          const assetRow = getAsset.get(tx.asset_code);
+          if (assetRow) {
+            await syncAssetToTurso(assetRow);
+          }
+
+          // Encontrar o ID da última inserção desta transação
+          const row = db.prepare("SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND user_id = ? ORDER BY id DESC LIMIT 1").get(tx.asset_code, tx.date, tx.quantity, tx.user_id || userId);
+          
+          if (row) {
+            const fullTx = getTx.get(row.id);
+            if (fullTx) {
+              await syncTransactionToTurso(fullTx);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Turso bulk sync error", e);
+      }
     
     res.json({ success: true, count: transactions.length, message: `${transactions.length} transações importadas com sucesso.` });
   } catch (err) {

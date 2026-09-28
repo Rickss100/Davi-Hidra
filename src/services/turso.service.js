@@ -538,3 +538,29 @@ export async function getTursoDiagnostics(localDb) {
     };
   }
 }
+
+
+/**
+ * Grava um ativo no Turso em tempo de execução
+ */
+export async function syncAssetToTurso(asset) {
+  const client = getTursoClient();
+  if (!client || !asset) return;
+
+  try {
+    await client.execute({
+      sql: `INSERT OR IGNORE INTO assets (code, name, type, market, sector, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+      args: [
+        asset.code,
+        asset.name,
+        asset.type,
+        asset.market,
+        asset.sector || null,
+        asset.created_at || new Date().toISOString()
+      ]
+    });
+  } catch (err) {
+    console.warn('⚠️ Turso syncAsset error:', err.message);
+  }
+}

@@ -161,38 +161,48 @@ router.post('/bulk', async (req, res) => {
     `);
     
     const checkAsset = db.prepare("SELECT code FROM assets WHERE code = ?");
-    const insertAsset = db.prepare("INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)");
-    
-    const insertMany = db.transaction((txs) => {
-      for (const tx of txs) {
-        // Ensure asset exists
-        const assetExists = checkAsset.get(tx.asset_code);
-        if (!assetExists) {
-          let defaultType = 'acao';
-          const uc = tx.asset_code.toUpperCase();
-          if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || uc.includes('RDB')) {
-            defaultType = 'RendaFixa';
-          } else if (uc.includes('11') && !uc.includes('34')) {
-            defaultType = 'FII';
-          }
-          insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
-            
-        }
+      const insertAsset = db.prepare("INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)");
+      const checkTx = db.prepare("SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND type = ? AND user_id = ?");
+      
+      const insertMany = db.transaction((txs) => {
+        const actuallyInserted = [];
+        for (const tx of txs) {
+          // Check duplicate
+          const txExists = checkTx.get(tx.asset_code, tx.date, tx.quantity, tx.type, tx.user_id || userId);
+          if (txExists) continue;
 
-        insert.run(
-          tx.asset_code,
-          tx.type,
-          tx.quantity,
-          tx.price,
-          tx.total_value || (tx.quantity * tx.price),
-          tx.date,
-          tx.notes || 'Importação via Planilha',
-          tx.user_id || userId
-        );
-      }
-    });
-    
-    insertMany(transactions);
+          // Ensure asset exists
+          const assetExists = checkAsset.get(tx.asset_code);
+          if (!assetExists) {
+            let defaultType = 'acao';
+            const uc = tx.asset_code.toUpperCase();
+            if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || uc.includes('RDB')) {
+              defaultType = 'RendaFixa';
+            } else if (uc.includes('11') && !uc.includes('34')) {
+              defaultType = 'FII';
+            }
+            insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
+          }
+  
+          insert.run(
+            tx.asset_code,
+            tx.type,
+            tx.quantity,
+            tx.price,
+            tx.total_value || (tx.quantity * tx.price),
+            tx.date,
+            tx.notes || 'Importação via Planilha',
+            tx.user_id || userId
+          );
+          actuallyInserted.push(tx);
+        }
+        return actuallyInserted;
+      });
+      
+      const newTransactions = insertMany(transactions);
+      // Substitute 'transactions' with 'newTransactions' for Turso sync
+      transactions.length = 0;
+      transactions.push(...newTransactions);
     
     // Sincronizar com o Turso para cada transação inserida (e ativos inéditos)
       try {

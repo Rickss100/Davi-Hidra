@@ -142,7 +142,7 @@
   background: #18181c;
   border: 1px solid #27272a;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .historico-table {

@@ -102,7 +102,7 @@ const TransactionForm = () => {
           setTimeout(() => window.location.reload(), 1500);
         }} />
       ) : (
-      <form onSubmit={handleSubmit} className="transaction-form">
+      <>
 {isSuspended && (
         <div style={{
           background: 'rgba(245, 158, 11, 0.12)',
@@ -189,6 +189,7 @@ const TransactionForm = () => {
           {isSuspended ? 'CONTA SUSPENSA' : activeTab === 'buy' ? 'CONFIRMAR APORTE' : activeTab === 'sell' ? 'CONFIRMAR VENDA' : 'REGISTRAR'}
         </button>
       </form>
+      </>
       )}
     </div>
   );

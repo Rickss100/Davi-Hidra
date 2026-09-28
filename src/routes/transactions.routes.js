@@ -160,8 +160,24 @@ router.post('/bulk', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
     
+    const checkAsset = db.prepare("SELECT code FROM assets WHERE code = ?");
+    const insertAsset = db.prepare("INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)");
+    
     const insertMany = db.transaction((txs) => {
       for (const tx of txs) {
+        // Ensure asset exists
+        const assetExists = checkAsset.get(tx.asset_code);
+        if (!assetExists) {
+          let defaultType = 'acao';
+          const uc = tx.asset_code.toUpperCase();
+          if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || uc.includes('RDB')) {
+            defaultType = 'RendaFixa';
+          } else if (uc.includes('11') && !uc.includes('34')) {
+            defaultType = 'FII';
+          }
+          insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
+        }
+
         insert.run(
           tx.asset_code,
           tx.type,

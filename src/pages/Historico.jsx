@@ -252,14 +252,14 @@ const Historico = () => {
           <table className="historico-table">
             <thead>
               <tr>
-                <th>Data</th>
+                <th style={{ whiteSpace: 'nowrap' }}>Data</th>
                 <th>Tipo</th>
                 <th>Ativo</th>
                 <th>Quantidade</th>
                 <th>Preço Unitário</th>
                 <th>Total da Operação</th>
                 <th>Observações</th>
-                <th style={{ textAlign: 'center' }}>Ações</th>
+                <th style={{ textAlign: 'center', whiteSpace: 'nowrap' }}>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -271,30 +271,30 @@ const Historico = () => {
 
                 return (
                   <tr key={tx.id}>
-                    <td style={{ fontWeight: 600, color: '#cbd5e1' }}>
+                    <td style={{ fontWeight: 600, color: '#cbd5e1', whiteSpace: 'nowrap' }}>
                       {tx.date ? new Date(tx.date + 'T00:00:00').toLocaleDateString('pt-BR') : '—'}
                     </td>
-                    <td>
-                      <span className={`badge-type ${isBuy ? 'buy' : 'sell'}`}>
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                        <span className={`badge-type ${isBuy ? 'buy' : 'sell'}`}>
                         {isBuy ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
                         {isBuy ? 'Compra / Aporte' : 'Venda / Resgate'}
                       </span>
                     </td>
                     <td>
                       <div className="asset-code-cell">
-                        <span>{tx.asset_code}</span>
+                        <span style={{ wordBreak: "break-all" }}>{tx.asset_code}</span>
                         {tx.category && (
-                          <span className="badge-category">{tx.category}</span>
+                          <span className="badge-category" style={{ whiteSpace: "nowrap" }}>{tx.category}</span>
                         )}
                       </div>
                     </td>
-                    <td style={{ fontWeight: 600 }}>
-                      {Number(tx.quantity).toLocaleString('pt-BR')}
+                    <td style={{ fontWeight: 600, whiteSpace: 'nowrap' }}>
+                        {Number(tx.quantity).toLocaleString('pt-BR')}
                     </td>
-                    <td>
-                      {currencyPrefix}{Number(tx.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                        {currencyPrefix}{Number(tx.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
-                    <td style={{ fontWeight: 700, color: isBuy ? '#34d399' : '#f87171' }}>
+                    <td style={{ fontWeight: 700, color: isBuy ? '#34d399' : '#f87171', whiteSpace: 'nowrap' }}>
                       {isBuy ? '+' : '-'} {currencyPrefix}{totalVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td style={{ color: '#94a3b8', fontSize: '12px' }}>

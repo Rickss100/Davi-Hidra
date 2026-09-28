@@ -84,7 +84,7 @@ const AssetTargetTable = ({ title, assets, onUpdate, availableAssets }) => {
           </datalist>
         )}
 
-        <div style={{ overflowY: 'auto', flex: 1, minHeight: '0' }} className="custom-scroll">
+        <div style={{ overflowY: 'auto', flex: 1, minHeight: '120px' }} className="custom-scroll">
           <table className="asset-table">
             <thead>
               <tr>

@@ -176,7 +176,7 @@ router.post('/bulk', async (req, res) => {
             defaultType = 'FII';
           }
           insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
-            try { await syncAssetToTurso({ code: tx.asset_code, name: tx.asset_code, type: defaultType, market: 'BR' }); } catch(e) {}
+            
         }
 
         insert.run(

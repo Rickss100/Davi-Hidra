@@ -58,34 +58,53 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     let count = 0;
 
     rows.forEach(row => {
-      // B3 Columns mapping (approximate based on B3 pattern)
-      // Usually "Data", "Movimentação", "Produto", "Instituição", "Quantidade", "Preço unitário", "Valor da Operação"
-      
       const mov = row['Movimentação'] || row['Movimentacao'] || row['Tipo'] || '';
       const dataStr = row['Data'] || row['Data do Negócio'] || '';
       const produto = row['Produto'] || row['Código'] || row['Ativo'] || '';
       const qty = row['Quantidade'] || 0;
       const preco = row['Preço unitário'] || row['Preço'] || 0;
+      const es = (row['Entrada/Saída'] || row['Entrada/Saida'] || '').toString().toUpperCase();
 
-      // Filter only Buys and Sells (Ignore Transferências, Desdobramentos for now unless specified)
       const movUpper = mov.toString().toUpperCase();
-      if (!movUpper.includes('COMPRA') && !movUpper.includes('VENDA') && !movUpper.includes('TRANSFERÊNCIA')) return;
+      
+      // Ignorar juros sobre capital, dividendos, rendimentos (isso é renda passiva, não aporte/venda de principal)
+      if (movUpper.includes('JUROS') || movUpper.includes('DIVIDENDO') || movUpper.includes('RENDIMENTO') || movUpper.includes('AMORTIZAÇÃO')) return;
 
-      const isBuy = movUpper.includes('COMPRA') || movUpper.includes('TRANSFERÊNCIA');
-      const type = isBuy ? 'buy' : 'sell';
+      // Determinar o Tipo (Compra ou Venda)
+      let type = 'buy'; // Default
+      if (es === 'DEBITO' || es === 'DÉBITO') {
+        type = 'sell';
+      } else if (es === 'CREDITO' || es === 'CRÉDITO') {
+        type = 'buy';
+      } else {
+        if (movUpper.includes('VENDA') || movUpper.includes('RESGATE')) type = 'sell';
+        if (movUpper.includes('COMPRA') || movUpper.includes('APLICAÇÃO')) type = 'buy';
+      }
 
-      // Extract asset code (B3 usually sends "PETROBRAS PN N2 - PETR4", we need "PETR4")
-      let assetCode = produto.toString().split(' - ').pop().trim();
-      if (assetCode.includes(' ')) {
-        assetCode = assetCode.split(' ')[0]; // fallback
+      // Extrair o Código do Ativo
+      let assetCode = produto.toString().trim();
+      if (assetCode.includes(' - ')) {
+        const parts = assetCode.split(' - ').map(p => p.trim());
+        const firstPart = parts[0].toUpperCase();
+        if (firstPart === 'CDB' || firstPart === 'RDB' || firstPart === 'LC' || firstPart === 'LCI' || firstPart === 'LCA') {
+          assetCode = parts.length > 1 ? parts[1] : parts[0];
+        } else {
+          // Para ações/FIIs, o código costuma ser a última parte (ex: PETROBRAS PN N2 - PETR4)
+          assetCode = parts[parts.length - 1];
+        }
       }
       
-      // Date conversion from DD/MM/YYYY to YYYY-MM-DD
+      // Se tiver espaços extras, pegar o primeiro pedaço
+      if (assetCode.includes(' ') && assetCode.length > 15) {
+        assetCode = assetCode.split(' ')[0];
+      }
+
+      // Converter Data de DD/MM/YYYY para YYYY-MM-DD
       let isoDate = new Date().toISOString().split('T')[0];
       if (dataStr) {
         const parts = dataStr.toString().split('/');
         if (parts.length === 3) {
-          isoDate = \`\${parts[2]}-\${parts[1]}-\${parts[0]}\`;
+          isoDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
         }
       }
 
@@ -93,6 +112,7 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
       let priceStr = preco.toString().replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
       const price = Math.abs(parseFloat(priceStr)) || 0;
 
+      // Importar apenas se tiver código e quantidade válida
       if (assetCode && quantity > 0) {
         parsedTransactions.push({
           asset_code: assetCode,
@@ -101,7 +121,7 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
           price: price,
           total_value: quantity * price,
           date: isoDate,
-          notes: \`Importado B3: \${mov}\`
+          notes: `Importado B3: ${mov}`
         });
         count++;
       }

@@ -46,6 +46,24 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     reader.readAsBinaryString(selectedFile);
   };
 
+  const parseMoney = (val) => {
+    if (typeof val === 'number') return Math.abs(val);
+    if (!val) return 0;
+    let s = val.toString().replace('R$', '').replace('US$', '').trim();
+    if (s.includes('.') && s.includes(',')) {
+      const lastDot = s.lastIndexOf('.');
+      const lastComma = s.lastIndexOf(',');
+      if (lastComma > lastDot) {
+        s = s.replace(/\\./g, '').replace(',', '.');
+      } else {
+        s = s.replace(/,/g, '');
+      }
+    } else if (s.includes(',')) {
+      s = s.replace(',', '.');
+    }
+    return Math.abs(parseFloat(s)) || 0;
+  };
+
   const parseB3Data = (rows) => {
     if (!rows || rows.length === 0) {
       setError('A planilha está vazia.');
@@ -104,12 +122,10 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
         }
       }
 
-      let quantity = typeof qty === 'number' ? Math.abs(qty) : Math.abs(parseFloat(qty.toString().replace(/\\./g, '').replace(',', '.'))) || 0;
-      
-      let price = typeof preco === 'number' ? Math.abs(preco) : Math.abs(parseFloat(preco.toString().replace('R$', '').replace(/\\./g, '').replace(',', '.'))) || 0;
-      
+      let quantity = parseMoney(qty);
+      let price = parseMoney(preco);
       const valOp = row['Valor da Operação'] || row['Valor'] || 0;
-      let totalVal = typeof valOp === 'number' ? Math.abs(valOp) : Math.abs(parseFloat(valOp.toString().replace('R$', '').replace(/\\./g, '').replace(',', '.'))) || 0;
+      let totalVal = parseMoney(valOp);
 
       if (price === 0 && quantity > 0 && totalVal > 0) {
         price = totalVal / quantity;

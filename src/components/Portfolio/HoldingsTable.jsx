@@ -18,7 +18,14 @@ const HoldingsTable = ({ category, title, color, ...props }) => {
 
   // Calculate totals for % Real
   const categoryTotal = assets.reduce((sum, asset) => sum + (asset.quantity * asset.currentPrice), 0);
-  const portfolioTotal = Object.values(holdings).flat().reduce((sum, asset) => sum + (asset.quantity * asset.currentPrice), 0);
+  let portfolioTotal = 0;
+  Object.keys(holdings).forEach(cat => {
+    const isUs = cat === 'stocks' || cat === 'reits';
+    holdings[cat].forEach(h => {
+      const val = h.quantity * h.currentPrice;
+      portfolioTotal += isUs ? val * usdRate : val;
+    });
+  });
 
   if (props.onlyReserve && assets.length === 0) return null;
   
@@ -50,6 +57,8 @@ const HoldingsTable = ({ category, title, color, ...props }) => {
           ) : (
             assets.map((asset) => {
               const totalValue = asset.quantity * asset.currentPrice;
+              const isUsCat = category === 'stocks' || category === 'reits';
+              const assetTotalBrl = isUsCat ? totalValue * usdRate : totalValue;
               const percent = categoryTotal > 0 ? (totalValue / categoryTotal) * 100 : 0;
               
               return (
@@ -57,7 +66,7 @@ const HoldingsTable = ({ category, title, color, ...props }) => {
                   <td className="asset-code">{asset.code}</td>
                   <td>{asset.quantity}</td>
                   <td>R$ {asset.currentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td>R$ {totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                  <td>{isUsCat ? 'US$ ' : 'R$ '}{totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                   <td>{percent.toFixed(1)}%</td>
                 </tr>
               );

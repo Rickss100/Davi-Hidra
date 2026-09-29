@@ -10,7 +10,7 @@
  * @param {number} totalValue - Total portfolio value
  * @returns {Array} Array of {category, name, currentPercent, targetPercent, distance}
  */
-export const calculateCategoryDistances = (holdings, macroAllocation, totalValue) => {
+export const calculateCategoryDistances = (holdings, macroAllocation, totalValue, usdRate = 1) => {
   const categories = [
     { key: 'acoes', name: 'Ações', macro: 'acoes' },
     { key: 'fiis', name: 'FIIs', macro: 'fiis' },
@@ -21,7 +21,11 @@ export const calculateCategoryDistances = (holdings, macroAllocation, totalValue
 
   return categories.map(cat => {
     const categoryHoldings = holdings[cat.key] || [];
-    const categoryValue = categoryHoldings.reduce((sum, h) => sum + (h.quantity * h.currentPrice), 0);
+    const isUs = cat.key === 'stocks' || cat.key === 'reits';
+    const categoryValue = categoryHoldings.reduce((sum, h) => {
+      const val = h.quantity * h.currentPrice;
+      return sum + (isUs ? val * usdRate : val);
+    }, 0);
     const currentPercent = totalValue > 0 ? (categoryValue / totalValue) * 100 : 0;
     
     // Get target from macro allocation
@@ -60,7 +64,7 @@ export const calculateCategoryDistances = (holdings, macroAllocation, totalValue
  * @param {number} categoryTargetPercent - Target percentage for this category
  * @returns {Array} Array of {ticker, currentPercent, targetPercent, distance}
  */
-export const calculateAssetDistances = (holdings, assetTargets, category, totalValue, categoryTargetPercent) => {
+export const calculateAssetDistances = (holdings, assetTargets, category, totalValue, categoryTargetPercent, usdRate = 1) => {
   const categoryHoldings = holdings[category] || [];
   const targets = assetTargets[category] || [];
 
@@ -225,7 +229,14 @@ export const suggestInvestments = (
 
   // Calculate total portfolio value
   const allHoldings = Object.values(holdings).flat();
-  const totalValue = allHoldings.reduce((sum, h) => sum + (h.quantity * h.currentPrice), 0);
+  let totalValue = 0;
+  Object.keys(holdings).forEach(cat => {
+    const isUs = cat === 'stocks' || cat === 'reits';
+    holdings[cat].forEach(h => {
+      const val = h.quantity * h.currentPrice;
+      totalValue += isUs ? val * usdRate : val;
+    });
+  });
 
   // If total value is 0 (new portfolio), distribute based on targets directly
   // This handles the "empty state" effectively
@@ -264,7 +275,7 @@ export const suggestInvestments = (
 
 
   // Get category distances
-  const categoryDistances = calculateCategoryDistances(holdings, macroAllocation, totalValue);
+  const categoryDistances = calculateCategoryDistances(holdings, macroAllocation, totalValue, usdRate);
 
   // Get all asset distances across all categories
   let allAssetDistances = [];

@@ -3,10 +3,10 @@ import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { calculateCategoryDistances, calculateAssetDistances } from '../../utils/calculateInvestmentSuggestions';
 import './DistancePanel.css';
 
-const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue }) => {
+const DistancePanel = ({ holdings, macroAllocation, assetTargets, totalValue, usdRate = 1 }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
 
-  const categoryDistances = calculateCategoryDistances(holdings, macroAllocation, totalValue);
+  const categoryDistances = calculateCategoryDistances(holdings, macroAllocation, totalValue, usdRate);
 
   const toggleCategory = (category) => {
     setExpandedCategory(expandedCategory === category ? null : category);

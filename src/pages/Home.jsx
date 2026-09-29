@@ -14,9 +14,9 @@ const Home = () => {
   const userName = user?.name || 'Investidor';
   
   // Calculate values
-  const totalValue = calculateTotalValue(holdings);
+  const totalValue = calculateTotalValue(holdings, usdRate);
   const passiveIncome = calculatePassiveIncome(transactions);
-  const holdingsSummary = getHoldingsSummary(holdings);
+  const holdingsSummary = getHoldingsSummary(holdings, usdRate);
   
   // Check if user has objectives defined
   const hasObjectives = Object.values(assetTargets).some(arr => arr.length > 0);

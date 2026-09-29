@@ -88,6 +88,25 @@ export const PortfolioProvider = ({ children }) => {
   const [isUpdatingPrices, setIsUpdatingPrices] = useState(false);
 
   // --- 4. Holdings (Derived State) ---
+  
+  const [usdRate, setUsdRate] = useState(() => {
+    const saved = localStorage.getItem('usdRate');
+    return saved ? parseFloat(saved) : 5.00; // fallback to 5.00
+  });
+
+  useEffect(() => {
+    fetch('https://economia.awesomeapi.com.br/last/USD-BRL')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.USDBRL) {
+          const rate = parseFloat(data.USDBRL.bid);
+          setUsdRate(rate);
+          localStorage.setItem('usdRate', rate);
+        }
+      })
+      .catch(err => console.error('Erro ao buscar cotação do dólar:', err));
+  }, []);
+
   const [holdings, setHoldings] = useState({
     acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: []
   });

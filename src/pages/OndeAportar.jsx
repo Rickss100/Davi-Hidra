@@ -38,7 +38,14 @@ const OndeAportar = () => {
 
   // Calculate total portfolio value
   const allHoldings = Object.values(holdings).flat();
-  const totalValue = allHoldings.reduce((sum, h) => sum + (h.quantity * h.currentPrice), 0);
+  let totalValue = 0;
+  Object.keys(holdings).forEach(cat => {
+    const isUs = cat === 'stocks' || cat === 'reits';
+    holdings[cat].forEach(h => {
+      const val = h.quantity * h.currentPrice;
+      totalValue += isUs ? val * usdRate : val;
+    });
+  });
 
   const handleAmountChange = (e) => {
     // Remove tudo que não é dígito, ponto ou vírgula

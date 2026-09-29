@@ -2,7 +2,7 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import './Portfolio.css';
 
 const HoldingsTable = ({ category, title, color, ...props }) => {
-  const { holdings } = usePortfolio();
+  const { holdings, usdRate } = usePortfolio();
   const { emergencyReserveSummary } = usePortfolio();
   let assets = holdings[category] || [];
   

@@ -9,7 +9,7 @@ import './Home.css';
 
 const Home = () => {
   const { user } = useAuth();
-  const { holdings, transactions, isLoading, macroAllocation, assetTargets } = usePortfolio();
+  const { holdings, transactions, isLoading, macroAllocation, assetTargets, usdRate } = usePortfolio();
 
   const userName = user?.name || 'Investidor';
   

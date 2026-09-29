@@ -9,7 +9,7 @@ import { suggestInvestments } from '../utils/calculateInvestmentSuggestions';
 import './OndeAportar.css';
 
 const OndeAportar = () => {
-  const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig } = usePortfolio();
+  const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig, usdRate } = usePortfolio();
   const { user } = useAuth();
   const isSuspended = user?.role === 'user' && (user?.status === 'suspended' || user?.isSuspended);
 

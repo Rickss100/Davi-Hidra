@@ -400,6 +400,7 @@ const AdminUsers = () => {
                 <th>Perfil</th>
                 <th>Plano & Validade</th>
                 <th>Status</th>
+                <th>Último Acesso</th>
                 <th>Transações</th>
                 <th>Ações</th>
               </tr>

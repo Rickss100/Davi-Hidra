@@ -750,7 +750,7 @@ function createUser({
   return newUser;
 }
 
-function updateUser(id, { name, email, password, role, status, plan_period, plan_expires_at }) {
+function updateUser(id, { name, email, password, role, status, plan_period, plan_expires_at, last_login }) {
   const db = getDatabase();
   const existing = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
   if (!existing) return null;
@@ -762,6 +762,7 @@ function updateUser(id, { name, email, password, role, status, plan_period, plan
   const newStatus = status !== undefined ? status : existing.status;
   const newPeriod = plan_period !== undefined ? plan_period : (existing.plan_period || 'lifetime');
   const newExpiresAt = plan_expires_at !== undefined ? plan_expires_at : existing.plan_expires_at;
+  const newLastLogin = last_login !== undefined ? last_login : existing.last_login;
 
   db.prepare(`
     UPDATE users 

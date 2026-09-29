@@ -5,6 +5,7 @@ import { usePortfolio } from '../context/PortfolioContext';
 import { RefreshCcw, Wallet } from 'lucide-react';
 import { formatCurrency, calculateTotalValue, calculatePassiveIncome, getHoldingsSummary } from '../utils/formatters';
 import UserMenu from '../components/UserMenu/UserMenu';
+import MarketIndicators from '../components/Dashboard/MarketIndicators';
 import './Home.css';
 
 const Home = () => {
@@ -31,6 +32,7 @@ const Home = () => {
         <UserMenu />
       </header>
 
+      <MarketIndicators />
       <div className="dashboard-grid">
         {/* Top Row */}
         <div className="dashboard-row">

@@ -112,6 +112,7 @@ async function ensureTursoSchema(client) {
       status TEXT DEFAULT 'active',
       plan_period TEXT DEFAULT 'lifetime',
       plan_expires_at DATETIME DEFAULT NULL,
+        last_login DATETIME DEFAULT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -180,8 +181,7 @@ export async function syncWithTursoOnStartup(localDb) {
       console.log(`☁️ Nuvem vazia. Migrando ${localUsers.length} usuários locais para o Turso...`);
       for (const u of localUsers) {
         await client.execute({
-          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at, last_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
             u.id, 
             u.email, 

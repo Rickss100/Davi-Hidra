@@ -417,6 +417,7 @@ export const PortfolioProvider = ({ children }) => {
   };
 
   const value = {
+    usdRate,
     macroAllocation,
     updateMacro,
     assetTargets,

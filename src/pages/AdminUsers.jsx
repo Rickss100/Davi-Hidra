@@ -469,7 +469,12 @@ const AdminUsers = () => {
                       </button>
                     </td>
                     <td>
-                      <span className="tx-count-badge">
+                        <span style={{ fontSize: '13px', color: '#a1a1aa' }}>
+                          {u.last_login ? new Date(u.last_login).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }) : '-'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="tx-count-badge">
                         {u.total_transactions || 0} ordens
                       </span>
                     </td>

@@ -467,11 +467,28 @@ const AdminUsers = () => {
 
                         <button 
                           className="btn-action" 
-                          onClick={() => {
-                            impersonateUser(u);
-                            navigate('/');
-                            window.location.reload();
-                          }}
+                          onClick={async () => {
+                              const reason = window.prompt('Motivo da auditoria (Obrigatório para compliance LGPD):');
+                              if (!reason) return;
+                              
+                              try {
+                                await fetch('/api/users/audit', {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({
+                                    action: 'IMPERSONATE',
+                                    targetUserId: u.id,
+                                    reason: reason
+                                  })
+                                });
+                              } catch (err) {
+                                console.error('Erro ao registrar log de auditoria', err);
+                              }
+
+                              impersonateUser(u);
+                              navigate('/');
+                              window.location.reload();
+                            }}
                           title="Entrar na Conta (Ações ficarão registradas no audit_historico.log)"
                           style={{ color: '#60a5fa', background: 'rgba(96, 165, 250, 0.1)', borderColor: 'rgba(96, 165, 250, 0.2)' }}
                         >

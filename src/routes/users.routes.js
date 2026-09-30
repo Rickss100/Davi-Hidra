@@ -23,6 +23,26 @@ function getRequester(req) {
   return getUserById(callerId);
 }
 
+
+// POST /api/users/audit - Registrar log de auditoria (Impersonação)
+router.post('/audit', async (req, res) => {
+  try {
+    const { action, targetUserId, reason } = req.body;
+    const requester = getRequester(req);
+    
+    if (!requester || (requester.role !== 'admin' && requester.role !== 'collaborator')) {
+      return res.status(403).json({ error: 'Acesso negado.' });
+    }
+
+    insertAuditLog(requester.id, targetUserId, action || 'IMPERSONATE', reason || 'Sem motivo detalhado');
+    
+    res.json({ message: 'Audit log salvo com sucesso.' });
+  } catch (err) {
+    console.error('Erro ao salvar audit log:', err);
+    res.status(500).json({ error: 'Erro interno.' });
+  }
+});
+
 // POST /api/users/login - Authenticate user
 router.post('/login', async (req, res) => {
   try {

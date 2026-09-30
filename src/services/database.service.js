@@ -801,7 +801,42 @@ function getUserTransactions(userId) {
   `).all(userId);
 }
 
+
+
+// ============================================================================
+// AUDIT LOGS
+// ============================================================================
+
+function insertAuditLog(adminId, targetUserId, action, details) {
+  const db = getDatabase();
+  const stmt = db.prepare(`
+    INSERT INTO audit_logs (admin_id, target_user_id, action, details)
+    VALUES (?, ?, ?, ?)
+  `);
+  
+  return stmt.run(
+    adminId, 
+    targetUserId || null, 
+    action, 
+    typeof details === 'string' ? details : JSON.stringify(details)
+  );
+}
+
+function getAuditLogs(limit = 100) {
+  const db = getDatabase();
+  return db.prepare(`
+    SELECT a.*, u1.name as admin_name, u2.name as target_name
+    FROM audit_logs a
+    LEFT JOIN users u1 ON a.admin_id = u1.id
+    LEFT JOIN users u2 ON a.target_user_id = u2.id
+    ORDER BY a.created_at DESC
+    LIMIT ?
+  `).all(limit);
+}
+
 export {
+  insertAuditLog,
+  getAuditLogs,
   initDatabase,
   getDatabase,
   closeDatabase,

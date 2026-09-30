@@ -75,7 +75,8 @@ export const calculateAssetDistances = (holdings, assetTargets, category, totalV
     // Use average price as fallback if current price is missing (e.g. market closed API error)
     const defaultFixedPrice = category === 'fixed' ? 1 : 0;
     const price = holding.currentPrice > 0 ? holding.currentPrice : (holding.averagePrice || defaultFixedPrice);
-    const assetValue = holding.quantity * price;
+    const isUsAsset = category === 'stocks' || category === 'reits';
+    const assetValue = holding.quantity * price * (isUsAsset ? usdRate : 1);
     const currentPercent = totalValue > 0 ? (assetValue / totalValue) * 100 : 0;
     
     // Asset target is relative to category, convert to global percentage
@@ -220,7 +221,8 @@ export const suggestInvestments = (
         holdings,
         macroAllocation,
         assetTargets,
-        null // Não passar recursivamente
+        null, // Não passar recursivamente
+        usdRate
       );
 
       return [sugestaoReserva, ...carteiraSuggestions];
@@ -289,7 +291,8 @@ export const suggestInvestments = (
           assetTargets,
           'fixed',
           totalValue,
-          catDist.targetPercent
+          catDist.targetPercent,
+          usdRate
         );
         allAssetDistances = allAssetDistances.concat(assetDists);
       } else if (catDist.distance > 0) {
@@ -314,7 +317,8 @@ export const suggestInvestments = (
       assetTargets,
       catDist.category,
       totalValue,
-      catDist.targetPercent
+      catDist.targetPercent,
+      usdRate
     );
     
     allAssetDistances = allAssetDistances.concat(assetDists);

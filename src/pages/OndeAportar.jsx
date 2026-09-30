@@ -75,7 +75,8 @@ const OndeAportar = () => {
       holdings,
       macroAllocation,
       assetTargets,
-      reserveSummaryForCalc
+      reserveSummaryForCalc,
+      usdRate
     );
     
     // Checar Qualidade DAVI (Item 9 da Auditoria)

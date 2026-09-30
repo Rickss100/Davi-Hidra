@@ -13,6 +13,7 @@ import { useAuth } from '../context/AuthContext';
 import { usePortfolio } from '../context/PortfolioContext';
 import { calculateTotalValue, calculatePassiveIncome } from '../utils/formatters';
 import BenchmarkChart from '../components/Resumo/BenchmarkChart';
+import CapitalEvolutionChart from '../components/Dashboard/CapitalEvolutionChart';
 import AllocationPieChart from '../components/Resumo/AllocationPieChart';
 import './Resumo.css';
 
@@ -151,6 +152,21 @@ const Resumo = () => {
           <div className="resumo-card-sub">
             Dividendos, JCP e FIIs creditados
           </div>
+        </div>
+      </div>
+
+      {/* Gráfico de Evolução de Capital */}
+      <div className="resumo-metrics-grid" style={{ gridTemplateColumns: '1fr', marginBottom: '24px' }}>
+        <div className="resumo-metric-card" style={{ padding: '24px' }}>
+          <div className="resumo-card-header" style={{ marginBottom: '16px' }}>
+            <span className="resumo-card-label" style={{ fontSize: '1.2rem', color: '#e1e1e6', fontWeight: 'bold' }}>
+              Evolução do Capital Aplicado (R$)
+            </span>
+          </div>
+          <p style={{ color: '#a8a8b3', fontSize: '0.9rem', marginBottom: '16px' }}>
+            Acompanhe o crescimento histórico dos seus aportes ao longo do tempo.
+          </p>
+          <CapitalEvolutionChart transactions={transactions} currentTotalValue={totalEquity} />
         </div>
       </div>
 

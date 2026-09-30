@@ -6,6 +6,8 @@ import { RefreshCcw, Wallet } from 'lucide-react';
 import { formatCurrency, calculateTotalValue, calculatePassiveIncome, getHoldingsSummary } from '../utils/formatters';
 import UserMenu from '../components/UserMenu/UserMenu';
 import MarketIndicators from '../components/Dashboard/MarketIndicators';
+import IncomeChart from '../components/Dashboard/IncomeChart';
+import MiniAllocationChart from '../components/Dashboard/MiniAllocationChart';
 import './Home.css';
 
 const Home = () => {
@@ -117,28 +119,31 @@ const Home = () => {
                   Não há dados a serem exibidos...
               </div>
             ) : (
-              <div className="holdings-summary-table">
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid #29292e', color: '#a8a8b3', fontSize: '0.875rem' }}>
-                      <th style={{ textAlign: 'left', padding: '0.5rem' }}>Categoria</th>
-                      <th style={{ textAlign: 'right', padding: '0.5rem' }}>Ativos</th>
-                      <th style={{ textAlign: 'right', padding: '0.5rem' }}>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {holdingsSummary.map(item => (
-                      <tr key={item.category} style={{ borderBottom: '1px solid #29292e' }}>
-                        <td style={{ padding: '0.75rem 0.5rem', color: '#e1e1e6' }}>{item.label}</td>
-                        <td style={{ textAlign: 'right', padding: '0.75rem 0.5rem', color: '#a8a8b3' }}>{item.count}</td>
-                        <td style={{ textAlign: 'right', padding: '0.75rem 0.5rem', color: '#e1e1e6', fontWeight: '500' }}>
-                          {formatCurrency(item.total)}
-                        </td>
+              <>
+                <MiniAllocationChart holdingsSummary={holdingsSummary} />
+                <div className="holdings-summary-table" style={{ marginTop: '16px' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid #29292e', color: '#a8a8b3', fontSize: '0.875rem' }}>
+                        <th style={{ textAlign: 'left', padding: '0.5rem' }}>Categoria</th>
+                        <th style={{ textAlign: 'right', padding: '0.5rem' }}>Ativos</th>
+                        <th style={{ textAlign: 'right', padding: '0.5rem' }}>Total</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {holdingsSummary.map(item => (
+                        <tr key={item.category} style={{ borderBottom: '1px solid #29292e' }}>
+                          <td style={{ padding: '0.75rem 0.5rem', color: '#e1e1e6' }}>{item.label}</td>
+                          <td style={{ textAlign: 'right', padding: '0.75rem 0.5rem', color: '#a8a8b3' }}>{item.count}</td>
+                          <td style={{ textAlign: 'right', padding: '0.75rem 0.5rem', color: '#e1e1e6', fontWeight: '500' }}>
+                            {formatCurrency(item.total)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
             )}
           </div>
         </div>

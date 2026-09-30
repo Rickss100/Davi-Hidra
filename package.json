@@ -27,9 +27,9 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^6.22.3",
+    "read-excel-file": "^9.3.10",
     "recharts": "^2.12.3",
-    "sql.js": "^1.13.0",
-    "xlsx": "^0.18.5"
+    "sql.js": "^1.13.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { UploadCloud, CheckCircle, AlertCircle, FileSpreadsheet } from 'lucide-react';
-import * as XLSX from 'xlsx';
+import readXlsxFile from 'read-excel-file/browser';
 
 const ImportarPlanilha = ({ onImportSuccess }) => {
   const [file, setFile] = useState(null);
@@ -28,22 +28,30 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     }
     setFile(selectedFile);
     
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = e.target.result;
-        const workbook = XLSX.read(data, { type: 'binary' });
-        const firstSheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[firstSheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
-        
+    if (selectedFile.name.endsWith('.csv')) {
+         setError('Formato CSV temporariamente não suportado nesta versão. Envie um arquivo Excel (.xlsx).');
+         return;
+      }
+      
+      readXlsxFile(selectedFile).then((rows) => {
+        if (rows.length < 2) {
+           setError('A planilha não contém dados suficientes.');
+           return;
+        }
+        const headers = rows[0];
+        const json = [];
+        for (let i = 1; i < rows.length; i++) {
+            let obj = {};
+            rows[i].forEach((cell, idx) => {
+                 obj[headers[idx]] = cell;
+            });
+            json.push(obj);
+        }
         parseB3Data(json);
-      } catch (err) {
+      }).catch(err => {
         console.error(err);
         setError('Erro ao ler a planilha. Verifique se o formato está correto.');
-      }
-    };
-    reader.readAsBinaryString(selectedFile);
+      });
   };
 
   const parseMoney = (val) => {

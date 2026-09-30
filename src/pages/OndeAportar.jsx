@@ -404,6 +404,10 @@ const OndeAportar = () => {
           assetTargets={assetTargets}
           totalValue={totalValue}
         />
+
+        <div className="cvm-disclaimer" style={{ marginTop: '32px', padding: '16px', background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', color: '#94a3b8', fontSize: '0.85rem', lineHeight: '1.5', gridColumn: '1 / -1' }}>
+           <strong style={{ color: '#ef4444' }}>⚠️ Aviso Legal (CVM):</strong> O Método Davi & Hydra é uma ferramenta educacional e uma calculadora de rebalanceamento baseada nas suas próprias metas. As sugestões geradas não constituem análise, consultoria ou recomendação de compra ou venda de valores mobiliários (Resolução CVM 19/2021). Toda decisão de investimento é de sua exclusiva responsabilidade e perfil de risco.
+        </div>
       </div>
     </div>
   );

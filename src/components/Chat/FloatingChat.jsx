@@ -79,7 +79,10 @@ const FloatingChat = () => {
           </div>
           
           <div className="chat-messages">
-            {messages.map((msg, idx) => (
+              <div style={{ textAlign: 'center', fontSize: '0.75rem', color: '#64748b', padding: '8px', borderBottom: '1px solid #334155', marginBottom: '8px' }}>
+                ⚠️ A IA Assessor DAVI fornece suporte técnico e educativo. Não realiza recomendações de investimento (CVM 19/2021).
+              </div>
+              {messages.map((msg, idx) => (
               <div key={idx} className={`message ${msg.role}`}>
                 {msg.role === 'bot' ? (
                   <ReactMarkdown>{msg.text}</ReactMarkdown>

@@ -8,8 +8,6 @@ import {
   Shield, 
   Key, 
   UserPlus, 
-  Eye, 
-  EyeOff, 
   CheckCircle, 
   XCircle, 
   Search, 
@@ -53,7 +51,6 @@ const AdminUsers = () => {
     plan_expires_at: ''
   };
   const [formData, setFormData] = useState(initialForm);
-  const [showPasswords, setShowPasswords] = useState({});
   const [tursoStatus, setTursoStatus] = useState(null);
 
   const { success, error: showError } = useToast();
@@ -109,10 +106,6 @@ const AdminUsers = () => {
     loadUsers();
     checkTursoStatus();
   }, []);
-
-  const togglePasswordVisibility = (id) => {
-    setShowPasswords(prev => ({ ...prev, [id]: !prev[id] }));
-  };
 
   // Abrir modal de edição
   const handleOpenEdit = (user) => {
@@ -396,7 +389,6 @@ const AdminUsers = () => {
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Login / E-mail</th>
-                <th>Senha</th>
                 <th>Perfil</th>
                 <th>Plano & Validade</th>
                 <th>Status</th>
@@ -407,7 +399,6 @@ const AdminUsers = () => {
             </thead>
             <tbody>
               {filteredUsers.map((u) => {
-                const isPassVisible = showPasswords[u.id];
                 const isUserAdmin = u.role === 'admin';
                 const cannotModify = isCurrentUserCollaborator && (isUserAdmin || u.id === 1);
 
@@ -426,20 +417,6 @@ const AdminUsers = () => {
                       </div>
                     </td>
                     <td className="col-email">{u.email}</td>
-                    <td className="col-pass">
-                      <div className="password-display">
-                        <span className="password-text">
-                          {isPassVisible ? u.password : '••••••••'}
-                        </span>
-                        <button 
-                          className="btn-toggle-eye" 
-                          onClick={() => togglePasswordVisibility(u.id)}
-                          title={isPassVisible ? 'Ocultar Senha' : 'Ver Senha'}
-                        >
-                          {isPassVisible ? <EyeOff size={14} /> : <Eye size={14} />}
-                        </button>
-                      </div>
-                    </td>
                     <td>
                       <span className={`role-badge role-${u.role || 'user'}`}>
                         {u.role === 'admin' ? '👑 Admin' : u.role === 'collaborator' ? '🛠️ Colaborador' : '👤 Investidor'}
@@ -568,7 +545,7 @@ const AdminUsers = () => {
                   placeholder="Digite a nova senha..."
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
-                <span className="field-hint">A senha pode ser alterada diretamente aqui.</span>
+                <span className="field-hint">Deixe em branco para não alterar. A senha atual não pode ser visualizada por segurança.</span>
               </div>
 
               <div className="form-row">

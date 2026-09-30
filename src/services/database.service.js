@@ -698,16 +698,15 @@ function getAllUsers() {
   const db = getDatabase();
   const users = db.prepare(`
     SELECT 
-      u.id, 
-      u.email, 
-      u.name, 
-      u.role, 
-      u.status, 
-      u.plan_period,
-      u.plan_expires_at,
-      u.created_at, 
-      u.updated_at,
-      u.password,
+        u.id, 
+        u.email, 
+        u.name, 
+        u.role, 
+        u.status, 
+        u.plan_period,
+        u.plan_expires_at,
+        u.created_at, 
+        u.updated_at,
       COUNT(t.id) as total_transactions,
       COALESCE(SUM(t.total_value), 0) as total_volume
     FROM users u

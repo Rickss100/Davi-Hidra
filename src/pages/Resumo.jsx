@@ -10,12 +10,15 @@ import {
   Coins
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { usePortfolio } from '../context/PortfolioContext';
+import { calculateTotalValue, calculatePassiveIncome } from '../utils/formatters';
 import BenchmarkChart from '../components/Resumo/BenchmarkChart';
 import AllocationPieChart from '../components/Resumo/AllocationPieChart';
 import './Resumo.css';
 
 const Resumo = () => {
   const { user } = useAuth();
+  const { holdings, transactions, usdRate } = usePortfolio();
   const userId = user?.id || 1;
 
   const [metrics, setMetrics] = useState(null);
@@ -39,12 +42,28 @@ const Resumo = () => {
     fetchMetrics();
   }, [userId]);
 
-  const totalEquity = metrics?.totalEquity || 0;
-  const investedCapital = metrics?.investedCapital || 0;
-  const totalProfitBRL = metrics?.totalProfitBRL || 0;
-  const totalReturnPct = metrics?.totalReturnPct || 0;
+  
+  // 1. DYNAMIC REAL-TIME METRICS
+  const totalEquity = calculateTotalValue(holdings, usdRate);
+  
+  let investedCapital = 0;
+  if (holdings) {
+    Object.keys(holdings).forEach(cat => {
+      const isUs = cat === 'stocks' || cat === 'reits';
+      holdings[cat].forEach(asset => {
+         const val = asset.totalInvested || 0;
+         investedCapital += isUs ? val * usdRate : val;
+      });
+    });
+  }
+
+  const totalProfitBRL = totalEquity - investedCapital;
+  const totalReturnPct = investedCapital > 0 ? (totalProfitBRL / investedCapital) * 100 : 0;
+  const totalDividends = calculatePassiveIncome(transactions);
+
+  // 2. BACKEND METRICS (Benchmarks)
   const pctOfCdi = metrics?.comparisons?.pctOfCdi || 0;
-  const totalDividends = metrics?.totalDividendsBRL || 0;
+
 
   return (
     <div className="resumo-page">

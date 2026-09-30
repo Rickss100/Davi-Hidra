@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Filter, RotateCcw, Zap, Shield, TrendingUp, ChevronLeft, ChevronRight } from 'lucide-react';
 import './DaviFilters.css';
 
@@ -9,7 +9,7 @@ const PRESETS = {
     icon: Shield,
     description: 'Filtros rigorosos para máxima segurança',
     acoes: {
-      pe_ratio: { max: 12 },
+      pe_ratio: { min: 0.01, max: 12 },
       pb_ratio: { max: 2 },
       dividend_yield: { min: 4 },
       roe: { min: 15 },
@@ -27,14 +27,14 @@ const PRESETS = {
       liquidity: { min: 1000000 }
     },
     stocks: {
-      pe_ratio: { max: 22 },
+      pe_ratio: { min: 0.01, max: 22 },
       pb_ratio: { max: 4 },
       dividend_yield: { min: 2.0 },
       roe: { min: 15 },
       debt_to_equity: { max: 1.0 }
     },
     reits: {
-      pe_ratio: { max: 16 },
+      pe_ratio: { min: 0.01, max: 16 },
       p_vpa: { max: 1.15 },
       dividend_yield: { min: 4.0 },
       vacancy_rate: { max: 5 }
@@ -45,7 +45,7 @@ const PRESETS = {
     icon: TrendingUp,
     description: 'Equilíbrio entre segurança e oportunidade',
     acoes: {
-      pe_ratio: { max: 15 },
+      pe_ratio: { min: 0.01, max: 15 },
       pb_ratio: { max: 3 },
       dividend_yield: { min: 3 },
       roe: { min: 10 },
@@ -62,13 +62,13 @@ const PRESETS = {
       dividend_yield: { min: 11 }
     },
     stocks: {
-      pe_ratio: { max: 32 },
+      pe_ratio: { min: 0.01, max: 32 },
       pb_ratio: { max: 7 },
       dividend_yield: { min: 0.8 },
       roe: { min: 15 }
     },
     reits: {
-      pe_ratio: { max: 20 },
+      pe_ratio: { min: 0.01, max: 20 },
       p_vpa: { max: 1.30 },
       dividend_yield: { min: 3.5 },
       vacancy_rate: { max: 8 }
@@ -79,7 +79,7 @@ const PRESETS = {
     icon: Zap,
     description: 'Mais oportunidades, maior risco',
     acoes: {
-      pe_ratio: { max: 20 },
+      pe_ratio: { min: 0.01, max: 20 },
       pb_ratio: { max: 5 },
       dividend_yield: { min: 2 },
       roe: { min: 8 }
@@ -93,11 +93,11 @@ const PRESETS = {
       dividend_yield: { min: 12 }
     },
     stocks: {
-      pe_ratio: { max: 45 },
+      pe_ratio: { min: 0.01, max: 45 },
       roe: { min: 12 }
     },
     reits: {
-      pe_ratio: { max: 26 },
+      pe_ratio: { min: 0.01, max: 26 },
       dividend_yield: { min: 2.5 },
       vacancy_rate: { max: 12 }
     }
@@ -108,10 +108,10 @@ const PRESETS = {
 const FILTER_DEFINITIONS = {
   Acao: {
     'Valuation': [
-      { key: 'pe_ratio', label: 'P/L', type: 'max', step: 1, defaultMax: 30 },
+      { key: 'pe_ratio', label: 'P/L', type: 'range', step: 1, defaultMax: 30 },
       { key: 'pb_ratio', label: 'P/VP', type: 'max', step: 0.5, defaultMax: 10 },
-      { key: 'ev_ebit', label: 'EV/EBIT', type: 'max', step: 1, defaultMax: 30 },
-      { key: 'ev_ebitda', label: 'EV/EBITDA', type: 'max', step: 1, defaultMax: 20 },
+      { key: 'ev_ebit', label: 'EV/EBIT', type: 'range', step: 1, defaultMax: 30 },
+      { key: 'ev_ebitda', label: 'EV/EBITDA', type: 'range', step: 1, defaultMax: 20 },
       { key: 'psr', label: 'PSR', type: 'max', step: 0.5, defaultMax: 10 },
     ],
     'Rentabilidade': [
@@ -178,9 +178,9 @@ const FILTER_DEFINITIONS = {
   },
   Stock: {
     'Valuation': [
-      { key: 'pe_ratio', label: 'P/L (P/E)', type: 'max', step: 1, defaultMax: 40 },
+      { key: 'pe_ratio', label: 'P/L (P/E)', type: 'range', step: 1, defaultMax: 40 },
       { key: 'pb_ratio', label: 'P/VP (P/B)', type: 'max', step: 0.5, defaultMax: 15 },
-      { key: 'ev_ebitda', label: 'EV/EBITDA', type: 'max', step: 1, defaultMax: 30 },
+      { key: 'ev_ebitda', label: 'EV/EBITDA', type: 'range', step: 1, defaultMax: 30 },
       { key: 'psr', label: 'PSR (P/S)', type: 'max', step: 0.5, defaultMax: 15 },
     ],
     'Rentabilidade': [
@@ -200,7 +200,7 @@ const FILTER_DEFINITIONS = {
   },
   REIT: {
     'Valuation': [
-      { key: 'pe_ratio', label: 'P/FFO', type: 'max', step: 1, defaultMax: 30 },
+      { key: 'pe_ratio', label: 'P/FFO', type: 'range', step: 1, defaultMax: 30 },
       { key: 'p_vpa', label: 'P/VP (P/NAV)', type: 'range', step: 0.05, defaultMin: 0.5, defaultMax: 1.5 },
       { key: 'psr', label: 'PSR', type: 'max', step: 0.5, defaultMax: 15 },
     ],
@@ -292,6 +292,14 @@ const DaviFilters = ({ assetType, onApplyFilters, onClear, totalAssets, filtered
     // Apply immediately
     onApplyFilters(presetFilters || {});
   };
+
+
+  useEffect(() => {
+    // Automatically apply 'moderado' preset on load and when assetType changes
+    // This sanitizes the Radar by default, hiding companies with negative earnings
+    applyPreset('moderado');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assetType]);
 
   const handleApply = () => {
     // Only send active filters

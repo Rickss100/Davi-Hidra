@@ -438,7 +438,7 @@ const RadarAtivos = () => {
         onApplyFilters={applyDaviFilters}
         onClear={clearDaviFilters}
         totalAssets={allAssets.length}
-        filteredCount={assets.length}
+        filteredCount={filteredData.length}
       />
 
       {/* Main Content Area */}

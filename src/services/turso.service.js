@@ -320,9 +320,22 @@ export async function syncWithTursoOnStartup(localDb) {
           user_id = excluded.user_id
       `);
 
-      for (const row of tursoTx) {
-        try {
-          upsertLocalTx.run({
+      const checkAsset = localDb.prepare('SELECT code FROM assets WHERE code = ?');
+        const insertAsset = localDb.prepare('INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)');
+
+        for (const row of tursoTx) {
+          try {
+            if (!checkAsset.get(row.asset_code)) {
+               let defaultType = 'acao';
+               const uc = String(row.asset_code).toUpperCase();
+               if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA')) {
+                 defaultType = 'RendaFixa';
+               } else if (uc.includes('11') && !uc.includes('34')) {
+                 defaultType = 'FII';
+               }
+               try { insertAsset.run(row.asset_code, row.asset_code, defaultType, 'BR'); } catch (e) {}
+            }
+            upsertLocalTx.run({
             id: Number(row.id),
             asset_code: String(row.asset_code),
             type: String(row.type),

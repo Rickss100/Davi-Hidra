@@ -34,7 +34,7 @@ const HoldingsTable = ({ category, title, color, ...props }) => {
       <div className="card-header-row">
         <h3>{title}</h3>
         <div className="card-header-total">
-          <span>R$ {categoryTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          <span>R$ {categoryTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           <span className="percent-badge">
             {portfolioTotal > 0 ? ((categoryTotal / portfolioTotal) * 100).toFixed(1) : 0}% Real
           </span>
@@ -65,8 +65,8 @@ const HoldingsTable = ({ category, title, color, ...props }) => {
                 <tr key={asset.code}>
                   <td className="asset-code">{asset.code}</td>
                   <td>{asset.quantity}</td>
-                  <td>R$ {asset.currentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td>{isUsCat ? 'US$ ' : 'R$ '}{totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                  <td>R$ {asset.currentPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td>{isUsCat ? 'US$ ' : 'R$ '}{totalValue.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td>{percent.toFixed(1)}%</td>
                 </tr>
               );

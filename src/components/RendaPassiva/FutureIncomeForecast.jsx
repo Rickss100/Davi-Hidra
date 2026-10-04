@@ -106,7 +106,7 @@ const FutureIncomeForecast = ({ currentEquity = 50000, monthlyExpense = 3000 }) 
           }}>
             <span>Patrimônio Atual em Carteira:</span>
             <strong style={{ color: currentEquity > 0 ? '#04d361' : '#f1f5f9', fontSize: '13px' }}>
-              R$ {Number(currentEquity || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              R$ {Number(currentEquity || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </strong>
           </div>
 
@@ -223,14 +223,14 @@ const FutureIncomeForecast = ({ currentEquity = 50000, monthlyExpense = 3000 }) 
             <div className="forecast-stat-item">
               <div className="stat-item-label">Patrimônio Acumulado</div>
               <div className="stat-item-val" style={{ color: '#04d361' }}>
-                R$ {forecastData?.finalEquity?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R$ {forecastData?.finalEquity?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             </div>
 
             <div className="forecast-stat-item">
               <div className="stat-item-label">Proventos Totais no Período</div>
               <div className="stat-item-val" style={{ color: '#38bdf8' }}>
-                R$ {forecastData?.totalDividendsReceived?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R$ {forecastData?.totalDividendsReceived?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             </div>
           </div>
@@ -293,12 +293,12 @@ const FutureIncomeForecast = ({ currentEquity = 50000, monthlyExpense = 3000 }) 
                   <td><strong>{t.year} ano(s)</strong></td>
                   <td>Mês {t.month}</td>
                   <td style={{ color: '#04d361', fontWeight: 600 }}>
-                    R$ {t.equity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {t.equity.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td style={{ color: '#38bdf8', fontWeight: 600 }}>
-                    R$ {t.monthlyIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    R$ {t.monthlyIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
-                  <td>R$ {t.annualIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                  <td>R$ {t.annualIncome.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 </tr>
               ))}
             </tbody>

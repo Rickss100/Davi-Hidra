@@ -89,7 +89,7 @@ const Resumo = () => {
             <DollarSign size={20} color="#04d361" />
           </div>
           <div className="resumo-card-value" style={{ color: '#04d361' }}>
-            R$ {totalEquity.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            R$ {totalEquity.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="resumo-card-sub">
             Posição consolidada a mercado
@@ -102,7 +102,7 @@ const Resumo = () => {
             <Coins size={20} color="#38bdf8" />
           </div>
           <div className="resumo-card-value">
-            R$ {investedCapital.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            R$ {investedCapital.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="resumo-card-sub">
             Total aportado de compras
@@ -119,7 +119,7 @@ const Resumo = () => {
             )}
           </div>
           <div className="resumo-card-value" style={{ color: totalProfitBRL >= 0 ? '#04d361' : '#f87171' }}>
-            {totalProfitBRL >= 0 ? '+' : ''}R$ {totalProfitBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            {totalProfitBRL >= 0 ? '+' : ''}R$ {totalProfitBRL.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="resumo-card-sub" style={{ color: totalReturnPct >= 0 ? '#04d361' : '#f87171', fontWeight: 600 }}>
             {totalReturnPct >= 0 ? '+' : ''}{totalReturnPct.toFixed(2)}% de retorno total
@@ -147,7 +147,7 @@ const Resumo = () => {
             <ShieldCheck size={20} color="#a855f7" />
           </div>
           <div className="resumo-card-value" style={{ color: '#c084fc' }}>
-            R$ {totalDividends.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            R$ {totalDividends.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="resumo-card-sub">
             Dividendos, JCP e FIIs creditados

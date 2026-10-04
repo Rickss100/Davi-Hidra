@@ -309,7 +309,7 @@ const ReservaEmergencia = () => {
           </div>
           <div className="metric-value">
             {monthlyExpense > 0 
-              ? `R$ ${targetReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` 
+              ? `R$ ${targetReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` 
               : 'R$ 0,00'}
           </div>
           <div className="metric-footer">
@@ -325,7 +325,7 @@ const ReservaEmergencia = () => {
             <ShieldCheck size={20} color="#04d361" />
           </div>
           <div className="metric-value" style={{ color: '#04d361' }}>
-            R$ {totalReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            R$ {totalReserve.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </div>
           <div className="metric-footer">
             {emergencyReserveSummary?.reserveAssets?.length || 0} ativo(s) de alta liquidez
@@ -342,7 +342,7 @@ const ReservaEmergencia = () => {
           </div>
           <div className="metric-footer">
             {missingAmount > 0 
-              ? `Faltam R$ ${missingAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${((missingAmount / (monthlyExpense || 1))).toFixed(1)} meses)`
+              ? `Faltam R$ ${missingAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (${((missingAmount / (monthlyExpense || 1))).toFixed(1)} meses)`
               : '100% Protegido'}
           </div>
         </div>
@@ -604,7 +604,7 @@ const ReservaEmergencia = () => {
                     </td>
                     <td>{asset.quantity}</td>
                     <td style={{ color: '#04d361', fontWeight: 600 }}>
-                      R$ {totalInvested.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      R$ {totalInvested.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td>{sharePercent.toFixed(1)}%</td>
                   </tr>

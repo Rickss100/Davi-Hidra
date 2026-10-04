@@ -154,7 +154,7 @@ const DividendsCalendar = ({ userId = 1 }) => {
 
         <div className="calendar-summary-pill">
           <DollarSign size={18} />
-          <span>Total no Mês: R$ {calendarData.totalIncomeBRL?.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+          <span>Total no Mês: R$ {calendarData.totalIncomeBRL?.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
       </div>
 

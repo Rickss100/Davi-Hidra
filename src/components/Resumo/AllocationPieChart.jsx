@@ -46,7 +46,7 @@ const AllocationPieChart = ({ userId = 1 }) => {
             {data.name}
           </div>
           <div style={{ color: '#fff', fontSize: '0.8rem', marginTop: '3px' }}>
-            R$ {data.current.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({data.percent}%)
+            R$ {data.current.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ({data.percent}%)
           </div>
         </div>
       );
@@ -124,10 +124,10 @@ const AllocationPieChart = ({ userId = 1 }) => {
                       <span>{cat.name}</span>
                     </div>
                   </td>
-                  <td>R$ {cat.invested.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
-                  <td style={{ fontWeight: 600 }}>R$ {cat.current.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                  <td>R$ {cat.invested.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                  <td style={{ fontWeight: 600 }}>R$ {cat.current.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td style={{ color: cat.profit >= 0 ? '#04d361' : '#f87171', fontWeight: 600 }}>
-                    {cat.profit > 0 ? '+' : ''}R$ {cat.profit.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    {cat.profit > 0 ? '+' : ''}R$ {cat.profit.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </td>
                   <td style={{ color: cat.returnPct >= 0 ? '#04d361' : '#f87171', fontWeight: 700 }}>
                     {cat.returnPct > 0 ? '+' : ''}{cat.returnPct.toFixed(2)}%

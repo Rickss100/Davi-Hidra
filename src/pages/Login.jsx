@@ -103,7 +103,7 @@ const Login = () => {
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <a 
-                href="https://api.whatsapp.com/send?text=Olá, preciso de suporte técnico referente à minha conta no Davi-Hidra."
+                href="https://api.whatsapp.com/send?phone=5527995263026&text=Olá, preciso de suporte técnico referente à minha conta no Davi-Hidra."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="login-button"
@@ -240,8 +240,23 @@ const Login = () => {
               </button>
             </div>
           </div>
+            
+            <div style={{ textAlign: 'right', marginTop: '-12px', marginBottom: '16px' }}>
+              <a 
+                href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20esqueci%20minha%20senha%20de%20acesso%20no%20Davi-Hidra.%20Pode%20me%20ajudar%20a%20redefinir%3F" 
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  color: '#94a3b8',
+                  fontSize: '0.8rem',
+                  textDecoration: 'underline'
+                }}
+              >
+                Esqueceu a senha?
+              </a>
+            </div>
 
-          <button type="submit" className="login-button" disabled={loading}>
+            <button type="submit" className="login-button" disabled={loading}>
             {loading ? (
               'Processando...'
             ) : isRegistering ? (

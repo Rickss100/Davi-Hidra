@@ -121,7 +121,7 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
         if (firstPart === 'CDB' || firstPart === 'RDB' || firstPart === 'LC' || firstPart === 'LCI' || firstPart === 'LCA') {
           assetCode = parts.length > 1 ? parts[1] : parts[0];
         } else {
-          assetCode = parts[parts.length - 1];
+          assetCode = parts[0];
         }
       }
       

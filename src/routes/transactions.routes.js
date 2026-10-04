@@ -153,7 +153,8 @@ router.post('/bulk', async (req, res) => {
       return res.status(400).json({ error: 'Nenhuma transação enviada para importação.' });
     }
 
-    const userId = transactions[0].user_id || 1; // Fallback to 1 if not provided
+    const headerUserId = req.headers['x-user-id'];
+      const userId = transactions[0].user_id || headerUserId || 1; // Use x-user-id header
     
     const insert = db.prepare(`
       INSERT INTO transactions (asset_code, type, quantity, price, total_value, date, notes, user_id)

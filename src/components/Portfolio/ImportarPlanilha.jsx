@@ -33,8 +33,16 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
          return;
       }
       
-      readXlsxFile(selectedFile).then((rows) => {
-        if (rows.length < 2) {
+      readXlsxFile(selectedFile).then((result) => {
+        let rows = result;
+        // B3 often exports single sheets wrapped in an object or multiple sheets
+        if (result.length > 0 && !Array.isArray(result[0]) && result[0].data) {
+           rows = result[0].data;
+        } else if (result.length === 1 && result[0].data) {
+           rows = result[0].data;
+        }
+        
+        if (!rows || rows.length < 2) {
            setError('A planilha não contém dados suficientes.');
            return;
         }

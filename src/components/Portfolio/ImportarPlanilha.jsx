@@ -174,13 +174,8 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     setError('');
     
     try {
-      const response = await fetch('/api/transactions/bulk', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactions: previewData })
-      });
-      
-      const result = await response.json();
+      const result = await api.post('/transactions/bulk', { transactions: previewData });
+        const response = { ok: true }; // stub for the next line
       
       if (response.ok) {
         if (onImportSuccess) onImportSuccess(result.count || previewData.length);

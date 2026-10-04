@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { UploadCloud, CheckCircle, AlertCircle, FileSpreadsheet } from 'lucide-react';
 import readXlsxFile from 'read-excel-file/browser';
+import { api } from '../../services/api';
 
 const ImportarPlanilha = ({ onImportSuccess }) => {
   const [file, setFile] = useState(null);

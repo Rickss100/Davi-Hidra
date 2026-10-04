@@ -39,7 +39,20 @@ export async function updateAllPrices(holdings, options = {}) {
     try {
       // Brapi supports batch requests - fetch all at once
       console.log(`Fetching ${category}: ${tickers.join(', ')}`);
-      const quotes = await getBrapiQuotes(tickers, brapiToken);
+      let quotes = [];
+      try {
+        quotes = await getBrapiQuotes(tickers, brapiToken);
+      } catch (batchErr) {
+        console.warn(`Brapi batch failed for ${category}. Falling back to sequential...`);
+        for (const t of tickers) {
+          try {
+            const q = await getBrapiQuote(t, brapiToken);
+            if (q) quotes.push(q);
+          } catch (e) {
+            console.error(`Failed ${t}:`, e.message);
+          }
+        }
+      }
       
       // Create a map for quick lookup
       const quoteMap = {};

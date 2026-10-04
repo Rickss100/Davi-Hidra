@@ -383,7 +383,7 @@ export const PortfolioProvider = ({ children }) => {
           console.log('Starting price update for all holdings...');
           
           // Get API keys from localStorage (you can move to env later)
-          const brapiToken = localStorage.getItem('brapiToken') || null;
+          const brapiToken = localStorage.getItem('brapiToken') || import.meta.env.VITE_BRAPI_TOKEN || '6AC8B12Ck6WvvTnVEnUoSh';
           const alphaVantageKey = localStorage.getItem('alphaVantageKey') || 'demo';
           
           // Use new updateAllPrices service

@@ -167,7 +167,8 @@ export const suggestInvestments = (
   holdings,
   macroAllocation,
   assetTargets,
-  emergencyReserveSummary = null
+  emergencyReserveSummary = null,
+  usdRate = 1
 ) => {
   if (availableAmount <= 0 || numAssets <= 0) return [];
 

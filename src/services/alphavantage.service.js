@@ -6,7 +6,7 @@
  * Documentation: https://www.alphavantage.co/documentation/
  */
 
-import fetch from 'node-fetch';
+// Using native global fetch (Browser + Node 18+)
 
 const AV_BASE_URL = 'https://www.alphavantage.co/query';
 

@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import SetupChecklist from '../components/Onboarding/SetupChecklist';
 import { useAuth } from '../context/AuthContext';
 import { usePortfolio } from '../context/PortfolioContext';
 import { RefreshCcw, Wallet } from 'lucide-react';
@@ -12,15 +12,31 @@ import './Home.css';
 
 const Home = () => {
   const { user } = useAuth();
-  const { holdings, transactions, isLoading, macroAllocation, assetTargets, usdRate } = usePortfolio();
+  const { holdings, transactions, isLoading, assetTargets, usdRate } = usePortfolio();
+
+  const [incomePeriod, setIncomePeriod] = useState('90d');
+  const [carteiraView, setCarteiraView] = useState('class'); // 'class' | 'asset'
 
   const userName = user?.name || 'Investidor';
   
   // Calculate values
   const totalValue = calculateTotalValue(holdings, usdRate);
-  const passiveIncome = calculatePassiveIncome(transactions);
+  const passiveIncome = calculatePassiveIncome(transactions, incomePeriod);
+  const totalHistoricalIncome = calculatePassiveIncome(transactions, 'all');
   const holdingsSummary = getHoldingsSummary(holdings, usdRate);
   
+  // Lista individual de ativos ordenada por valor
+  const individualAssets = Object.entries(holdings || {})
+    .flatMap(([cat, list]) => {
+      const isUs = cat === 'stocks' || cat === 'reits';
+      return (list || []).map(a => {
+        const val = (Number(a.quantity) || 0) * (Number(a.currentPrice) || 0) * (isUs ? usdRate : 1);
+        return { ...a, category: cat, totalVal: val };
+      });
+    })
+    .filter(a => a.quantity > 0)
+    .sort((a, b) => b.totalVal - a.totalVal);
+
   // Check if user has objectives defined
   const hasObjectives = Object.values(assetTargets).some(arr => arr.length > 0);
 
@@ -85,20 +101,25 @@ const Home = () => {
             </div>
             
             <div className="filters">
-                <span style={{ fontSize: '0.875rem', color: '#a8a8b3', position: 'absolute', right: '110px', top: '28px' }}>Filtrar por:</span>
-                <select className="filter-select">
-                    <option>Mês atual</option>
+                <span style={{ fontSize: '0.875rem', color: '#a8a8b3', position: 'absolute', right: '150px', top: '28px' }}>Filtrar por:</span>
+                <select 
+                  className="filter-select"
+                  value={incomePeriod}
+                  onChange={(e) => setIncomePeriod(e.target.value)}
+                >
+                    <option value="90d">Últimos 90 dias (B3)</option>
+                    <option value="month">Mês atual</option>
+                    <option value="12m">Últimos 12 meses</option>
+                    <option value="all">Total histórico</option>
                 </select>
             </div>
 
-            {passiveIncome === 0 ? (
+            {totalHistoricalIncome === 0 ? (
               <div className="empty-graph-state">
                 Sem rendimentos :/
               </div>
             ) : (
-              <div className="empty-graph-state">
-                Gráfico em desenvolvimento
-              </div>
+              <IncomeChart transactions={transactions} />
             )}
           </div>
 
@@ -109,8 +130,18 @@ const Home = () => {
                     <Wallet size={18} /> Carteira
                 </div>
                 <div className="carteira-controls">
-                    <button className="control-btn active">Classe de ativo</button>
-                    <button className="control-btn">Ativo</button>
+                    <button 
+                      className={`control-btn ${carteiraView === 'class' ? 'active' : ''}`}
+                      onClick={() => setCarteiraView('class')}
+                    >
+                      Classe de ativo
+                    </button>
+                    <button 
+                      className={`control-btn ${carteiraView === 'asset' ? 'active' : ''}`}
+                      onClick={() => setCarteiraView('asset')}
+                    >
+                      Ativo
+                    </button>
                 </div>
             </div>
             
@@ -118,7 +149,7 @@ const Home = () => {
               <div className="empty-table-state">
                   Não há dados a serem exibidos...
               </div>
-            ) : (
+            ) : carteiraView === 'class' ? (
               <>
                 <MiniAllocationChart holdingsSummary={holdingsSummary} />
                 <div className="holdings-summary-table" style={{ marginTop: '16px' }}>
@@ -144,6 +175,33 @@ const Home = () => {
                   </table>
                 </div>
               </>
+            ) : (
+              <div className="holdings-summary-table" style={{ marginTop: '12px', maxHeight: '340px', overflowY: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #29292e', color: '#a8a8b3', fontSize: '0.82rem' }}>
+                      <th style={{ textAlign: 'left', padding: '0.5rem' }}>Ativo</th>
+                      <th style={{ textAlign: 'right', padding: '0.5rem' }}>Qtd</th>
+                      <th style={{ textAlign: 'right', padding: '0.5rem' }}>Total</th>
+                      <th style={{ textAlign: 'right', padding: '0.5rem' }}>%</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {individualAssets.map(asset => (
+                      <tr key={asset.code} style={{ borderBottom: '1px solid #29292e', fontSize: '0.88rem' }}>
+                        <td style={{ padding: '0.6rem 0.5rem', color: '#e1e1e6', fontWeight: '600' }}>{asset.code}</td>
+                        <td style={{ textAlign: 'right', padding: '0.6rem 0.5rem', color: '#a8a8b3' }}>{Number(asset.quantity.toFixed(2))}</td>
+                        <td style={{ textAlign: 'right', padding: '0.6rem 0.5rem', color: '#10b981', fontWeight: '500' }}>
+                          {formatCurrency(asset.totalVal)}
+                        </td>
+                        <td style={{ textAlign: 'right', padding: '0.6rem 0.5rem', color: '#a8a8b3' }}>
+                          {totalValue > 0 ? ((asset.totalVal / totalValue) * 100).toFixed(1) + '%' : '0%'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
           </div>
         </div>

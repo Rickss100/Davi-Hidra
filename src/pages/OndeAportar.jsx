@@ -9,7 +9,7 @@ import { suggestInvestments } from '../utils/calculateInvestmentSuggestions';
 import './OndeAportar.css';
 
 const OndeAportar = () => {
-  const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig, usdRate } = usePortfolio();
+  const { holdings, macroAllocation, assetTargets, emergencyReserveSummary, updateEmergencyConfig, usdRate, addTransaction } = usePortfolio();
   const { user } = useAuth();
   const isSuspended = user?.role === 'user' && (user?.status === 'suspended' || user?.isSuspended);
 
@@ -151,8 +151,56 @@ const OndeAportar = () => {
 
   const totalSuggested = suggestions.reduce((sum, s) => sum + s.valorTotal, 0);
 
+  const [copyFeedback, setCopyFeedback] = useState('');
+
   const handleCopyTicker = (ticker) => {
     navigator.clipboard.writeText(ticker);
+    setCopyFeedback(`Código ${ticker} copiado!`);
+    setTimeout(() => setCopyFeedback(''), 2500);
+  };
+
+  const handleCopyWhatsAppSummary = () => {
+    if (!suggestions || suggestions.length === 0) return;
+    const investorName = user?.name || 'Investidor';
+    const dateStr = new Date().toLocaleDateString('pt-BR');
+    const lines = [
+      `📊 *PLANO DE APORTE — NORTE INVEST (MÉTODO DAVI)*`,
+      `👤 Investidor: *${investorName}*`,
+      `📅 Data: ${dateStr}`,
+      `💰 Valor Disponível: *R$ ${Number(availableAmount || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}*`,
+      ``,
+      `🎯 *ORDENS SUGERIDAS PELA RÉGUA OURO:*`
+    ];
+    suggestions.forEach((s, i) => {
+      const cotasTxt = s.cotas ? `${s.cotas} cota(s)/un.` : 'Aporte direto';
+      lines.push(`${i + 1}. *${s.ticker}* — ${cotasTxt} ➔ *R$ ${s.valorTotal.toFixed(2)}* (${s.reason || 'Rebalanceamento'})`);
+    });
+    lines.push(``);
+    lines.push(`✅ *Total Alocado: R$ ${totalSuggested.toFixed(2)}*`);
+    navigator.clipboard.writeText(lines.join('\n'));
+    setCopyFeedback('✓ Resumo formatado copiado para o WhatsApp!');
+    setTimeout(() => setCopyFeedback(''), 3500);
+  };
+
+  const handleRegisterAllSuggestions = async () => {
+    if (!suggestions || suggestions.length === 0) return;
+    if (!window.confirm('Deseja registrar todas as ordens sugeridas acima diretamente na sua Carteira com a data de hoje?')) return;
+    const today = new Date().toISOString().split('T')[0];
+    for (const s of suggestions) {
+      const qty = Number(s.cotas) > 0 ? Number(s.cotas) : 1;
+      const price = Number(s.cotas) > 0 ? Number((s.valorTotal / s.cotas).toFixed(2)) : Number(s.valorTotal.toFixed(2));
+      await addTransaction({
+        asset_code: s.ticker,
+        type: 'buy',
+        quantity: qty,
+        price: price,
+        date: today,
+        category: s.categoria || (s.isEmergencyReserve ? 'fixed' : undefined),
+        notes: 'Aporte guiado pelo Onde Aportar (Régua Ouro)'
+      });
+    }
+    setCopyFeedback('✓ Aportes registrados na Carteira com sucesso!');
+    setTimeout(() => setCopyFeedback(''), 4000);
   };
 
   return (
@@ -389,6 +437,56 @@ const OndeAportar = () => {
                 <div className="total-aporte">
                   <span>Total do Aporte</span>
                   <span className="total-value">R$ {totalSuggested.toFixed(2)}</span>
+                </div>
+
+                {copyFeedback && (
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '8px', color: '#34d399', fontSize: '13px', fontWeight: '600', textAlign: 'center' }}>
+                    {copyFeedback}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={handleCopyWhatsAppSummary}
+                    style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', background: '#25D366', color: '#09090b', fontWeight: '700', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}
+                  >
+                    <MessageCircle size={18} />
+                    Copiar Resumo p/ WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRegisterAllSuggestions}
+                    style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', background: '#18181b', color: '#e2e8f0', fontWeight: '600', border: '1px solid #3f3f46', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}
+                  >
+                    <ArrowRight size={18} />
+                    Registrar Aportes na Carteira
+                  </button>
+                </div>
+
+                {copyFeedback && (
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', borderRadius: '8px', color: '#34d399', fontSize: '13px', fontWeight: '600', textAlign: 'center' }}>
+                    {copyFeedback}
+                  </div>
+                )}
+
+                <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    onClick={handleCopyWhatsAppSummary}
+                    style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', background: '#25D366', color: '#09090b', fontWeight: '700', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}
+                  >
+                    <MessageCircle size={18} />
+                    Copiar Resumo p/ WhatsApp
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleRegisterAllSuggestions}
+                    style={{ flex: 1, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '12px 16px', background: '#18181b', color: '#e2e8f0', fontWeight: '600', border: '1px solid #3f3f46', borderRadius: '8px', cursor: 'pointer', fontSize: '14px' }}
+                  >
+                    <ArrowRight size={18} />
+                    Registrar Aportes na Carteira
+                  </button>
                 </div>
               </div>
             )}

@@ -17,25 +17,43 @@ import MagicNumberTable from '../components/RendaPassiva/MagicNumberTable';
 import './RendaPassiva.css';
 
 const RendaPassiva = () => {
-  const { holdings, emergencyReserveSummary } = usePortfolio();
+  const { holdings, transactions, emergencyReserveSummary } = usePortfolio();
   const { user } = useAuth();
   const userId = user?.id || 1;
 
   const [activeTab, setActiveTab] = useState('calendar'); // 'calendar' | 'forecast' | 'magic'
 
-  // Calcular patrimônio total atual em carteira
+  // Calcular patrimônio total atual e custo total investido em carteira
   const allHoldings = Object.values(holdings).flat();
   const totalEquity = allHoldings.reduce((sum, h) => {
     const price = h.currentPrice > 0 ? h.currentPrice : (h.averagePrice || 1);
     return sum + (h.quantity * price);
   }, 0);
+  const totalInvested = allHoldings.reduce((sum, h) => sum + (Number(h.totalInvested) || 0), 0);
 
   const hasHoldings = allHoldings.length > 0 && totalEquity > 0;
 
-  // Proventos mensais e dividend yield reais (ou 0 se a carteira for nova)
-  const estimatedAnnualYieldPct = hasHoldings ? 8.8 : 0.0;
-  const estimatedMonthlyIncome = hasHoldings ? (totalEquity * (estimatedAnnualYieldPct / 100 / 12)) : 0.0;
-  const yocAnnualPct = hasHoldings ? (estimatedAnnualYieldPct * 1.15) : 0.0;
+  // Proventos reais importados nos últimos 12 meses (ou estimativa se ainda não importou proventos)
+  const now = new Date();
+  const real12mDividends = (transactions || [])
+    .filter(tx => {
+      if (tx.type !== 'event') return false;
+      const d = new Date(tx.date + 'T12:00:00');
+      const diffDays = (now - d) / (1000 * 60 * 60 * 24);
+      return diffDays >= -5 && diffDays <= 366;
+    })
+    .reduce((sum, tx) => sum + (Number(tx.total_value) || Number(tx.totalValue) || 0), 0);
+
+  const hasRealDividends = real12mDividends > 0;
+  const estimatedAnnualYieldPct = hasHoldings
+    ? (hasRealDividends ? (real12mDividends / totalEquity) * 100 : 8.8)
+    : 0.0;
+  const estimatedMonthlyIncome = hasHoldings
+    ? (hasRealDividends ? real12mDividends / 12 : totalEquity * (estimatedAnnualYieldPct / 100 / 12))
+    : 0.0;
+  const yocAnnualPct = hasHoldings
+    ? (hasRealDividends && totalInvested > 0 ? (real12mDividends / totalInvested) * 100 : estimatedAnnualYieldPct * 1.15)
+    : 0.0;
 
   // Custo de vida essencial da Reserva de Emergência
   const monthlyExpense = emergencyReserveSummary?.monthlyExpense || 0;

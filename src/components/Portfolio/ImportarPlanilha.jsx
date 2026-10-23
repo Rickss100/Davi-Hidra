@@ -4,74 +4,34 @@ import readXlsxFile from 'read-excel-file/browser';
 import { api } from '../../services/api';
 
 const ImportarPlanilha = ({ onImportSuccess }) => {
-  const [file, setFile] = useState(null);
+  const [filesCount, setFilesCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [previewData, setPreviewData] = useState(null);
+  const [previewStats, setPreviewStats] = useState({ trades: 0, events: 0 });
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
 
   const handleFileDrop = (e) => {
     e.preventDefault();
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) processFile(droppedFile);
+    const droppedFiles = Array.from(e.dataTransfer.files || []);
+    if (droppedFiles.length > 0) processFiles(droppedFiles);
   };
 
   const handleFileSelect = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) processFile(selectedFile);
-  };
-
-  const processFile = (selectedFile) => {
-    setError('');
-    if (!selectedFile.name.endsWith('.xlsx') && !selectedFile.name.endsWith('.csv')) {
-      setError('Por favor, envie um arquivo Excel (.xlsx) ou CSV.');
-      return;
-    }
-    setFile(selectedFile);
-    
-    if (selectedFile.name.endsWith('.csv')) {
-         setError('Formato CSV temporariamente não suportado nesta versão. Envie um arquivo Excel (.xlsx).');
-         return;
-      }
-      
-      readXlsxFile(selectedFile).then((result) => {
-        let rows = result;
-        // B3 often exports single sheets wrapped in an object or multiple sheets
-        if (result.length > 0 && !Array.isArray(result[0]) && result[0].data) {
-           rows = result[0].data;
-        } else if (result.length === 1 && result[0].data) {
-           rows = result[0].data;
-        }
-        
-        if (!rows || rows.length < 2) {
-           setError('A planilha não contém dados suficientes.');
-           return;
-        }
-        const headers = rows[0];
-        const json = [];
-        for (let i = 1; i < rows.length; i++) {
-            let obj = {};
-            rows[i].forEach((cell, idx) => {
-                 obj[headers[idx]] = cell;
-            });
-            json.push(obj);
-        }
-        parseB3Data(json);
-      }).catch(err => {
-        console.error(err);
-        setError('Erro ao ler a planilha. Verifique se o formato está correto.');
-      });
+    const selectedFiles = Array.from(e.target.files || []);
+    if (selectedFiles.length > 0) processFiles(selectedFiles);
   };
 
   const parseMoney = (val) => {
     if (typeof val === 'number') return Math.abs(val);
     if (!val) return 0;
     let s = val.toString().replace('R$', '').replace('US$', '').trim();
+    if (s === '-' || s === '') return 0;
     if (s.includes('.') && s.includes(',')) {
       const lastDot = s.lastIndexOf('.');
       const lastComma = s.lastIndexOf(',');
       if (lastComma > lastDot) {
-        s = s.replace(/\\./g, '').replace(',', '.');
+        s = s.replace(/\./g, '').replace(',', '.');
       } else {
         s = s.replace(/,/g, '');
       }
@@ -81,6 +41,54 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     return Math.abs(parseFloat(s)) || 0;
   };
 
+  const extractJsonFromSheet = (rows) => {
+    if (!rows || rows.length < 2) return [];
+    const headers = rows[0];
+    const json = [];
+    for (let i = 1; i < rows.length; i++) {
+      let obj = {};
+      rows[i].forEach((cell, idx) => {
+        if (headers[idx]) obj[headers[idx]] = cell;
+      });
+      json.push(obj);
+    }
+    return json;
+  };
+
+  const processFiles = async (fileList) => {
+    setError('');
+    const validFiles = fileList.filter(f => f.name.endsWith('.xlsx'));
+    if (validFiles.length === 0) {
+      setError('Por favor, envie um ou mais arquivos Excel (.xlsx) exportados da B3.');
+      return;
+    }
+
+    setFilesCount(validFiles.length);
+    const allJsonRows = [];
+
+    try {
+      for (const selectedFile of validFiles) {
+        const result = await readXlsxFile(selectedFile);
+        if (Array.isArray(result) && result.length > 0 && !Array.isArray(result[0]) && result[0].data) {
+          // Multi-sheet or wrapped B3 export
+          for (const sheetObj of result) {
+            const sheetName = String(sheetObj.sheet || '').toLowerCase();
+            if (sheetName.includes('proventos')) continue; // Evitar duplicar resumo anual de proventos sem data
+            const extracted = extractJsonFromSheet(sheetObj.data);
+            allJsonRows.push(...extracted);
+          }
+        } else if (Array.isArray(result)) {
+          const extracted = extractJsonFromSheet(result);
+          allJsonRows.push(...extracted);
+        }
+      }
+      parseB3Data(allJsonRows);
+    } catch (err) {
+      console.error(err);
+      setError('Erro ao ler a(s) planilha(s). Verifique se o formato B3 (.xlsx) está correto.');
+    }
+  };
+
   const parseB3Data = (rows) => {
     if (!rows || rows.length === 0) {
       setError('A planilha está vazia.');
@@ -88,34 +96,34 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     }
 
     const parsedTransactions = [];
-    let count = 0;
+    const seenKeys = new Set();
+    let tradeCount = 0;
+    let eventCount = 0;
 
     rows.forEach(row => {
       const mov = row['Movimentação'] || row['Movimentacao'] || row['Tipo'] || '';
       const dataStr = row['Data'] || row['Data do Negócio'] || '';
-      const produto = row['Produto'] || row['Código'] || row['Ativo'] || '';
-      const qty = row['Quantidade'] || 0;
-      const preco = row['Preço unitário'] || row['Preço'] || 0;
+      const produto = row['Produto'] || row['Código de Negociação'] || row['Código'] || row['Ativo'] || '';
+      const qty = row['Quantidade'] || row['Quantidade Disponível'] || 0;
+      const preco = row['Preço unitário'] || row['Preço de Fechamento'] || row['Preço'] || 0;
+      const valOp = row['Valor da Operação'] || row['Valor Atualizado'] || row['Valor'] || 0;
       const es = (row['Entrada/Saída'] || row['Entrada/Saida'] || '').toString().toUpperCase();
 
       const movUpper = mov.toString().toUpperCase();
-      
-      // Ignorar juros sobre capital, dividendos, rendimentos, leilão de fração e atualização cadastral
-      if (movUpper.includes('JUROS') || movUpper.includes('DIVIDENDO') || movUpper.includes('RENDIMENTO') || movUpper.includes('AMORTIZAÇÃO') || movUpper.includes('LEILÃO') || movUpper.includes('LEILAO') || movUpper.includes('ATUALIZAÇÃO') || movUpper.includes('ATUALIZACAO')) return;
 
-      // Determinar o Tipo
-      let type = 'buy';
-      if (es === 'DEBITO' || es === 'DÉBITO') {
-        type = 'sell';
-      } else if (es === 'CREDITO' || es === 'CRÉDITO') {
-        type = 'buy';
-      } else {
-        if (movUpper.includes('VENDA') || movUpper.includes('RESGATE')) type = 'sell';
-        if (movUpper.includes('COMPRA') || movUpper.includes('APLICAÇÃO')) type = 'buy';
+      // Ignorar eventos puramente cadastrais ou direitos não exercidos
+      if (
+        movUpper.includes('ATUALIZAÇÃO') ||
+        movUpper.includes('ATUALIZACAO') ||
+        movUpper.includes('SUBSCRIÇÃO') ||
+        movUpper.includes('SUBSCRICAO') ||
+        movUpper.includes('AMORTIZAÇÃO')
+      ) {
+        return;
       }
 
       // Extrair o Código do Ativo
-      let assetCode = produto.toString().trim();
+      let assetCode = (row['Código de Negociação'] || produto).toString().trim();
       if (assetCode.includes(' - ')) {
         const parts = assetCode.split(' - ').map(p => p.trim());
         const firstPart = parts[0].toUpperCase();
@@ -125,10 +133,10 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
           assetCode = parts[0];
         }
       }
-      
       if (assetCode.includes(' ') && assetCode.length > 15) {
         assetCode = assetCode.split(' ')[0];
       }
+      if (!assetCode || assetCode.toLowerCase() === 'total') return;
 
       // Converter Data
       let isoDate = new Date().toISOString().split('T')[0];
@@ -141,32 +149,79 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
 
       let quantity = parseMoney(qty);
       let price = parseMoney(preco);
-      const valOp = row['Valor da Operação'] || row['Valor'] || 0;
       let totalVal = parseMoney(valOp);
+
+      // 1. Verificar se é Provento / Renda Passiva (Dividendo, JCP, Rendimento, Leilão de Fração)
+      const isDividendEvent =
+        movUpper.includes('JUROS') ||
+        movUpper.includes('DIVIDENDO') ||
+        movUpper.includes('RENDIMENTO') ||
+        movUpper.includes('LEILÃO') ||
+        movUpper.includes('LEILAO');
+
+      if (isDividendEvent) {
+        if (totalVal <= 0 && quantity > 0 && price > 0) {
+          totalVal = Number((quantity * price).toFixed(2));
+        }
+        if (assetCode && totalVal > 0) {
+          const dedupKey = `event|${assetCode}|${isoDate}|${totalVal}|${mov}`;
+          if (!seenKeys.has(dedupKey)) {
+            seenKeys.add(dedupKey);
+            parsedTransactions.push({
+              asset_code: assetCode,
+              type: 'event',
+              quantity: quantity || 1,
+              price: price || totalVal,
+              total_value: totalVal,
+              date: isoDate,
+              notes: `Provento B3: ${mov}`
+            });
+            eventCount++;
+          }
+        }
+        return;
+      }
+
+      // 2. Determinar o Tipo de Operação de Custódia (Compra / Venda / Bonificação / Fração)
+      let type = 'buy';
+      if (es === 'DEBITO' || es === 'DÉBITO') {
+        type = 'sell';
+      } else if (es === 'CREDITO' || es === 'CRÉDITO') {
+        type = 'buy';
+      } else {
+        if (movUpper.includes('VENDA') || movUpper.includes('RESGATE')) type = 'sell';
+        if (movUpper.includes('COMPRA') || movUpper.includes('APLICAÇÃO')) type = 'buy';
+      }
 
       if (price === 0 && quantity > 0 && totalVal > 0) {
         price = totalVal / quantity;
       }
 
       if (assetCode && quantity > 0) {
-        parsedTransactions.push({
-          asset_code: assetCode,
-          type: type,
-          quantity: quantity,
-          price: price,
-          total_value: quantity * price,
-          date: isoDate,
-          notes: `Importado B3: ${mov}`
-        });
-        count++;
+        const computedTotal = Number((quantity * price).toFixed(2));
+        const dedupKey = `${type}|${assetCode}|${isoDate}|${quantity}|${price}`;
+        if (!seenKeys.has(dedupKey)) {
+          seenKeys.add(dedupKey);
+          parsedTransactions.push({
+            asset_code: assetCode,
+            type: type,
+            quantity: quantity,
+            price: price,
+            total_value: computedTotal,
+            date: isoDate,
+            notes: `Importado B3: ${mov || 'Posição Consolidada'}`
+          });
+          tradeCount++;
+        }
       }
     });
 
     if (parsedTransactions.length === 0) {
-      setError('Nenhuma transação de Compra ou Venda válida encontrada.');
+      setError('Nenhuma transação ou provento válido encontrado na(s) planilha(s).');
       return;
     }
 
+    setPreviewStats({ trades: tradeCount, events: eventCount });
     setPreviewData(parsedTransactions);
   };
 
@@ -176,15 +231,9 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     
     try {
       const result = await api.post('/transactions/bulk', { transactions: previewData });
-        const response = { ok: true }; // stub for the next line
-      
-      if (response.ok) {
-        if (onImportSuccess) onImportSuccess(result.count || previewData.length);
-        setFile(null);
-        setPreviewData(null);
-      } else {
-        setError(result.error || 'Falha ao importar transações.');
-      }
+      if (onImportSuccess) onImportSuccess(result.count || previewData.length);
+      setFilesCount(0);
+      setPreviewData(null);
     } catch (err) {
       setError('Erro de conexão com o servidor.');
     } finally {
@@ -196,10 +245,10 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
     <div className="import-container" style={{ padding: '20px', background: '#121214', borderRadius: '12px', border: '1px solid #27272a' }}>
       <h3 style={{ marginTop: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
         <FileSpreadsheet size={20} color="#10b981" /> 
-        Importar Histórico da B3
+        Importar Histórico & Proventos da B3
       </h3>
       <p style={{ color: '#94a3b8', fontSize: '13px', marginBottom: '20px' }}>
-        Baixe sua planilha da B3 e faça o upload aqui. O sistema lerá as colunas automaticamente.
+        Arraste uma ou várias planilhas (.xlsx) da B3 de uma só vez. O sistema importa compras, vendas, bonificações e dividendos automaticamente.
       </p>
 
       {!previewData ? (
@@ -212,17 +261,18 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
           onClick={() => fileInputRef.current?.click()}
         >
           <UploadCloud size={40} color="#94a3b8" style={{ marginBottom: '12px' }} />
-          <p style={{ margin: '0 0 8px 0', fontWeight: '600' }}>Arraste o arquivo .xlsx ou .csv aqui</p>
-          <input type="file" ref={fileInputRef} onChange={handleFileSelect} accept=".csv, .xlsx" style={{ display: 'none' }} />
+          <p style={{ margin: '0 0 8px 0', fontWeight: '600' }}>Arraste um ou mais arquivos .xlsx da B3 aqui</p>
+          <p style={{ margin: 0, fontSize: '12px', color: '#64748b' }}>Suporta múltiplos anos simultâneos (Movimentação e Posição Consolidada)</p>
+          <input type="file" multiple ref={fileInputRef} onChange={handleFileSelect} accept=".xlsx" style={{ display: 'none' }} />
         </div>
       ) : (
         <div className="preview-container">
           <div style={{ background: 'rgba(16, 185, 129, 0.1)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(16,185,129,0.2)', marginBottom: '16px' }}>
             <p style={{ margin: 0, color: '#34d399', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle size={16} /> Planilha lida com sucesso!
+              <CheckCircle size={16} /> {filesCount > 1 ? `${filesCount} planilhas lidas com sucesso!` : 'Planilha lida com sucesso!'}
             </p>
             <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#e2e8f0' }}>
-              Encontramos <strong>{previewData.length}</strong> transações prontas para importação.
+              Encontramos <strong>{previewStats.trades}</strong> operações de custódia e <strong>{previewStats.events}</strong> proventos/dividendos prontos para importação.
             </p>
           </div>
 

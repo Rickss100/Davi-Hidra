@@ -8,7 +8,7 @@
  * Documentation: https://brapi.dev/docs
  */
 
-import fetch from 'node-fetch';
+// Using native global fetch (Browser + Node 18+)
 
 const BRAPI_BASE_URL = 'https://brapi.dev/api';
 

@@ -38,7 +38,7 @@ const Historico = () => {
       const val = Number(t.total_value || (t.quantity * t.price) || 0);
       if (t.type === 'buy') {
         totalInvested += val;
-      } else {
+      } else if (t.type === 'sell') {
         totalSells += val;
       }
       if (t.asset_code) uniqueAssets.add(t.asset_code);
@@ -50,7 +50,7 @@ const Historico = () => {
     return {
       totalInvested,
       totalSells,
-      totalCount: transactions.length,
+      totalCount: transactions.filter(t => t.type !== 'event').length,
       uniqueAssetsCount: uniqueAssets.size,
       avgAporte
     };
@@ -212,6 +212,7 @@ const Historico = () => {
             <option value="ALL">Todos os Tipos</option>
             <option value="buy">Aportes / Compras</option>
             <option value="sell">Resgates / Vendas</option>
+            <option value="event">Proventos / Dividendos</option>
           </select>
 
           <select 
@@ -265,6 +266,7 @@ const Historico = () => {
             <tbody>
               {filteredTransactions.map((tx) => {
                 const isBuy = tx.type === 'buy';
+                const isEvent = tx.type === 'event';
                 const totalVal = Number(tx.total_value || (tx.quantity * tx.price) || 0);
                 const isUS = tx.category === 'Stock' || tx.category === 'REIT' || (tx.asset_code && !tx.asset_code.match(/\d/));
                 const currencyPrefix = isUS ? 'US$ ' : 'R$ ';
@@ -275,9 +277,12 @@ const Historico = () => {
                       {tx.date ? new Date(tx.date + 'T00:00:00').toLocaleDateString('pt-BR') : '—'}
                     </td>
                     <td style={{ whiteSpace: 'nowrap' }}>
-                        <span className={`badge-type ${isBuy ? 'buy' : 'sell'}`}>
-                        {isBuy ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
-                        {isBuy ? 'Compra / Aporte' : 'Venda / Resgate'}
+                        <span
+                          className={`badge-type ${isBuy || isEvent ? 'buy' : 'sell'}`}
+                          style={isEvent ? { background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)' } : {}}
+                        >
+                        {isBuy || isEvent ? <ArrowDownLeft size={13} /> : <ArrowUpRight size={13} />}
+                        {isEvent ? 'Provento / Dividendo' : isBuy ? 'Compra / Aporte' : 'Venda / Resgate'}
                       </span>
                     </td>
                     <td>
@@ -294,8 +299,8 @@ const Historico = () => {
                     <td style={{ whiteSpace: 'nowrap' }}>
                         {currencyPrefix}{Number(tx.price).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
-                    <td style={{ fontWeight: 700, color: isBuy ? '#34d399' : '#f87171', whiteSpace: 'nowrap' }}>
-                      {isBuy ? '+' : '-'} {currencyPrefix}{totalVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    <td style={{ fontWeight: 700, color: isEvent ? '#c084fc' : isBuy ? '#34d399' : '#f87171', whiteSpace: 'nowrap' }}>
+                      {isBuy || isEvent ? '+' : '-'} {currencyPrefix}{totalVal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td style={{ color: '#94a3b8', fontSize: '12px' }}>
                       {tx.notes || '—'}

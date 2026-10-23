@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useContext } from 'react';
 import { transactionService } from '../services/transactionService';
+import { updateAllPrices, getUpdateStatus } from '../services/priceUpdater.service';
 import { useAuth } from './AuthContext';
 
 const PortfolioContext = createContext();
@@ -84,7 +85,7 @@ export const PortfolioProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   // --- 3. Prices State ---
-  const [currentPrices, setCurrentPrices] = useState({});
+  const [currentPrices, setCurrentPrices] = useState(() => { try { const s = localStorage.getItem('cachedPrices'); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [isUpdatingPrices, setIsUpdatingPrices] = useState(false);
 
   // --- 4. Holdings (Derived State) ---
@@ -173,6 +174,7 @@ export const PortfolioProvider = ({ children }) => {
 
     // Process transactions
     transactions.forEach(tx => {
+       if (tx.type === 'event') return;
        const targetCode = tx.asset_code || tx.code;
        const cat = normalizeCategory(tx.category || tx.type || tx.asset_type, targetCode);
        if (cat && targetCode && newHoldings[cat]) {
@@ -211,6 +213,7 @@ export const PortfolioProvider = ({ children }) => {
         });
     });
 
+    Object.keys(newHoldings).forEach(cat => { newHoldings[cat] = newHoldings[cat].filter(a => Number(a.quantity) > 0.0001); });
     setHoldings(newHoldings);
   }, [transactions, currentPrices]);
 
@@ -401,7 +404,7 @@ export const PortfolioProvider = ({ children }) => {
               });
           });
           
-          setCurrentPrices(prev => ({ ...prev, ...newPrices }));
+          setCurrentPrices(prev => { const next = { ...prev, ...newPrices }; try { localStorage.setItem('cachedPrices', JSON.stringify(next)); } catch {} return next; });
           
           // Show status summary
           const status = getUpdateStatus(updatedHoldings);
@@ -415,6 +418,16 @@ export const PortfolioProvider = ({ children }) => {
           setIsUpdatingPrices(false);
       }
   };
+
+
+  // Auto-refresh prices in background when new uncached assets appear
+  useEffect(() => {
+    const brAssets = [...(holdings.acoes || []), ...(holdings.fiis || [])];
+    const hasMissing = brAssets.some(a => a.code && !currentPrices[a.code]);
+    if (hasMissing && !isUpdatingPrices && brAssets.length > 0) {
+      refreshPrices();
+    }
+  }, [holdings.acoes?.length, holdings.fiis?.length]);
 
   const value = {
     usdRate,

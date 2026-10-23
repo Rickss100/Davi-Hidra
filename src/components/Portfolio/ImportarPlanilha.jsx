@@ -100,8 +100,8 @@ const ImportarPlanilha = ({ onImportSuccess }) => {
 
       const movUpper = mov.toString().toUpperCase();
       
-      // Ignorar juros sobre capital, dividendos, rendimentos e leilão de fração (eventos de caixa)
-      if (movUpper.includes('JUROS') || movUpper.includes('DIVIDENDO') || movUpper.includes('RENDIMENTO') || movUpper.includes('AMORTIZAÇÃO') || movUpper.includes('LEILÃO') || movUpper.includes('LEILAO')) return;
+      // Ignorar juros sobre capital, dividendos, rendimentos, leilão de fração e atualização cadastral
+      if (movUpper.includes('JUROS') || movUpper.includes('DIVIDENDO') || movUpper.includes('RENDIMENTO') || movUpper.includes('AMORTIZAÇÃO') || movUpper.includes('LEILÃO') || movUpper.includes('LEILAO') || movUpper.includes('ATUALIZAÇÃO') || movUpper.includes('ATUALIZACAO')) return;
 
       // Determinar o Tipo
       let type = 'buy';

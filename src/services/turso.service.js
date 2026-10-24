@@ -95,6 +95,13 @@ export async function getTursoStatus() {
  */
 async function ensureTursoSchema(client) {
     await client.execute(`
+      CREATE TABLE IF NOT EXISTS cached_prices (
+        asset_code TEXT PRIMARY KEY,
+        price REAL NOT NULL,
+        updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    await client.execute(`
       CREATE TABLE IF NOT EXISTS user_objectives (
         user_id INTEGER PRIMARY KEY,
         macro_allocation TEXT,
@@ -353,6 +360,37 @@ export async function syncWithTursoOnStartup(localDb) {
       }
     }
 
+    
+    // ────────────────────────────────────────────────────────────
+    // COTAÇÕES GLOBAIS EM CACHE (cached_prices)
+    // ────────────────────────────────────────────────────────────
+    try {
+      const tursoPricesRes = await client.execute('SELECT asset_code, price, updated_at FROM cached_prices');
+      if (tursoPricesRes.rows.length > 0) {
+        const upsertLocalPrice = localDb.prepare(`
+          INSERT OR REPLACE INTO prices (asset_code, date, open, high, low, close, volume)
+          VALUES (@code, @date, @price, @price, @price, @price, 0)
+        `);
+        const checkAssetP = localDb.prepare('SELECT code FROM assets WHERE code = ?');
+        const insertAssetP = localDb.prepare('INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)');
+        for (const pRow of tursoPricesRes.rows) {
+          const code = String(pRow.asset_code).toUpperCase();
+          const price = Number(pRow.price);
+          const date = String(pRow.updated_at || new Date().toISOString()).split('T')[0];
+          if (code && price > 0) {
+            if (!checkAssetP.get(code)) {
+              const isFii = code.includes('11') && !code.includes('34');
+              try { insertAssetP.run(code, code, isFii ? 'FII' : 'acao', 'BR'); } catch {}
+            }
+            try { upsertLocalPrice.run({ code, date, price }); } catch {}
+          }
+        }
+        console.log(`☁️ Restauradas ${tursoPricesRes.rows.length} cotações em cache do Turso.`);
+      }
+    } catch (pErr) {
+      console.warn('⚠️ Aviso ao restaurar cached_prices do Turso:', pErr.message);
+    }
+
     console.log(`✅ Sincronização com Turso concluída com sucesso! (Nuvem: ${tursoUsers.length} usuários, ${tursoTx.length} transações)`);
   } catch (error) {
     console.error('⚠️ Falha ao sincronizar com Turso Cloud no startup:', error.message);
@@ -575,5 +613,32 @@ export async function syncAssetToTurso(asset) {
     });
   } catch (err) {
     console.warn('⚠️ Turso syncAsset error:', err.message);
+  }
+}
+
+
+/**
+ * Salva um mapa de cotações { TICKER: preco } em lote no Turso (cached_prices)
+ */
+export async function syncPricesToTurso(pricesMap) {
+  const client = getTursoClient();
+  if (!client || !pricesMap || Object.keys(pricesMap).length === 0) return;
+
+  try {
+    await ensureTursoSchema(client);
+    const now = new Date().toISOString();
+    const stmts = Object.entries(pricesMap)
+      .filter(([, price]) => Number(price) > 0)
+      .map(([code, price]) => ({
+        sql: 'INSERT OR REPLACE INTO cached_prices (asset_code, price, updated_at) VALUES (?, ?, ?)',
+        args: [code.toUpperCase(), Number(price), now]
+      }));
+
+    for (let i = 0; i < stmts.length; i += 50) {
+      await client.batch(stmts.slice(i, i + 50), 'write');
+    }
+    console.log(`☁️ ${stmts.length} cotações globais sincronizadas no Turso Cloud.`);
+  } catch (err) {
+    console.warn('⚠️ Erro ao sincronizar cotações no Turso:', err.message);
   }
 }

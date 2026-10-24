@@ -88,6 +88,22 @@ export const PortfolioProvider = ({ children }) => {
   const [currentPrices, setCurrentPrices] = useState(() => { try { const s = localStorage.getItem('cachedPrices'); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   const [isUpdatingPrices, setIsUpdatingPrices] = useState(false);
 
+  // Carregar cache global de cotações do servidor (<10ms) logo ao abrir o app
+  useEffect(() => {
+    fetch('/api/prices/latest-all')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.prices && Object.keys(data.prices).length > 0) {
+          setCurrentPrices(prev => {
+            const merged = { ...prev, ...data.prices };
+            try { localStorage.setItem('cachedPrices', JSON.stringify(merged)); } catch {}
+            return merged;
+          });
+        }
+      })
+      .catch(err => console.warn('Erro ao buscar cache global de cotações:', err));
+  }, []);
+
   // --- 4. Holdings (Derived State) ---
   
   const [usdRate, setUsdRate] = useState(() => {
@@ -383,33 +399,36 @@ export const PortfolioProvider = ({ children }) => {
   const refreshPrices = async (options = {}) => {
       setIsUpdatingPrices(true);
       try {
-          console.log('Starting price update for all holdings...');
-          
-          // Get API keys from localStorage (you can move to env later)
+          console.log('⚡ Solicitando atualização centralizada de cotações ao servidor...');
+          const res = await fetch('/api/prices/sync-active', { method: 'POST' });
+          if (res.ok) {
+              const data = await res.json();
+              if (data && data.prices && Object.keys(data.prices).length > 0) {
+                  setCurrentPrices(prev => {
+                      const next = { ...prev, ...data.prices };
+                      try { localStorage.setItem('cachedPrices', JSON.stringify(next)); } catch {}
+                      return next;
+                  });
+                  return { success: true, updatedCount: data.updatedCount || Object.keys(data.prices).length };
+              }
+          }
+
+          // Fallback client-side caso o servidor esteja offline
           const brapiToken = localStorage.getItem('brapiToken') || import.meta.env.VITE_BRAPI_TOKEN || '6AC8B12Ck6WvvTnVEnUoSh';
           const alphaVantageKey = localStorage.getItem('alphaVantageKey') || 'demo';
-          
-          // Use new updateAllPrices service
           const updatedHoldings = await updateAllPrices(holdings, {
               brapiToken,
               alphaVantageKey,
               onProgress: options.onProgress
           });
-          
-          // Extract prices into currentPrices map
           const newPrices = {};
           Object.keys(updatedHoldings).forEach(category => {
               updatedHoldings[category].forEach(asset => {
                   newPrices[asset.code] = asset.currentPrice;
               });
           });
-          
           setCurrentPrices(prev => { const next = { ...prev, ...newPrices }; try { localStorage.setItem('cachedPrices', JSON.stringify(next)); } catch {} return next; });
-          
-          // Show status summary
           const status = getUpdateStatus(updatedHoldings);
-          console.log('Price update complete:', status);
-          
           return { success: true, updatedCount: status.updatedAssets };
       } catch (err) {
           console.error("Failed to update prices", err);

@@ -210,7 +210,18 @@ app.use((err, req, res, next) => {
 });
 
 // ✅ Só inicia o servidor APÓS o sync com Turso estar completo
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 API endpoints available at /api`);
+
+  // Iniciar aquecimento de cache global de cotações em background e agendar a cada 20 minutos
+  try {
+    const { syncActivePortfolioPrices } = await import('./routes/prices.routes.js');
+    syncActivePortfolioPrices().catch(e => console.warn('⚠️ Background price sync warning:', e.message));
+    setInterval(() => {
+      syncActivePortfolioPrices().catch(e => console.warn('⚠️ Scheduled price sync warning:', e.message));
+    }, 20 * 60 * 1000);
+  } catch (e) {
+    console.warn('⚠️ Could not initialize background price scheduler:', e.message);
+  }
 });

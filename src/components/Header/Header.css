@@ -7,6 +7,8 @@
     border-bottom: 1px solid var(--border-color);
     margin-bottom: 2rem;
     border-radius: var(--radius-md);
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .header-left h1 {
@@ -64,6 +66,22 @@
     border-color: #e53e3e;
     background-color: rgba(229, 62, 62, 0.1);
     transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .app-header {
+        padding: 0.85rem 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .header-left h1 {
+        font-size: 1.15rem;
+    }
+
+    .btn-refresh {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.82rem;
+    }
 }
 
 /* Animations */

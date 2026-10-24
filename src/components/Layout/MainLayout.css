@@ -9,4 +9,11 @@
   padding: 2rem;
   overflow-y: auto;
   background-color: var(--bg-primary);
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem 0.85rem 5.25rem;
+  }
 }

@@ -1,5 +1,4 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import { USERS_DB } from '../data/usersDb';
+import { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { userService } from '../services/userService';
 
 const AuthContext = createContext();
@@ -10,45 +9,61 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('user');
+      const savedToken = localStorage.getItem('auth_token');
+      // Sessões antigas sem token criptográfico assinado são invalidadas por segurança
+      if (!savedUser || !savedToken) {
+        localStorage.removeItem('user');
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('original_user');
+        localStorage.removeItem('impersonator_id');
+        return null;
+      }
+      return JSON.parse(savedUser);
+    } catch {
+      return null;
+    }
   });
+
+  const logout = useCallback(() => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('original_user');
+    localStorage.removeItem('impersonator_id');
+  }, []);
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      logout();
+    };
+    window.addEventListener('auth-unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth-unauthorized', handleUnauthorized);
+  }, [logout]);
 
   const login = async (email, password) => {
     try {
-      // Tentar login na API Express / SQLite
       const data = await userService.login(email, password);
-      if (data && data.user) {
-        setUser(data.user);
+      if (data && data.user && data.token) {
+        localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.removeItem('original_user');
+        localStorage.removeItem('impersonator_id');
+        setUser(data.user);
         return { success: true, user: data.user };
       }
     } catch (err) {
       console.warn('API login error:', err.message);
-      
-      // Se for conta inativa bloqueada, não usar fallback local
+
       if (err.code === 'ACCOUNT_INACTIVE' || err.message?.toLowerCase().includes('inativa')) {
-        return { 
-          success: false, 
+        return {
+          success: false,
           error: err.message || 'Sua conta está inativa por motivos técnicos ou desfiliação do programa.',
-          code: 'ACCOUNT_INACTIVE' 
+          code: 'ACCOUNT_INACTIVE'
         };
       }
 
-      // Fallback local se a API estiver offline
-      const foundUser = USERS_DB.find(u => u.email === email && u.password === password);
-      if (foundUser) {
-        const userObj = {
-          id: foundUser.id,
-          name: foundUser.name,
-          email: foundUser.email,
-          role: foundUser.id === 1 ? 'admin' : 'user',
-          status: 'active'
-        };
-        setUser(userObj);
-        localStorage.setItem('user', JSON.stringify(userObj));
-        return { success: true, user: userObj };
-      }
       return { success: false, error: err.message || 'Login ou senha inválidos' };
     }
     return { success: false, error: 'Login ou senha inválidos' };
@@ -57,9 +72,10 @@ export const AuthProvider = ({ children }) => {
   const register = async (name, email, password) => {
     try {
       const data = await userService.register({ name, email, password });
-      if (data && data.user) {
-        setUser(data.user);
+      if (data && data.user && data.token) {
+        localStorage.setItem('auth_token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        setUser(data.user);
         return { success: true, user: data.user };
       }
       return { success: false, error: 'Erro ao registrar usuário' };
@@ -69,8 +85,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const impersonateUser = (targetUser) => {
-    localStorage.setItem('original_user', JSON.stringify(user));
-    localStorage.setItem('impersonator_id', String(user.id));
+    // O auth_token permanece o JWT assinado do Admin/Colaborador,
+    // permitindo que o backend valide criptograficamente a permissão de auditoria.
+    if (!localStorage.getItem('original_user')) {
+      localStorage.setItem('original_user', JSON.stringify(user));
+      localStorage.setItem('impersonator_id', String(user.id));
+    }
     const fakeUser = { ...targetUser, isImpersonated: true };
     setUser(fakeUser);
     localStorage.setItem('user', JSON.stringify(fakeUser));
@@ -87,21 +107,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-      localStorage.removeItem('original_user');
-      localStorage.removeItem('impersonator_id');
-  };
-
   const value = {
     user,
     login,
     register,
     logout,
     isAuthenticated: !!user,
-      impersonateUser,
-      exitImpersonation
+    impersonateUser,
+    exitImpersonation
   };
 
   return (

@@ -1,5 +1,6 @@
 import express from 'express';
 import { getDatabase } from '../services/database.service.js';
+import { requireAuth, resolveAuthorizedUserId } from '../middleware/security.middleware.js';
 
 function getUsdToBrl(db) {
   try {
@@ -9,14 +10,19 @@ function getUsdToBrl(db) {
 }
 
 const router = express.Router();
+router.use(requireAuth);
 
 /**
  * GET /api/resumo/metrics
- * Retorna as métricas essenciais consolidadas da carteira do usuário
+ * Retorna as métricas essenciais consolidadas da carteira do usuário autorizado
  */
 router.get('/metrics', (req, res) => {
   try {
-    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const userId = authCheck.userId;
     const db = getDatabase();
 
     // 1. Obter transações e posições atuais do usuário
@@ -41,11 +47,9 @@ router.get('/metrics', (req, res) => {
     let investedCapital = 0;
 
     holdingsRows.forEach(h => {
-      const isUsAsset = h.market === 'US' || String(h.category).toLowerCase().includes('stock') || String(h.category).toLowerCase().includes('reit');
-      const multiplier = 1; // Removed usdToBrl conversion to prevent duplicate conversion since user inputs and BRAPI handle BRL directly
+      const multiplier = 1;
       investedCapital += Number(h.invested) * multiplier;
 
-      // Buscar último preço
       const priceRow = db.prepare(`
         SELECT close FROM prices WHERE asset_code = ? ORDER BY date DESC LIMIT 1
       `).get(h.asset_code);
@@ -54,26 +58,25 @@ router.get('/metrics', (req, res) => {
       totalEquity += (Number(h.quantity) * currentPrice) * multiplier;
     });
 
-    // Se a carteira estiver vazia, usar valores mínimos para não dividir por zero
     const profitBRL = totalEquity - investedCapital;
     const returnPct = investedCapital > 0 ? (profitBRL / investedCapital) * 100 : 0;
 
-    // 2. Proventos acumulados recebidos
-    const userCodes = holdingsRows.map(h => `'${h.asset_code}'`).join(',');
+    // 2. Proventos acumulados recebidos (Query 100% parametrizada contra SQL Injection)
     let totalDividends = 0;
-    if (userCodes.length > 0) {
+    if (holdingsRows.length > 0) {
+      const placeholders = holdingsRows.map(() => '?').join(',');
+      const codeParams = holdingsRows.map(h => h.asset_code);
       const divRows = db.prepare(`
           SELECT d.asset_code, SUM(d.amount) as amount, a.market, a.type as category
           FROM dividends d
           JOIN assets a ON a.code = d.asset_code
-          WHERE d.asset_code IN (${userCodes}) 
+          WHERE d.asset_code IN (${placeholders})
             AND d.payment_date <= date('now')
           GROUP BY d.asset_code
-        `).all();
-        divRows.forEach(d => {
-          const isUs = d.market === 'US' || String(d.category).toLowerCase().includes('stock') || String(d.category).toLowerCase().includes('reit');
-          totalDividends += Number(d.amount); // Removed usdToBrl for dividends for UI coherence
-        });
+        `).all(...codeParams);
+      divRows.forEach(d => {
+        totalDividends += Number(d.amount);
+      });
     }
     // 3. Benchmarks de mercado de referência do período ajustados ao tempo de carteira (Simulação TWR simples)
     const firstTx = db.prepare("SELECT date FROM transactions WHERE user_id = ? ORDER BY date ASC LIMIT 1").get(userId);
@@ -139,7 +142,11 @@ router.get('/metrics', (req, res) => {
  */
 router.get('/benchmark-data', (req, res) => {
   try {
-    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const userId = authCheck.userId;
     const period = req.query.period || '12m'; // '6m', 'ytd', '12m', '24m', 'total'
     const db = getDatabase();
 
@@ -300,7 +307,11 @@ router.get('/benchmark-data', (req, res) => {
  */
 router.get('/allocation', (req, res) => {
   try {
-    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const userId = authCheck.userId;
     const db = getDatabase();
 
     const holdings = db.prepare(`

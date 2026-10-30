@@ -17,10 +17,17 @@ import { createClient } from '@libsql/client';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const TURSO_URL = 'libsql://davi-hidra-rickss100.aws-us-east-1.turso.io';
-const TURSO_TOKEN = 'eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJhIjoicnciLCJpYXQiOjE3OTAyMDU5MzYsImlkIjoiMDFhMGQwOTQtYjkwMS03MmNjLTg5NjEtMGY2OGM3MjM4NWUyIiwia2lkIjoiQTR2aEEtV2dqd1F1SGdOMzIxX0JDdUJfWU4yQ0xSTUtPYVhkYmtWSmNmOCIsInJpZCI6ImY5Y2I4NzZhLTNkY2EtNDMwMi1iNWRlLTNiMTYyZWM2Njk5NSJ9.GEnC6ElUr_asQ2C7I-Q3Hop4FLTpJcoGW9wQ6xhwPGjXcUByEaPcwKFO07EhxRcuGeaIE1qrU8K4fKXU6jKwCg';
+if (fs.existsSync('.env') && typeof process.loadEnvFile === 'function') {
+  process.loadEnvFile();
+}
 
-const BASE_URL = 'https://davi-hidra.onrender.com';
+const TURSO_URL = process.env.TURSO_DATABASE_URL;
+const TURSO_TOKEN = process.env.TURSO_AUTH_TOKEN;
+if (!TURSO_URL || !TURSO_TOKEN) {
+  throw new Error('Defina TURSO_DATABASE_URL e TURSO_AUTH_TOKEN no arquivo .env antes de executar o teste.');
+}
+
+const BASE_URL = process.env.TEST_BASE_URL || 'https://davi-hidra.onrender.com';
 
 const turso = createClient({
   url: TURSO_URL,

@@ -4,16 +4,21 @@ import {
   seedDividendsData 
 } from '../services/dividends.service.js';
 import { getDatabase } from '../services/database.service.js';
+import { requireAuth, requireAdminOrCollab, resolveAuthorizedUserId } from '../middleware/security.middleware.js';
 
 const router = express.Router();
 
 /**
  * GET /api/dividends/calendar
- * Retorna os proventos do mês agrupados por dia para o usuário
+ * Retorna os proventos do mês agrupados por dia para o usuário autorizado
  */
-router.get('/calendar', (req, res) => {
+router.get('/calendar', requireAuth, (req, res) => {
   try {
-    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const userId = authCheck.userId;
     const now = new Date();
     const year = parseInt(req.query.year || now.getFullYear(), 10);
     const month = parseInt(req.query.month || (now.getMonth() + 1), 10);
@@ -28,9 +33,9 @@ router.get('/calendar', (req, res) => {
 
 /**
  * POST /api/dividends/seed
- * Popula proventos realistas para testes e simulações
+ * Popula proventos realistas para testes e simulações (restrito a Admin/Colaborador)
  */
-router.post('/seed', (req, res) => {
+router.post('/seed', requireAdminOrCollab, (req, res) => {
   try {
     const result = seedDividendsData();
     res.json(result);
@@ -42,11 +47,15 @@ router.post('/seed', (req, res) => {
 
 /**
  * GET /api/dividends/magic-number
- * Retorna o cálculo do "Número Mágico" (Efeito Bola de Neve) para os ativos em custódia do usuário
+ * Retorna o cálculo do "Número Mágico" (Efeito Bola de Neve) para os ativos em custódia do usuário autorizado
  */
-router.get('/magic-number', (req, res) => {
+router.get('/magic-number', requireAuth, (req, res) => {
   try {
-    const userId = parseInt(req.query.userId || req.headers['x-user-id'] || '1', 10);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const userId = authCheck.userId;
     const db = getDatabase();
 
     // 1. Obter ativos do usuário com quantidade > 0

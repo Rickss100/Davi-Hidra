@@ -16,14 +16,18 @@ import { getAssets, getAssetsToSync, insertFundamentals, mergeFundamentals, upse
 import { syncRendaFixa } from '../services/rendafixa.service.js';
 import { seedSP500Stocks, syncStocks } from '../services/stocks.service.js';
 import { seedREITs, syncREITs } from '../services/reits.service.js';
+import { requireAuth, requireAdminOrCollab } from '../middleware/security.middleware.js';
 
 const router = express.Router();
 
-// Brapi token
-const BRAPI_TOKEN = '6AC8B12Ck6WvvTnVEnUoSh';
+// Todas as rotas de sincronização exigem usuário autenticado
+router.use(requireAuth);
 
-// POST /api/sync/seed-assets - Populate database with available assets from Brapi
-router.post('/seed-assets', async (req, res) => {
+// Brapi token (prioriza variável de ambiente)
+const BRAPI_TOKEN = process.env.BRAPI_TOKEN || '6AC8B12Ck6WvvTnVEnUoSh';
+
+// POST /api/sync/seed-assets - Populate database with available assets from Brapi (Admin/Collab)
+router.post('/seed-assets', requireAdminOrCollab, async (req, res) => {
   try {
     console.log('🌱 Starting asset seed from Brapi...');
     
@@ -81,8 +85,8 @@ router.post('/seed-assets', async (req, res) => {
   }
 });
 
-// POST /api/sync/reload-full-data - Recarrega dados fundamentalistas completos de acoes.csv e fiis.csv
-router.post('/reload-full-data', async (req, res) => {
+// POST /api/sync/reload-full-data - Recarrega dados fundamentalistas completos (Admin/Collab)
+router.post('/reload-full-data', requireAdminOrCollab, async (req, res) => {
   try {
     const fs = await import('fs');
     const path = await import('path');
@@ -408,8 +412,8 @@ router.post('/all', async (req, res) => {
   }
 });
 
-// POST /api/sync/tokens - Update API tokens
-router.post('/tokens', (req, res) => {
+// POST /api/sync/tokens - Update API tokens (Admin/Collab)
+router.post('/tokens', requireAdminOrCollab, (req, res) => {
   try {
     const { brapiToken, alphaVantageKey } = req.body;
     

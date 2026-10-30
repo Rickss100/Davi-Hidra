@@ -1,12 +1,13 @@
 import express from 'express';
 import { getDatabase } from '../services/database.service.js';
 import { getTursoClient } from '../services/turso.service.js';
+import { requireAuth, resolveAuthorizedUserId } from '../middleware/security.middleware.js';
 
 const router = express.Router();
 
-/**
- * Garante que a tabela user_objectives existe
- */
+// Todas as rotas de objetivos exigem autenticação criptográfica válida
+router.use(requireAuth);
+
 const ensureTable = (db) => {
   db.prepare(`
     CREATE TABLE IF NOT EXISTS user_objectives (
@@ -20,21 +21,22 @@ const ensureTable = (db) => {
 
 /**
  * GET /api/objectives/:userId
- * Retorna macroAllocation e assetTargets salvos no banco para o usuário
+ * Retorna macroAllocation e assetTargets salvos no banco para o usuário autorizado
  */
 router.get('/:userId', (req, res) => {
   try {
-    const userId = parseInt(req.params.userId, 10);
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: 'userId inválido' });
+    const authCheck = resolveAuthorizedUserId(req, req.params.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
     }
+    const userId = authCheck.userId;
 
     const db = getDatabase();
     ensureTable(db);
 
-    const row = db.prepare(
-      'SELECT macro_allocation, asset_targets FROM user_objectives WHERE user_id = ?'
-    ).get(userId);
+    const row = db
+      .prepare('SELECT macro_allocation, asset_targets FROM user_objectives WHERE user_id = ?')
+      .get(userId);
 
     if (!row) {
       return res.json({ found: false, macroAllocation: null, assetTargets: null });
@@ -53,35 +55,47 @@ router.get('/:userId', (req, res) => {
 
 /**
  * POST /api/objectives/:userId
- * Salva ou atualiza macroAllocation e/ou assetTargets do usuário
- * Body: { macroAllocation?, assetTargets? }
+ * Salva ou atualiza macroAllocation e/ou assetTargets do usuário autorizado
  */
 router.post('/:userId', async (req, res) => {
   try {
-    const userId = parseInt(req.params.userId, 10);
-    if (!userId || isNaN(userId)) {
-      return res.status(400).json({ error: 'userId inválido' });
+    const authCheck = resolveAuthorizedUserId(req, req.params.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
     }
+    const userId = authCheck.userId;
 
     const db = getDatabase();
     ensureTable(db);
 
     const { macroAllocation, assetTargets } = req.body;
 
-    // Buscar linha atual para merge parcial
-    const existing = db.prepare(
-      'SELECT macro_allocation, asset_targets FROM user_objectives WHERE user_id = ?'
-    ).get(userId);
+    const existing = db
+      .prepare('SELECT macro_allocation, asset_targets FROM user_objectives WHERE user_id = ?')
+      .get(userId);
 
-    const currentMacro = existing ? JSON.parse(existing.macro_allocation) : {
-      fixed: 20, variable: 80,
-      brasil: 65, usa: 35,
-      acoes: 50, fiis: 50,
-      stocks: 70, reits: 30
-    };
-    const currentTargets = existing ? JSON.parse(existing.asset_targets) : {
-      acoes: [], fiis: [], stocks: [], reits: [], fixed: [], reserva: []
-    };
+    const currentMacro = existing
+      ? JSON.parse(existing.macro_allocation)
+      : {
+          fixed: 20,
+          variable: 80,
+          brasil: 65,
+          usa: 35,
+          acoes: 50,
+          fiis: 50,
+          stocks: 70,
+          reits: 30
+        };
+    const currentTargets = existing
+      ? JSON.parse(existing.asset_targets)
+      : {
+          acoes: [],
+          fiis: [],
+          stocks: [],
+          reits: [],
+          fixed: [],
+          reserva: []
+        };
 
     const newMacro = macroAllocation ? { ...currentMacro, ...macroAllocation } : currentMacro;
     const newTargets = assetTargets ? { ...currentTargets, ...assetTargets } : currentTargets;
@@ -95,11 +109,9 @@ router.post('/:userId', async (req, res) => {
         updated_at       = excluded.updated_at
     `).run(userId, JSON.stringify(newMacro), JSON.stringify(newTargets));
 
-    // SYNC TO TURSO IMMEDIATELY SO RENDER DOES NOT LOSE IT ON RESTART
     try {
       const tClient = getTursoClient();
       if (tClient) {
-        // Ensure table exists in Turso just in case
         await tClient.execute(`
           CREATE TABLE IF NOT EXISTS user_objectives (
             user_id INTEGER PRIMARY KEY,
@@ -108,7 +120,7 @@ router.post('/:userId', async (req, res) => {
             updated_at TEXT
           );
         `);
-        
+
         await tClient.execute({
           sql: `
             INSERT INTO user_objectives (user_id, macro_allocation, asset_targets, updated_at)
@@ -118,9 +130,13 @@ router.post('/:userId', async (req, res) => {
               asset_targets = excluded.asset_targets,
               updated_at = excluded.updated_at
           `,
-          args: [userId, JSON.stringify(newMacro), JSON.stringify(newTargets), new Date().toISOString()]
+          args: [
+            userId,
+            JSON.stringify(newMacro),
+            JSON.stringify(newTargets),
+            new Date().toISOString()
+          ]
         });
-        console.log(`✅ Objetivos sincronizados no Turso para user ${userId}`);
       }
     } catch (tErr) {
       console.warn('⚠️ Erro ao espelhar objetivos no Turso:', tErr.message);

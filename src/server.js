@@ -1,6 +1,6 @@
 /**
  * Express Server for DAVI & HYDRA Investment App
- * Serves data from SQLite database via REST API
+ * Serves data from SQLite database via REST API (DevSecOps Hardened)
  */
 
 import express from 'express';
@@ -8,98 +8,164 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { initDatabase, getDatabase } from './services/database.service.js';
-import { syncWithTursoOnStartup, getTursoStatus, getTursoDiagnostics } from './services/turso.service.js';
+import { initDatabase } from './services/database.service.js';
+import {
+  syncWithTursoOnStartup,
+  getTursoStatus,
+  getTursoDiagnostics
+} from './services/turso.service.js';
+import {
+  securityHeaders,
+  createRateLimiter,
+  authenticateRequest,
+  requireAdminOrCollab
+} from './middleware/security.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DIST_DIR = path.resolve(__dirname, '../dist');
 
-// Import routes with error handling
-let testRoutes, assetsRoutes, pricesRoutes, fundamentalsRoutes, economicRoutes, statsRoutes, syncRoutes, transactionsRoutes, usersRoutes, dividendsRoutes, resumoRoutes, objectivesRoutes;
+let testRoutes,
+  assetsRoutes,
+  pricesRoutes,
+  fundamentalsRoutes,
+  economicRoutes,
+  statsRoutes,
+  syncRoutes,
+  transactionsRoutes,
+  usersRoutes,
+  dividendsRoutes,
+  resumoRoutes,
+  objectivesRoutes;
 
 try {
   objectivesRoutes = (await import('./routes/objectives.routes.js')).default;
   console.log('✅ objectives.routes loaded');
-} catch (err) { console.error('❌ objectives.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ objectives.routes failed:', err.message);
+}
 
 try {
   usersRoutes = (await import('./routes/users.routes.js')).default;
   console.log('✅ users.routes loaded');
-} catch (err) { console.error('❌ users.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ users.routes failed:', err.message);
+}
 
 try {
   testRoutes = (await import('./routes/test.routes.js')).default;
   console.log('✅ test.routes loaded');
-} catch (err) { console.error('❌ test.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ test.routes failed:', err.message);
+}
 
 try {
   assetsRoutes = (await import('./routes/assets.routes.js')).default;
   console.log('✅ assets.routes loaded');
-} catch (err) { console.error('❌ assets.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ assets.routes failed:', err.message);
+}
 
 try {
   pricesRoutes = (await import('./routes/prices.routes.js')).default;
   console.log('✅ prices.routes loaded');
-} catch (err) { console.error('❌ prices.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ prices.routes failed:', err.message);
+}
 
 try {
   fundamentalsRoutes = (await import('./routes/fundamentals.routes.js')).default;
   console.log('✅ fundamentals.routes loaded');
-} catch (err) { console.error('❌ fundamentals.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ fundamentals.routes failed:', err.message);
+}
 
 try {
   economicRoutes = (await import('./routes/economic.routes.js')).default;
   console.log('✅ economic.routes loaded');
-} catch (err) { console.error('❌ economic.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ economic.routes failed:', err.message);
+}
 
 try {
   statsRoutes = (await import('./routes/stats.routes.js')).default;
   console.log('✅ stats.routes loaded');
-} catch (err) { console.error('❌ stats.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ stats.routes failed:', err.message);
+}
 
 try {
   syncRoutes = (await import('./routes/sync.routes.js')).default;
   console.log('✅ sync.routes loaded');
-} catch (err) { console.error('❌ sync.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ sync.routes failed:', err.message);
+}
 
 try {
   transactionsRoutes = (await import('./routes/transactions.routes.js')).default;
   console.log('✅ transactions.routes loaded');
-} catch (err) { console.error('❌ transactions.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ transactions.routes failed:', err.message);
+}
 
 try {
   dividendsRoutes = (await import('./routes/dividends.routes.js')).default;
   console.log('✅ dividends.routes loaded');
-} catch (err) { console.error('❌ dividends.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ dividends.routes failed:', err.message);
+}
 
 try {
   resumoRoutes = (await import('./routes/resumo.routes.js')).default;
   console.log('✅ resumo.routes loaded');
-} catch (err) { console.error('❌ resumo.routes failed:', err.message); }
+} catch (err) {
+  console.error('❌ resumo.routes failed:', err.message);
+}
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
-// Middleware
+// 🛡️ DevSecOps: Ocultar assinatura do servidor e injetar cabeçalhos HTTP de segurança
+app.disable('x-powered-by');
+app.use(securityHeaders);
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '5mb' }));
 
+// 🛡️ DevSecOps: Rate Limiter Global da API (300 req/min por IP)
+const globalApiLimiter = createRateLimiter({
+  windowMs: 60 * 1000,
+  max: 300,
+  keyPrefix: 'api-global',
+  message: 'Volume excessivo de requisições detectado. Aguarde um instante.'
+});
+app.use('/api', globalApiLimiter);
+
+// 🛡️ DevSecOps: Trilha de Auditoria Verificada Criptograficamente (com redação de senhas)
 app.use((req, res, next) => {
-  const impersonatorId = req.headers['x-impersonator-id'];
-  if (impersonatorId && req.method !== 'GET') {
-    const targetUserId = req.headers['x-user-id'] || 'unknown';
-    const logLine = `[${new Date().toISOString()}] ADMIN_ID: ${impersonatorId} | TARGET_USER_ID: ${targetUserId} | METHOD: ${req.method} | PATH: ${req.originalUrl} | BODY: ${JSON.stringify(req.body)}\n`;
-    try {
-      fs.appendFileSync(path.resolve(__dirname, '../audit_historico.log'), logLine);
-    } catch (e) {
-      console.error('Audit Log failed:', e);
+  if (req.method !== 'GET' && req.path.startsWith('/api')) {
+    const authUser = authenticateRequest(req);
+    const targetUserId = req.headers['x-user-id'];
+    if (
+      authUser &&
+      (authUser.role === 'admin' || authUser.role === 'collaborator') &&
+      targetUserId &&
+      String(targetUserId) !== String(authUser.id)
+    ) {
+      const redactedBody = { ...(req.body || {}) };
+      if ('password' in redactedBody) redactedBody.password = '[REDACTED]';
+      if ('newPassword' in redactedBody) redactedBody.newPassword = '[REDACTED]';
+      if ('token' in redactedBody) redactedBody.token = '[REDACTED]';
+
+      const logLine = `[${new Date().toISOString()}] VERIFIED_ADMIN_ID: ${authUser.id} (${authUser.uuid || 'no-uuid'}) | TARGET_USER_ID: ${targetUserId} | METHOD: ${req.method} | PATH: ${req.originalUrl} | BODY: ${JSON.stringify(redactedBody)}\n`;
+      try {
+        fs.appendFileSync(path.resolve(__dirname, '../audit_historico.log'), logLine);
+      } catch (e) {
+        console.error('Audit Log failed:', e.message);
+      }
     }
   }
   next();
 });
-
-
 
 // Servir relatórios em PDF e HTML
 const RELATORIOS_DIR = path.resolve(__dirname, '../public/relatorios');
@@ -118,9 +184,6 @@ if (fs.existsSync(DIST_DIR)) {
 const localDb = initDatabase();
 console.log('✅ Database initialized');
 
-// ✅ AGUARDAR o sync com Turso antes de abrir o servidor para requisições
-// Isso garante que os dados do Turso estão restaurados no banco local
-// antes de qualquer usuário conseguir acessar a API
 console.log('☁️ Aguardando sincronização com Turso Cloud...');
 try {
   await syncWithTursoOnStartup(localDb);
@@ -128,7 +191,7 @@ try {
   console.warn('⚠️ Falha de sincronização com Turso no startup (continuando):', err.message);
 }
 
-// Routes - only register if loaded successfully
+// Routes
 if (testRoutes) app.use('/api/test', testRoutes);
 if (assetsRoutes) app.use('/api/assets', assetsRoutes);
 if (pricesRoutes) app.use('/api/prices', pricesRoutes);
@@ -142,17 +205,16 @@ if (dividendsRoutes) app.use('/api/dividends', dividendsRoutes);
 if (resumoRoutes) app.use('/api/resumo', resumoRoutes);
 if (objectivesRoutes) app.use('/api/objectives', objectivesRoutes);
 
-  // Chat Route
-  const chatRoutes = (await import('./routes/chat.routes.js')).default;
-  app.use('/api/chat', chatRoutes);
+const chatRoutes = (await import('./routes/chat.routes.js')).default;
+app.use('/api/chat', chatRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Turso Cloud status
-app.get('/api/admin/turso-status', async (req, res) => {
+// 🛡️ Rotas Administrativas Turso Cloud protegidas por requireAdminOrCollab
+app.get('/api/admin/turso-status', requireAdminOrCollab, async (req, res) => {
   try {
     const status = await getTursoStatus();
     res.json(status);
@@ -161,8 +223,7 @@ app.get('/api/admin/turso-status', async (req, res) => {
   }
 });
 
-// Turso Cloud Diagnostics detalhado
-app.get('/api/admin/turso-diagnostics', async (req, res) => {
+app.get('/api/admin/turso-diagnostics', requireAdminOrCollab, async (req, res) => {
   try {
     const diag = await getTursoDiagnostics(localDb);
     res.json(diag);
@@ -171,18 +232,21 @@ app.get('/api/admin/turso-diagnostics', async (req, res) => {
   }
 });
 
-// Forçar ressincronização completa com o Turso Cloud sob demanda
-app.post('/api/admin/turso-force-sync', async (req, res) => {
+app.post('/api/admin/turso-force-sync', requireAdminOrCollab, async (req, res) => {
   try {
     await syncWithTursoOnStartup(localDb);
     const status = await getTursoStatus();
-    res.json({ success: true, message: 'Sincronização forçada concluída com sucesso!', status });
+    res.json({
+      success: true,
+      message: 'Sincronização forçada concluída com sucesso!',
+      status
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// SPA Fallback: rotas de página não-API são atendidas pelo index.html do Vite
+// SPA Fallback
 if (fs.existsSync(DIST_DIR)) {
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api') || req.path === '/health') {
@@ -192,34 +256,36 @@ if (fs.existsSync(DIST_DIR)) {
   });
 } else {
   app.get('/', (req, res) => {
-    res.json({ 
+    res.json({
       status: 'online',
       app: 'DAVI & HYDRA API',
-      message: 'API rodando normalmente. O frontend ainda não foi compilado com npm run build.'
+      message: 'API rodando normalmente.'
     });
   });
 }
 
-// Error handling middleware
+// Error handling middleware (sem expor stack trace interno)
 app.use((err, req, res, next) => {
-  console.error('❌ Error:', err);
-  res.status(500).json({ 
-    error: 'Internal server error', 
-    message: err.message 
+  console.error('❌ Error:', err.message);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: 'Ocorreu um erro interno no servidor.'
   });
 });
 
-// ✅ Só inicia o servidor APÓS o sync com Turso estar completo
 app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📊 API endpoints available at /api`);
+  console.log(`🛡️ DevSecOps Protection Layer active (JWT HMAC-SHA256 + Rate Limit + Anti-IDOR)`);
 
-  // Iniciar aquecimento de cache global de cotações em background e agendar a cada 20 minutos
   try {
     const { syncActivePortfolioPrices } = await import('./routes/prices.routes.js');
-    syncActivePortfolioPrices().catch(e => console.warn('⚠️ Background price sync warning:', e.message));
+    syncActivePortfolioPrices().catch((e) =>
+      console.warn('⚠️ Background price sync warning:', e.message)
+    );
     setInterval(() => {
-      syncActivePortfolioPrices().catch(e => console.warn('⚠️ Scheduled price sync warning:', e.message));
+      syncActivePortfolioPrices().catch((e) =>
+        console.warn('⚠️ Scheduled price sync warning:', e.message)
+      );
     }, 20 * 60 * 1000);
   } catch (e) {
     console.warn('⚠️ Could not initialize background price scheduler:', e.message);

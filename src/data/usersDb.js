@@ -1,14 +1,3 @@
-export const USERS_DB = [
-    {
-        id: 1,
-        email: 'Rickss100',
-        password: 'cdggbvn',
-        name: 'Rickss100'
-    },
-    {
-        id: 2,
-        email: 'user@davi.com',
-        password: '123',
-        name: 'Investidor Padrão'
-    }
-];
+// DevSecOps: Removidas credenciais estáticas do bundle frontend.
+// Toda autenticação passa obrigatoriamente pela API criptografada (bcrypt + JWT HMAC-SHA256).
+export const USERS_DB = [];

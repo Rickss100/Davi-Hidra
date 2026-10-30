@@ -5,6 +5,8 @@
  */
 
 import { createClient } from '@libsql/client';
+import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import fs from 'fs';
 
 // Carregar variáveis de ambiente do .env se existir (Node 20+)
@@ -138,6 +140,12 @@ async function ensureTursoSchema(client) {
     // Coluna já existe
   }
 
+  try {
+    await client.execute("ALTER TABLE users ADD COLUMN uuid TEXT DEFAULT NULL");
+  } catch (e) {
+    // Coluna já existe
+  }
+
   await client.execute(`
     CREATE TABLE IF NOT EXISTS transactions (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -177,7 +185,7 @@ export async function syncWithTursoOnStartup(localDb) {
     await ensureTursoSchema(client);
 
     // ────────────────────────────────────────
-    // USUÁRIOS
+    // USUÁRIOS (+ Auto-Hardening DevSecOps: UUID & Bcrypt)
     // ────────────────────────────────────────
     const tursoUsersResult = await client.execute('SELECT * FROM users ORDER BY id');
     const tursoUsers = tursoUsersResult.rows;
@@ -187,18 +195,25 @@ export async function syncWithTursoOnStartup(localDb) {
       // Primeira inicialização: Nuvem vazia → Migra local para Turso
       console.log(`☁️ Nuvem vazia. Migrando ${localUsers.length} usuários locais para o Turso...`);
       for (const u of localUsers) {
+        const finalUuid = u.uuid || crypto.randomUUID();
+        const rawPwd = String(u.password || '123456');
+        const finalPwd = (rawPwd.startsWith('$2a$') || rawPwd.startsWith('$2b$'))
+          ? rawPwd
+          : bcrypt.hashSync(rawPwd, 10);
+
         await client.execute({
-          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at, last_login) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          sql: `INSERT OR REPLACE INTO users (id, uuid, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
-            u.id, 
-            u.email, 
-            u.password, 
-            u.name, 
-            u.role, 
+            u.id,
+            finalUuid,
+            u.email,
+            finalPwd,
+            u.name,
+            u.role,
             u.status,
             u.plan_period || 'lifetime',
             u.plan_expires_at || null,
-            u.created_at || new Date().toISOString(), 
+            u.created_at || new Date().toISOString(),
             u.updated_at || new Date().toISOString()
           ]
         });
@@ -216,11 +231,12 @@ export async function syncWithTursoOnStartup(localDb) {
         }
       }
 
-      // 2. Inserir/Atualizar no banco local todos os usuários da nuvem
+      // 2. Inserir/Atualizar no banco local todos os usuários da nuvem (+ migrar UUID e Bcrypt na nuvem)
       const upsertLocal = localDb.prepare(`
-        INSERT INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
-        VALUES (@id, @email, @password, @name, @role, @status, @plan_period, @plan_expires_at, @created_at, @updated_at)
+        INSERT INTO users (id, uuid, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+        VALUES (@id, @uuid, @email, @password, @name, @role, @status, @plan_period, @plan_expires_at, @created_at, @updated_at)
         ON CONFLICT(id) DO UPDATE SET
+          uuid = excluded.uuid,
           email = excluded.email,
           password = excluded.password,
           name = excluded.name,
@@ -231,12 +247,30 @@ export async function syncWithTursoOnStartup(localDb) {
           updated_at = excluded.updated_at
       `);
 
+      let cloudHardenedCount = 0;
+
       for (const row of tursoUsers) {
         try {
+          const hasUuid = Boolean(row.uuid && String(row.uuid).trim().length > 0);
+          const rawPwd = String(row.password || '123456');
+          const isHashed = rawPwd.startsWith('$2a$') || rawPwd.startsWith('$2b$');
+
+          const finalUuid = hasUuid ? String(row.uuid) : crypto.randomUUID();
+          const finalPassword = isHashed ? rawPwd : bcrypt.hashSync(rawPwd, 10);
+
+          if (!hasUuid || !isHashed) {
+            await client.execute({
+              sql: 'UPDATE users SET uuid = ?, password = ?, updated_at = ? WHERE id = ?',
+              args: [finalUuid, finalPassword, new Date().toISOString(), Number(row.id)]
+            });
+            cloudHardenedCount++;
+          }
+
           upsertLocal.run({
             id: Number(row.id),
+            uuid: finalUuid,
             email: String(row.email),
-            password: String(row.password),
+            password: finalPassword,
             name: String(row.name),
             role: String(row.role || 'user'),
             status: String(row.status || 'active'),
@@ -248,6 +282,10 @@ export async function syncWithTursoOnStartup(localDb) {
         } catch (uErr) {
           console.warn('⚠️ Erro ao restaurar usuário do Turso:', uErr.message);
         }
+      }
+
+      if (cloudHardenedCount > 0) {
+        console.log(`🛡️ [DevSecOps Cloud] ${cloudHardenedCount} contas no Turso Cloud atualizadas com UUID único + Bcrypt.`);
       }
     }
 
@@ -409,16 +447,21 @@ export async function syncUserToTurso(user) {
   }
 
   // Garantir que campos obrigatórios nunca sejam undefined ou null
-  const passwordVal = user.password && String(user.password).trim() !== '' ? String(user.password).trim() : '123';
+  const rawPwd = user.password && String(user.password).trim() !== '' ? String(user.password).trim() : '123456';
+  const passwordVal = (rawPwd.startsWith('$2a$') || rawPwd.startsWith('$2b$'))
+    ? rawPwd
+    : bcrypt.hashSync(rawPwd, 10);
+  const uuidVal = user.uuid || crypto.randomUUID();
   const emailVal = String(user.email).trim();
   const nameVal = String(user.name).trim();
 
   try {
     await client.execute({
-      sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      sql: `INSERT OR REPLACE INTO users (id, uuid, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       args: [
         user.id,
+        uuidVal,
         emailVal,
         passwordVal,
         nameVal,
@@ -437,10 +480,11 @@ export async function syncUserToTurso(user) {
       try {
         await ensureTursoSchema(client);
         await client.execute({
-          sql: `INSERT OR REPLACE INTO users (id, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          sql: `INSERT OR REPLACE INTO users (id, uuid, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           args: [
             user.id,
+            uuidVal,
             emailVal,
             passwordVal,
             nameVal,

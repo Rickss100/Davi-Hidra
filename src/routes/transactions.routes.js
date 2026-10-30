@@ -1,31 +1,36 @@
-
 import express from 'express';
 import { getDatabase, getUserById } from '../services/database.service.js';
-import { syncTransactionToTurso, syncTransactionDeleteToTurso, syncAssetToTurso } from '../services/turso.service.js';
+import {
+  syncTransactionToTurso,
+  syncTransactionDeleteToTurso,
+  syncAssetToTurso
+} from '../services/turso.service.js';
+import { requireAuth, resolveAuthorizedUserId } from '../middleware/security.middleware.js';
 
 const router = express.Router();
-const db = getDatabase(); // Pegar instância do banco
+const db = getDatabase();
 
-// GET /api/transactions - List transactions with optional userId filter
+// Todas as rotas de transações exigem autenticação criptográfica válida
+router.use(requireAuth);
+
+// GET /api/transactions - Lista apenas as transações da carteira autorizada (Anti-IDOR)
 router.get('/', (req, res) => {
   try {
-    const userId = req.query.userId || req.headers['x-user-id'];
-    
-    let query = `
-      SELECT t.*, a.type as category 
-      FROM transactions t
-      LEFT JOIN assets a ON t.asset_code = a.code
-    `;
-    const params = [];
-
-    if (userId) {
-      query += ` WHERE t.user_id = ? `;
-      params.push(userId);
+    const authCheck = resolveAuthorizedUserId(req, req.query.userId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
     }
 
-    query += ` ORDER BY t.date DESC `;
+    const transactions = db
+      .prepare(`
+        SELECT t.*, a.type as category 
+        FROM transactions t
+        LEFT JOIN assets a ON t.asset_code = a.code
+        WHERE t.user_id = ?
+        ORDER BY t.date DESC
+      `)
+      .all(authCheck.userId);
 
-    const transactions = db.prepare(query).all(...params);
     res.json(transactions);
   } catch (error) {
     console.error('Error fetching transactions:', error);
@@ -33,66 +38,87 @@ router.get('/', (req, res) => {
   }
 });
 
-// POST /api/transactions - Create new transaction
+// POST /api/transactions - Cria nova transação estritamente vinculada ao usuário autorizado
 router.post('/', async (req, res) => {
-  console.log('📥 POST /api/transactions payload:', req.body);
-
   const targetCode = req.body.asset_code || req.body.code;
   const { type, quantity, price, date, notes, user_id } = req.body;
-  const headerUserId = req.headers['x-user-id'];
-  const finalUserId = user_id || headerUserId || 1; // fallback para usuário 1
 
-  // Verificar se a conta está suspensa ou inativa
+  const authCheck = resolveAuthorizedUserId(req, user_id);
+  if (!authCheck.userId) {
+    return res.status(authCheck.status).json({ error: authCheck.message });
+  }
+  const finalUserId = authCheck.userId;
+
   const user = getUserById(finalUserId);
-  if (user && user.role === 'user' && (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')) {
-    return res.status(403).json({ 
-      error: 'ACCOUNT_SUSPENDED', 
-      message: 'Sua conta está suspensa ou inativa. Inclusão de novos ativos e aportes bloqueada.' 
+  if (
+    user &&
+    user.role === 'user' &&
+    (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')
+  ) {
+    return res.status(403).json({
+      error: 'ACCOUNT_SUSPENDED',
+      message: 'Sua conta está suspensa ou inativa. Inclusão de novos ativos e aportes bloqueada.'
     });
   }
 
   if (!targetCode || !type || !quantity || !price || !date) {
-    console.error('❌ Missing fields:', { targetCode, type, quantity, price, date });
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
     const total_value = Number(quantity) * Number(price);
-    
-    // Ensure asset exists (basic check, auto-create stub if doesn't exist)
+
     const asset = db.prepare('SELECT code, type FROM assets WHERE code = ?').get(targetCode);
     if (!asset) {
-       console.log(`Auto-creating asset ${targetCode} for transaction`);
-       let defaultType = 'acao';
-       const uc = targetCode.toUpperCase();
-       if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || req.body.category === 'fixed') {
-         defaultType = 'RendaFixa';
-       } else if (uc.includes('11') && !uc.includes('34')) {
-         defaultType = 'FII';
-       }
-       const defaultMarket = (req.body.category === 'Stock' || req.body.category === 'REIT') ? 'US' : 'BR';
-       
-       db.prepare(`
-         INSERT INTO assets (code, name, type, market)
-         VALUES (?, ?, ?, ?)
-       `).run(targetCode, targetCode, defaultType, defaultMarket);
+      let defaultType = 'acao';
+      const uc = String(targetCode).toUpperCase();
+      if (
+        uc.includes('SELIC') ||
+        uc.includes('CDB') ||
+        uc.includes('DIARIA') ||
+        uc.includes('TESOURO') ||
+        uc.includes('LCI') ||
+        uc.includes('LCA') ||
+        req.body.category === 'fixed'
+      ) {
+        defaultType = 'RendaFixa';
+      } else if (uc.includes('11') && !uc.includes('34')) {
+        defaultType = 'FII';
+      }
+      const defaultMarket =
+        req.body.category === 'Stock' || req.body.category === 'REIT' ? 'US' : 'BR';
+
+      db.prepare(`
+        INSERT INTO assets (code, name, type, market)
+        VALUES (?, ?, ?, ?)
+      `).run(targetCode, targetCode, defaultType, defaultMarket);
     }
 
     const stmt = db.prepare(`
       INSERT INTO transactions (asset_code, type, quantity, price, total_value, date, notes, user_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
-    const info = stmt.run(targetCode, type, quantity, price, total_value, date, notes, finalUserId);
-    
-    const newTransaction = db.prepare(`
-      SELECT t.*, a.type as category 
-      FROM transactions t 
-      LEFT JOIN assets a ON t.asset_code = a.code 
-      WHERE t.id = ?
-    `).get(info.lastInsertRowid);
 
-    // ✅ Aguardar confirmação síncrona no Turso antes de retornar
+    const info = stmt.run(
+      targetCode,
+      type,
+      quantity,
+      price,
+      total_value,
+      date,
+      notes,
+      finalUserId
+    );
+
+    const newTransaction = db
+      .prepare(`
+        SELECT t.*, a.type as category 
+        FROM transactions t 
+        LEFT JOIN assets a ON t.asset_code = a.code 
+        WHERE t.id = ?
+      `)
+      .get(info.lastInsertRowid);
+
     try {
       await syncTransactionToTurso(newTransaction);
     } catch (tursoErr) {
@@ -106,7 +132,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// DELETE /api/transactions/:id - Remove transaction
+// DELETE /api/transactions/:id - Remove transação validando propriedade (Anti-IDOR)
 router.delete('/:id', async (req, res) => {
   try {
     const tx = db.prepare('SELECT * FROM transactions WHERE id = ?').get(req.params.id);
@@ -114,17 +140,24 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ error: 'Transaction not found' });
     }
 
-    const headerUserId = req.headers['x-user-id'];
-    const callerId = headerUserId || tx.user_id;
-    const user = getUserById(callerId);
-    if (user && user.role === 'user' && (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')) {
-      return res.status(403).json({ 
-        error: 'ACCOUNT_SUSPENDED', 
-        message: 'Sua conta está suspensa ou inativa. Exclusão de transações bloqueada.' 
+    // Verifica se o usuário autenticado é dono da transação (ou Admin/Colaborador em auditoria)
+    const authCheck = resolveAuthorizedUserId(req, tx.user_id);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+
+    const user = getUserById(authCheck.userId);
+    if (
+      req.authUser.role === 'user' &&
+      user &&
+      (user.status === 'suspended' || user.isPlanExpired || user.status === 'inactive')
+    ) {
+      return res.status(403).json({
+        error: 'ACCOUNT_SUSPENDED',
+        message: 'Sua conta está suspensa ou inativa. Exclusão de transações bloqueada.'
       });
     }
 
-    // 1. Sincronizar remoção na nuvem Turso primeiro se ativo
     try {
       await syncTransactionDeleteToTurso(req.params.id);
     } catch (tursoErr) {
@@ -143,95 +176,118 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-
-// POST /api/transactions/bulk - Bulk insert transactions
+// POST /api/transactions/bulk - Importação em lote com isolamento estrito por usuário autorizado
 router.post('/bulk', async (req, res) => {
   try {
     const { transactions } = req.body;
-    
+
     if (!transactions || !Array.isArray(transactions) || transactions.length === 0) {
       return res.status(400).json({ error: 'Nenhuma transação enviada para importação.' });
     }
 
-    const headerUserId = req.headers['x-user-id'];
-      const userId = transactions[0].user_id || headerUserId || 1; // Use x-user-id header
-    
+    const requestedUserId = transactions[0]?.user_id;
+    const authCheck = resolveAuthorizedUserId(req, requestedUserId);
+    if (!authCheck.userId) {
+      return res.status(authCheck.status).json({ error: authCheck.message });
+    }
+    const targetUserId = authCheck.userId;
+
     const insert = db.prepare(`
       INSERT INTO transactions (asset_code, type, quantity, price, total_value, date, notes, user_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    
-    const checkAsset = db.prepare("SELECT code FROM assets WHERE code = ?");
-      const insertAsset = db.prepare("INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)");
-      const checkTx = db.prepare("SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND type = ? AND user_id = ?");
-      
-      const insertMany = db.transaction((txs) => {
-        const actuallyInserted = [];
-        for (const tx of txs) {
-          // Check duplicate
-          const txExists = checkTx.get(tx.asset_code, tx.date, tx.quantity, tx.type, tx.user_id || userId);
-          if (txExists) continue;
 
-          // Ensure asset exists
-          const assetExists = checkAsset.get(tx.asset_code);
-          if (!assetExists) {
-            let defaultType = 'acao';
-            const uc = tx.asset_code.toUpperCase();
-            if (uc.includes('SELIC') || uc.includes('CDB') || uc.includes('DIARIA') || uc.includes('TESOURO') || uc.includes('LCI') || uc.includes('LCA') || uc.includes('RDB')) {
-              defaultType = 'RendaFixa';
-            } else if (uc.includes('11') && !uc.includes('34')) {
-              defaultType = 'FII';
-            }
-            insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
-          }
-  
-          insert.run(
-            tx.asset_code,
-            tx.type,
-            tx.quantity,
-            tx.price,
-            tx.total_value || (tx.quantity * tx.price),
-            tx.date,
-            tx.notes || 'Importação via Planilha',
-            tx.user_id || userId
-          );
-          actuallyInserted.push(tx);
-        }
-        return actuallyInserted;
-      });
-      
-      const newTransactions = insertMany(transactions);
-      // Substitute 'transactions' with 'newTransactions' for Turso sync
-      transactions.length = 0;
-      transactions.push(...newTransactions);
-    
-    // Sincronizar com o Turso para cada transação inserida (e ativos inéditos)
-      try {
-        const getTx = db.prepare("SELECT t.*, a.type as category FROM transactions t LEFT JOIN assets a ON t.asset_code = a.code WHERE t.id = ?");
-        const getAsset = db.prepare("SELECT * FROM assets WHERE code = ?");
-        
-        for (const tx of transactions) {
-          // Sync asset if it was auto-created
-          const assetRow = getAsset.get(tx.asset_code);
-          if (assetRow) {
-            await syncAssetToTurso(assetRow);
-          }
+    const checkAsset = db.prepare('SELECT code FROM assets WHERE code = ?');
+    const insertAsset = db.prepare(
+      'INSERT INTO assets (code, name, type, market) VALUES (?, ?, ?, ?)'
+    );
+    const checkTx = db.prepare(
+      'SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND type = ? AND user_id = ?'
+    );
 
-          // Encontrar o ID da última inserção desta transação
-          const row = db.prepare("SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND user_id = ? ORDER BY id DESC LIMIT 1").get(tx.asset_code, tx.date, tx.quantity, tx.user_id || userId);
-          
-          if (row) {
-            const fullTx = getTx.get(row.id);
-            if (fullTx) {
-              await syncTransactionToTurso(fullTx);
-            }
+    const insertMany = db.transaction((txs) => {
+      const actuallyInserted = [];
+      for (const tx of txs) {
+        const txExists = checkTx.get(
+          tx.asset_code,
+          tx.date,
+          tx.quantity,
+          tx.type,
+          targetUserId
+        );
+        if (txExists) continue;
+
+        const assetExists = checkAsset.get(tx.asset_code);
+        if (!assetExists) {
+          let defaultType = 'acao';
+          const uc = String(tx.asset_code).toUpperCase();
+          if (
+            uc.includes('SELIC') ||
+            uc.includes('CDB') ||
+            uc.includes('DIARIA') ||
+            uc.includes('TESOURO') ||
+            uc.includes('LCI') ||
+            uc.includes('LCA') ||
+            uc.includes('RDB')
+          ) {
+            defaultType = 'RendaFixa';
+          } else if (uc.includes('11') && !uc.includes('34')) {
+            defaultType = 'FII';
           }
+          insertAsset.run(tx.asset_code, tx.asset_code, defaultType, 'BR');
         }
-      } catch (e) {
-        console.warn("Turso bulk sync error", e);
+
+        insert.run(
+          tx.asset_code,
+          tx.type,
+          tx.quantity,
+          tx.price,
+          tx.total_value || tx.quantity * tx.price,
+          tx.date,
+          tx.notes || 'Importação via Planilha',
+          targetUserId
+        );
+        actuallyInserted.push({ ...tx, user_id: targetUserId });
       }
-    
-    res.json({ success: true, count: transactions.length, message: `${transactions.length} transações importadas com sucesso.` });
+      return actuallyInserted;
+    });
+
+    const newTransactions = insertMany(transactions);
+
+    try {
+      const getTx = db.prepare(
+        'SELECT t.*, a.type as category FROM transactions t LEFT JOIN assets a ON t.asset_code = a.code WHERE t.id = ?'
+      );
+      const getAsset = db.prepare('SELECT * FROM assets WHERE code = ?');
+
+      for (const tx of newTransactions) {
+        const assetRow = getAsset.get(tx.asset_code);
+        if (assetRow) {
+          await syncAssetToTurso(assetRow);
+        }
+
+        const row = db
+          .prepare(
+            'SELECT id FROM transactions WHERE asset_code = ? AND date = ? AND quantity = ? AND user_id = ? ORDER BY id DESC LIMIT 1'
+          )
+          .get(tx.asset_code, tx.date, tx.quantity, targetUserId);
+
+        if (row) {
+          const fullTx = getTx.get(row.id);
+          if (fullTx) {
+            await syncTransactionToTurso(fullTx);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Turso bulk sync error', e);
+    }
+
+    res.json({
+      success: true,
+      count: newTransactions.length,
+      message: `${newTransactions.length} transações importadas com sucesso.`
+    });
   } catch (err) {
     console.error('Erro no import em lote:', err);
     res.status(500).json({ error: 'Erro ao importar transações', details: err.message });

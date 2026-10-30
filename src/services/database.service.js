@@ -4,6 +4,8 @@
  */
 
 import Database from 'better-sqlite3';
+import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -32,7 +34,7 @@ function initDatabase() {
     }
 
     // Create database connection
-    db = new Database(DB_PATH, { verbose: console.log });
+    db = new Database(DB_PATH, process.env.SQL_VERBOSE === 'true' ? { verbose: console.log } : {});
     
     // Enable foreign keys
     db.pragma('foreign_keys = ON');
@@ -90,7 +92,21 @@ function initDatabase() {
         db.exec("ALTER TABLE users ADD COLUMN plan_expires_at DATETIME DEFAULT NULL");
         console.log('✅ Column plan_expires_at added to users');
       }
+      if (!userColNames.includes('uuid')) {
+        db.exec("ALTER TABLE users ADD COLUMN uuid TEXT DEFAULT NULL");
+        console.log('✅ Column uuid added to users');
+      }
+      if (!userColNames.includes('reset_token')) {
+        db.exec("ALTER TABLE users ADD COLUMN reset_token TEXT DEFAULT NULL");
+      }
+      if (!userColNames.includes('reset_expires')) {
+        db.exec("ALTER TABLE users ADD COLUMN reset_expires DATETIME DEFAULT NULL");
+      }
+      if (!userColNames.includes('last_login')) {
+        db.exec("ALTER TABLE users ADD COLUMN last_login DATETIME DEFAULT NULL");
+      }
       db.exec("CREATE INDEX IF NOT EXISTS idx_users_plan_expires ON users(plan_expires_at)");
+      db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_users_uuid ON users(uuid)");
     } catch (uMigErr) {
       console.warn('⚠️ Migration check for users table:', uMigErr.message);
     }
@@ -114,6 +130,28 @@ function initDatabase() {
       console.warn('⚠️ User seed error:', seedErr.message);
     }
     
+    try {
+      const allLocalUsers = db.prepare('SELECT id, uuid, password FROM users').all();
+      const updateSecStmt = db.prepare('UPDATE users SET uuid = ?, password = ? WHERE id = ?');
+      let migratedCount = 0;
+      for (const u of allLocalUsers) {
+        const hasUuid = Boolean(u.uuid && String(u.uuid).trim().length > 0);
+        const pwd = String(u.password || '');
+        const isHashed = pwd.startsWith('$2a$') || pwd.startsWith('$2b$');
+        if (!hasUuid || !isHashed) {
+          const nextUuid = hasUuid ? u.uuid : crypto.randomUUID();
+          const nextPwd = isHashed ? pwd : bcrypt.hashSync(pwd || '123456', 10);
+          updateSecStmt.run(nextUuid, nextPwd, u.id);
+          migratedCount++;
+        }
+      }
+      if (migratedCount > 0) {
+        console.log(`🛡️ [DevSecOps] ${migratedCount} contas locais migradas para UUID + Bcrypt.`);
+      }
+    } catch (secMigErr) {
+      console.warn('⚠️ Security migration warning:', secMigErr.message);
+    }
+
     console.log('✅ Database initialized successfully at:', DB_PATH);
     return db;
   } catch (error) {
@@ -690,7 +728,10 @@ function getUserByEmail(email) {
 
 function getUserById(id) {
   const db = getDatabase();
-  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(id);
+  const isNumeric = !Number.isNaN(Number(id)) && String(id).trim() !== '';
+  const user = isNumeric
+    ? db.prepare('SELECT * FROM users WHERE id = ?').get(Number(id))
+    : db.prepare('SELECT * FROM users WHERE uuid = ?').get(String(id).trim());
   return enrichUserWithPlan(user);
 }
 
@@ -699,6 +740,7 @@ function getAllUsers() {
   const users = db.prepare(`
     SELECT 
         u.id, 
+        u.uuid,
         u.email, 
         u.name, 
         u.role, 
@@ -737,10 +779,10 @@ function createUser({
 }) {
   const db = getDatabase();
   const stmt = db.prepare(`
-    INSERT INTO users (email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    INSERT INTO users (uuid, email, password, name, role, status, plan_period, plan_expires_at, created_at, updated_at)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
   `);
-  const info = stmt.run(email, password, name, role, status, plan_period || 'lifetime', plan_expires_at || null);
+  const info = stmt.run(crypto.randomUUID(), email, password, name, role, status, plan_period || 'lifetime', plan_expires_at || null);
   const newUser = db.prepare('SELECT * FROM users WHERE id = ?').get(info.lastInsertRowid);
   
   // Sincronizar criação na nuvem Turso se ativo

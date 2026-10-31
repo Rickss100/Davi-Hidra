@@ -3,14 +3,54 @@ import { eq } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { assets, cachedPrices, fundamentals, userAssetNotes } from '@/db/schema';
 import { getAuthorizedContextOrNull } from '@/server/dal/auth-dal';
+import { resolveAssetDisplayName, resolveAssetSector } from '@/lib/asset-names';
+
+function normalizeCategory(type: string, market: string, code: string): string {
+  const t = type.toLowerCase();
+  const m = market.toUpperCase();
+  const c = code.toUpperCase();
+
+  if (
+    t.includes('fixa') ||
+    t.includes('fixed') ||
+    t.includes('tesouro') ||
+    c.includes('TESOURO') ||
+    c.includes('SELIC') ||
+    c.includes('CDB')
+  ) {
+    return 'fixed';
+  }
+  if (t.includes('fii')) return 'fiis';
+  if (t.includes('reit')) return 'reits';
+  if (t.includes('stock') || m === 'US') return 'stocks';
+  if (/^[A-Z]{4}11B?$/.test(c)) return 'fiis';
+  return 'acoes';
+}
 
 export async function GET(request: Request) {
   const ctx = await getAuthorizedContextOrNull();
   if (!ctx) return NextResponse.json({ error: 'UNAUTHORIZED' }, { status: 401 });
 
   const { searchParams } = new URL(request.url);
-  const typeFilter = (searchParams.get('type') || '').trim().toLowerCase();
+  const rawType = (searchParams.get('type') || '').trim().toLowerCase();
   const query = (searchParams.get('q') || '').trim().toLowerCase();
+  const minRatingParam = Number(searchParams.get('minRating') || 0);
+  const minRating = Number.isFinite(minRatingParam) && minRatingParam > 0 ? minRatingParam : 0;
+  const limitParam = Number(searchParams.get('limit') || 350);
+  const limit = Number.isFinite(limitParam) && limitParam > 0 ? Math.min(1600, limitParam) : 350;
+
+  const normalizedFilter =
+    rawType === 'acao' || rawType === 'acoes'
+      ? 'acoes'
+      : rawType === 'fii' || rawType === 'fiis'
+        ? 'fiis'
+        : rawType === 'stock' || rawType === 'stocks'
+          ? 'stocks'
+          : rawType === 'reit' || rawType === 'reits'
+            ? 'reits'
+            : rawType === 'fixed' || rawType === 'fixa'
+              ? 'fixed'
+              : '';
 
   const db = await getDb();
   const [allAssets, allFunds, allPrices, userNotes] = await Promise.all([
@@ -27,52 +67,100 @@ export async function GET(request: Request) {
   const priceMap = new Map(allPrices.map((p) => [p.assetCode.toUpperCase(), Number(p.price)]));
   const noteMap = new Map(userNotes.map((n) => [n.assetCode.toUpperCase(), n]));
 
-  const items = allAssets
-    .filter((a) => {
-      if (typeFilter && typeFilter !== 'all') {
-        const t = a.type.toLowerCase();
-        if (typeFilter === 'acao' && !t.includes('acao')) return false;
-        if (typeFilter === 'fii' && !t.includes('fii')) return false;
-        if (typeFilter === 'stock' && !t.includes('stock')) return false;
-        if (typeFilter === 'reit' && !t.includes('reit')) return false;
-        if (typeFilter === 'fixed' && !t.includes('fixa') && !t.includes('fixed')) return false;
-      }
-      if (query) {
-        return (
-          a.code.toLowerCase().includes(query) ||
-          a.name.toLowerCase().includes(query) ||
-          (a.sector || '').toLowerCase().includes(query)
-        );
-      }
-      return true;
-    })
-    .slice(0, 250)
-    .map((a) => {
-      const upper = a.code.toUpperCase();
-      const f = fundMap.get(upper);
-      const n = noteMap.get(upper);
-      return {
-        code: a.code,
-        name: a.name,
-        type: a.type,
-        market: a.market,
-        sector: a.sector,
-        price: priceMap.get(upper) ?? 0,
-        peRatio: f?.peRatio ? Number(f.peRatio) : null,
-        pbRatio: f?.pbRatio ? Number(f.pbRatio) : null,
-        pVpa: f?.pVpa ? Number(f.pVpa) : null,
-        dividendYield: f?.dividendYield ? Number(f.dividendYield) : null,
-        roe: f?.roe ? Number(f.roe) : null,
-        vacancyRate: f?.vacancyRate ? Number(f.vacancyRate) : null,
-        rateDescription: f?.rateDescription ?? null,
-        liquidityType: f?.liquidityType ?? null,
-        userRating: n?.rating ?? null,
-        userNotes: n?.notes ?? ''
-      };
-    });
+  const filtered = allAssets.filter((a) => {
+    const cat = normalizeCategory(a.type, a.market, a.code);
+    if (normalizedFilter && cat !== normalizedFilter) return false;
+
+    if (minRating > 0) {
+      const rating = noteMap.get(a.code.toUpperCase())?.rating ?? 0;
+      if (rating < minRating) return false;
+    }
+
+    if (query) {
+      const displayName = resolveAssetDisplayName(a.code, a.name).toLowerCase();
+      const displaySector = (resolveAssetSector(a.code, a.sector) || '').toLowerCase();
+      return (
+        a.code.toLowerCase().includes(query) ||
+        displayName.includes(query) ||
+        displaySector.includes(query)
+      );
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    if (query) {
+      const aCode = a.code.toLowerCase();
+      const bCode = b.code.toLowerCase();
+      if (aCode === query && bCode !== query) return -1;
+      if (bCode === query && aCode !== query) return 1;
+
+      const aStarts = aCode.startsWith(query);
+      const bStarts = bCode.startsWith(query);
+      if (aStarts && !bStarts) return -1;
+      if (bStarts && !aStarts) return 1;
+
+      const aNameStarts = resolveAssetDisplayName(a.code, a.name).toLowerCase().startsWith(query);
+      const bNameStarts = resolveAssetDisplayName(b.code, b.name).toLowerCase().startsWith(query);
+      if (aNameStarts && !bNameStarts) return -1;
+      if (bNameStarts && !aNameStarts) return 1;
+    }
+    return a.code.localeCompare(b.code);
+  });
+
+  const items = filtered.slice(0, limit).map((a) => {
+    const upper = a.code.toUpperCase();
+    const f = fundMap.get(upper);
+    const n = noteMap.get(upper);
+    const category = normalizeCategory(a.type, a.market, a.code);
+    return {
+      code: a.code,
+      name: resolveAssetDisplayName(a.code, a.name),
+      type: a.type,
+      category,
+      market: a.market,
+      sector: resolveAssetSector(a.code, a.sector),
+      price: priceMap.get(upper) ?? 0,
+      peRatio: f?.peRatio !== null && f?.peRatio !== undefined ? Number(f.peRatio) : null,
+      pbRatio: f?.pbRatio !== null && f?.pbRatio !== undefined ? Number(f.pbRatio) : null,
+      pVpa: f?.pVpa !== null && f?.pVpa !== undefined ? Number(f.pVpa) : null,
+      dividendYield:
+        f?.dividendYield !== null && f?.dividendYield !== undefined ? Number(f.dividendYield) : null,
+      roe: f?.roe !== null && f?.roe !== undefined ? Number(f.roe) : null,
+      roic: f?.roic !== null && f?.roic !== undefined ? Number(f.roic) : null,
+      debtToEquity:
+        f?.debtToEquity !== null && f?.debtToEquity !== undefined ? Number(f.debtToEquity) : null,
+      vacancyRate:
+        f?.vacancyRate !== null && f?.vacancyRate !== undefined ? Number(f.vacancyRate) : null,
+      evEbit: f?.evEbit !== null && f?.evEbit !== undefined ? Number(f.evEbit) : null,
+      evEbitda: f?.evEbitda !== null && f?.evEbitda !== undefined ? Number(f.evEbitda) : null,
+      psr: f?.psr !== null && f?.psr !== undefined ? Number(f.psr) : null,
+      roa: f?.roa !== null && f?.roa !== undefined ? Number(f.roa) : null,
+      ebitMargin: f?.ebitMargin !== null && f?.ebitMargin !== undefined ? Number(f.ebitMargin) : null,
+      profitMargin: f?.profitMargin !== null && f?.profitMargin !== undefined ? Number(f.profitMargin) : null,
+      currentRatio: f?.currentRatio !== null && f?.currentRatio !== undefined ? Number(f.currentRatio) : null,
+      netDebtEbitda: f?.netDebtEbitda !== null && f?.netDebtEbitda !== undefined ? Number(f.netDebtEbitda) : null,
+      revenueGrowth: f?.revenueGrowth !== null && f?.revenueGrowth !== undefined ? Number(f.revenueGrowth) : null,
+      revenueGrowth5y: f?.revenueGrowth5y !== null && f?.revenueGrowth5y !== undefined ? Number(f.revenueGrowth5y) : null,
+      earningsGrowth: f?.earningsGrowth !== null && f?.earningsGrowth !== undefined ? Number(f.earningsGrowth) : null,
+      payoutRatio: f?.payoutRatio !== null && f?.payoutRatio !== undefined ? Number(f.payoutRatio) : null,
+      marketCap: f?.marketCap !== null && f?.marketCap !== undefined ? Number(f.marketCap) : null,
+      capRate: f?.capRate !== null && f?.capRate !== undefined ? Number(f.capRate) : null,
+      ffoYield: f?.ffoYield !== null && f?.ffoYield !== undefined ? Number(f.ffoYield) : null,
+      liquidity: f?.liquidity !== null && f?.liquidity !== undefined ? Number(f.liquidity) : null,
+      propertyCount: f?.propertyCount !== null && f?.propertyCount !== undefined ? Number(f.propertyCount) : null,
+      pricePerSqm: f?.pricePerSqm !== null && f?.pricePerSqm !== undefined ? Number(f.pricePerSqm) : null,
+      rentPerSqm: f?.rentPerSqm !== null && f?.rentPerSqm !== undefined ? Number(f.rentPerSqm) : null,
+      rateDescription: f?.rateDescription ?? null,
+      liquidityType: f?.liquidityType ?? null,
+      userRating: n?.rating ?? null,
+      userNotes: n?.notes ?? ''
+    };
+  });
 
   return NextResponse.json({
     totalCatalog: allAssets.length,
+    totalMatched: filtered.length,
     items
   });
 }

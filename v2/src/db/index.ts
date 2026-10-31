@@ -73,6 +73,20 @@ CREATE TABLE IF NOT EXISTS fundamentals (
   cap_rate NUMERIC(14, 4),
   ffo_yield NUMERIC(14, 4),
   liquidity NUMERIC(20, 2),
+  psr NUMERIC(14, 4),
+  ev_ebit NUMERIC(14, 4),
+  ev_ebitda NUMERIC(14, 4),
+  roa NUMERIC(14, 4),
+  ebit_margin NUMERIC(14, 4),
+  current_ratio NUMERIC(14, 4),
+  net_debt_ebitda NUMERIC(14, 4),
+  revenue_growth NUMERIC(14, 4),
+  revenue_growth_5y NUMERIC(14, 4),
+  earnings_growth NUMERIC(14, 4),
+  payout_ratio NUMERIC(14, 4),
+  property_count NUMERIC(14, 2),
+  price_per_sqm NUMERIC(14, 2),
+  rent_per_sqm NUMERIC(14, 2),
   indexer TEXT,
   rate_fixed NUMERIC(14, 4),
   rate_description TEXT,
@@ -196,7 +210,106 @@ async function createDatabaseConnection(): Promise<AppDatabase> {
   }
   await pglite.waitReady;
   await pglite.exec(BOOTSTRAP_DDL);
+
+  // Migrações dinâmicas de colunas fundamentalistas estendidas
+  const ALTER_COLUMNS = `
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS psr NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS ev_ebit NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS ev_ebitda NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS roa NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS ebit_margin NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS current_ratio NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS net_debt_ebitda NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS revenue_growth NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS revenue_growth_5y NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS earnings_growth NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS payout_ratio NUMERIC(14, 4);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS property_count NUMERIC(14, 2);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS price_per_sqm NUMERIC(14, 2);
+    ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS rent_per_sqm NUMERIC(14, 2);
+  `;
+  await pglite.exec(ALTER_COLUMNS).catch(() => {});
+  await syncV1Fundamentals((sql) => pglite.exec(sql));
+
   return drizzlePglite(pglite, { schema });
+}
+
+async function syncV1Fundamentals(dbExec: (sql: string) => Promise<unknown>) {
+  try {
+    const sqlitePath = path.resolve(process.cwd(), '../investment-data.db');
+    const localSqlitePath = path.resolve(process.cwd(), 'investment-data.db');
+    const finalSqlitePath = fs.existsSync(sqlitePath)
+      ? sqlitePath
+      : fs.existsSync(localSqlitePath)
+        ? localSqlitePath
+        : null;
+    if (!finalSqlitePath) return;
+
+    // @ts-expect-error better-sqlite3 declaration is optional in v2
+    const { default: Database } = (await import('better-sqlite3')) as {
+      default: new (
+        path: string,
+        options?: Record<string, unknown>
+      ) => { prepare: (sql: string) => { all: () => Record<string, unknown>[] } };
+    };
+    const v1Db = new Database(finalSqlitePath, { readonly: true });
+    const rows = v1Db
+      .prepare(`
+        SELECT f.* FROM fundamentals f
+        INNER JOIN (
+          SELECT asset_code, MAX(updated_at) as max_u FROM fundamentals GROUP BY asset_code
+        ) m ON f.asset_code = m.asset_code AND f.updated_at = m.max_u
+      `)
+      .all() as Record<string, unknown>[];
+
+    if (!rows || rows.length === 0) return;
+
+    for (const r of rows) {
+      const code = String(r.asset_code || '').toUpperCase().trim();
+      if (!code) continue;
+
+      const psr = r.psr != null ? Number(r.psr) : 'NULL';
+      const evEbit = r.ev_ebit != null ? Number(r.ev_ebit) : 'NULL';
+      const evEbitda = r.ev_ebitda != null ? Number(r.ev_ebitda) : 'NULL';
+      const roa = r.roa != null ? Number(r.roa) : 'NULL';
+      const ebitMargin = r.ebit_margin != null ? Number(r.ebit_margin) : 'NULL';
+      const currentRatio = r.current_ratio != null ? Number(r.current_ratio) : 'NULL';
+      const netDebtEbitda = r.net_debt != null ? Number(r.net_debt) : 'NULL';
+      const revenueGrowth = r.revenue_growth != null ? Number(r.revenue_growth) : 'NULL';
+      const revenueGrowth5y = r.revenue_growth_5y != null ? Number(r.revenue_growth_5y) : 'NULL';
+      const earningsGrowth = r.earnings_growth != null ? Number(r.earnings_growth) : 'NULL';
+      const propertyCount = r.property_count != null ? Number(r.property_count) : 'NULL';
+      const pricePerSqm = r.price_per_sqm != null ? Number(r.price_per_sqm) : 'NULL';
+      const rentPerSqm = r.rent_per_sqm != null ? Number(r.rent_per_sqm) : 'NULL';
+      const roic = r.roic != null ? Number(r.roic) : 'NULL';
+      const capRate = r.cap_rate != null ? Number(r.cap_rate) : 'NULL';
+      const ffoYield = r.ffo_yield != null ? Number(r.ffo_yield) : 'NULL';
+
+      const sql = `
+        UPDATE fundamentals
+        SET psr = COALESCE(${psr}, psr),
+            ev_ebit = COALESCE(${evEbit}, ev_ebit),
+            ev_ebitda = COALESCE(${evEbitda}, ev_ebitda),
+            roa = COALESCE(${roa}, roa),
+            ebit_margin = COALESCE(${ebitMargin}, ebit_margin),
+            current_ratio = COALESCE(${currentRatio}, current_ratio),
+            net_debt_ebitda = COALESCE(${netDebtEbitda}, net_debt_ebitda),
+            revenue_growth = COALESCE(${revenueGrowth}, revenue_growth),
+            revenue_growth_5y = COALESCE(${revenueGrowth5y}, revenue_growth_5y),
+            earnings_growth = COALESCE(${earningsGrowth}, earnings_growth),
+            property_count = COALESCE(${propertyCount}, property_count),
+            price_per_sqm = COALESCE(${pricePerSqm}, price_per_sqm),
+            rent_per_sqm = COALESCE(${rentPerSqm}, rent_per_sqm),
+            roic = COALESCE(${roic}, roic),
+            cap_rate = COALESCE(${capRate}, cap_rate),
+            ffo_yield = COALESCE(${ffoYield}, ffo_yield)
+        WHERE asset_code = '${code}';
+      `;
+      await dbExec(sql).catch(() => {});
+    }
+  } catch {
+    // Ignora em caso de indisponibilidade
+  }
 }
 
 export async function getDb(): Promise<AppDatabase> {

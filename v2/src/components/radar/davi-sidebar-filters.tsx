@@ -360,7 +360,7 @@ export function DaviSidebarFilters({
       aria-label="Painel de Filtros do Método DAVI"
       className={cn(
         'relative flex shrink-0 flex-col rounded-2xl border border-slate-800 bg-obsidian-950/90 transition-all duration-200',
-        isCollapsed ? 'w-12 items-center p-2' : 'w-full lg:w-72 xl:w-80 p-4'
+        isCollapsed ? 'w-12 items-center p-2' : 'w-full lg:w-64 xl:w-72 p-3 sm:p-3.5'
       )}
     >
       {/* Botão Retrátil */}

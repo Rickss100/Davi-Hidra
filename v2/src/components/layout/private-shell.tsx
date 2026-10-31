@@ -25,6 +25,7 @@ import {
 } from 'lucide-react';
 import { usePortfolioData, useSyncLivePrices } from '@/hooks/use-portfolio';
 import { Button, Badge } from '@/components/ui/primitives';
+import { BrandLogo } from '@/components/ui/brand-logo';
 import { TwoFactorModal } from '@/components/security/two-factor-modal';
 import { PrivateAiDrawer } from '@/components/chat/private-ai-drawer';
 import { cn } from '@/lib/utils';
@@ -34,16 +35,16 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const NAV_ITEMS = [
-  { href: '/', label: 'Visão Executiva', icon: LayoutDashboard },
-  { href: '/carteira', label: 'Minha Carteira', icon: Briefcase },
+  { href: '/', label: 'Home', icon: LayoutDashboard },
+  { href: '/carteira', label: 'Carteira', icon: Briefcase },
   { href: '/onde-aportar', label: 'Onde Aportar', icon: Compass },
-  { href: '/definir-objetivos', label: 'Objetivos & Régua', icon: Target },
+  { href: '/definir-objetivos', label: 'Definir Objetivos', icon: Target },
+  { href: '/reserva-emergencia', label: 'Reserva de Emerg.', icon: Shield },
   { href: '/renda-passiva', label: 'Renda Passiva', icon: Coins },
-  { href: '/reserva-emergencia', label: 'Reserva Blindada', icon: Shield },
-  { href: '/resumo', label: 'Resumo & Alocação', icon: PieChart },
-  { href: '/historico', label: 'Extrato & Importar B3', icon: History },
+  { href: '/resumo', label: 'Resumo', icon: PieChart },
   { href: '/radar', label: 'Radar de Ativos', icon: Radar },
-  { href: '/tutorial', label: 'Método DAVI & Hydra', icon: BookOpen }
+  { href: '/historico', label: 'Histórico', icon: History },
+  { href: '/tutorial', label: 'Tutorial & Método', icon: BookOpen }
 ];
 
 export function PrivateShell({ children }: { children: React.ReactNode }) {
@@ -115,18 +116,8 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
       <div className="flex flex-1">
         {/* Sidebar Desktop */}
         <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-800/90 bg-obsidian-900/95 md:flex">
-          <div className="flex items-center gap-3 border-b border-slate-800/80 px-5 py-5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-gold-400 to-gold-600 font-black text-obsidian-950 shadow-gold">
-              N
-            </div>
-            <div>
-              <span className="block text-sm font-extrabold tracking-wide text-white">
-                NORTE INVEST
-              </span>
-              <span className="block text-[10px] font-semibold uppercase tracking-widest text-gold-400">
-                Private Wealth V2
-              </span>
-            </div>
+          <div className="border-b border-slate-800/80 px-5 py-5">
+            <BrandLogo size="md" />
           </div>
 
           <nav aria-label="Menu Principal" className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
@@ -140,7 +131,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                   className={cn(
                     'flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all',
                     active
-                      ? 'border border-gold-500/30 bg-gold-500/15 text-gold-300'
+                      ? 'border border-emerald-500/35 bg-emerald-500/10 text-emerald-400'
                       : 'text-slate-400 hover:bg-obsidian-800 hover:text-slate-100'
                   )}
                 >
@@ -161,7 +152,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                 )}
               >
                 <Users className="h-4 w-4 shrink-0" />
-                <span>Gestão & Compliance</span>
+                <span>{ctx?.actor.role === 'admin' ? 'Painel Admin' : 'Painel Gestão (TI)'}</span>
               </Link>
             )}
           </nav>
@@ -250,7 +241,14 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          <main className="mx-auto w-full max-w-7xl flex-1 p-4 md:p-8">{children}</main>
+          <main
+            className={cn(
+              'mx-auto w-full flex-1 p-3 sm:p-4 md:p-6 transition-all',
+              pathname === '/radar' ? 'max-w-[2400px] px-2 sm:px-4 lg:px-6' : 'max-w-7xl md:p-8'
+            )}
+          >
+            {children}
+          </main>
         </div>
       </div>
 
@@ -259,7 +257,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-0 z-50 flex bg-black/75 backdrop-blur-sm md:hidden">
           <div className="flex w-72 flex-col bg-obsidian-900 p-4">
             <div className="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
-              <span className="font-bold text-gold-400">NORTE INVEST PRIVATE</span>
+              <BrandLogo size="sm" />
               <button
                 type="button"
                 aria-label="Fechar menu"
@@ -279,7 +277,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                     className={cn(
                       'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm',
                       pathname === item.href
-                        ? 'bg-gold-500/15 text-gold-300'
+                        ? 'bg-emerald-500/15 font-medium text-emerald-400'
                         : 'text-slate-300'
                     )}
                   >
@@ -295,7 +293,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                   className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gold-400"
                 >
                   <Users className="h-4 w-4" />
-                  <span>Gestão & Compliance</span>
+                  <span>{ctx?.actor.role === 'admin' ? 'Painel Admin' : 'Painel Gestão (TI)'}</span>
                 </Link>
               )}
             </div>
@@ -321,16 +319,16 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      {/* Barra Inferior Nativa Mobile (PWA) */}
+      {/* Barra Inferior Nativa Mobile (PWA) — 5 atalhos como na V1 */}
       <nav
         aria-label="Navegação Rápida Mobile"
         className="fixed bottom-0 left-0 right-0 z-30 flex items-center justify-around border-t border-slate-800 bg-obsidian-900/95 py-2 backdrop-blur-md md:hidden"
       >
         {[
-          { href: '/', label: 'Início', icon: LayoutDashboard },
+          { href: '/', label: 'Home', icon: LayoutDashboard },
           { href: '/carteira', label: 'Carteira', icon: Briefcase },
           { href: '/onde-aportar', label: 'Aportar', icon: Compass },
-          { href: '/renda-passiva', label: 'Proventos', icon: Coins }
+          { href: '/definir-objetivos', label: 'Régua', icon: Target }
         ].map((tab) => {
           const Icon = tab.icon;
           const active = pathname === tab.href;
@@ -340,7 +338,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
               href={tab.href}
               className={cn(
                 'flex flex-col items-center gap-0.5 px-3 py-1 text-[11px] font-medium',
-                active ? 'text-gold-400' : 'text-slate-400'
+                active ? 'text-emerald-400' : 'text-slate-400'
               )}
             >
               <Icon className="h-5 w-5" />
@@ -348,6 +346,14 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
             </Link>
           );
         })}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex flex-col items-center gap-0.5 px-3 py-1 text-[11px] font-medium text-slate-400"
+        >
+          <Menu className="h-5 w-5" />
+          <span>Menu</span>
+        </button>
       </nav>
 
       {/* Guia Rápido PWA iOS/Android */}

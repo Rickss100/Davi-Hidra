@@ -40,11 +40,37 @@ type SortKey =
   | 'price'
   | 'peRatio'
   | 'pbRatio'
+  | 'psr'
   | 'dividendYield'
   | 'roe'
+  | 'roic'
+  | 'profitMargin'
   | 'debtToEquity'
   | 'currentRatio'
+  | 'vacancyRate'
+  | 'capRate'
+  | 'ffoYield'
+  | 'propertyCount'
+  | 'liquidity'
   | 'userRating';
+
+function fmtRatio(v: number | null | undefined): string {
+  if (v === null || v === undefined) return '—';
+  return Number(v).toFixed(2);
+}
+
+function fmtPercentOrDash(v: number | null | undefined): string {
+  if (v === null || v === undefined) return '—';
+  return formatPercent(Number(v));
+}
+
+function fmtCompactMoney(val: number | null | undefined): string {
+  if (val === null || val === undefined || val === 0) return '—';
+  if (val >= 1_000_000_000) return `R$ ${(val / 1_000_000_000).toFixed(1)}B`;
+  if (val >= 1_000_000) return `R$ ${(val / 1_000_000).toFixed(1)}M`;
+  if (val >= 1_000) return `R$ ${(val / 1_000).toFixed(0)}k`;
+  return formatBRL(val);
+}
 
 export default function RadarAtivosPage() {
   const [typeFilter, setTypeFilter] = useState('all');
@@ -127,6 +153,10 @@ export default function RadarAtivosPage() {
           valA = a.pVpa ?? a.pbRatio;
           valB = b.pVpa ?? b.pbRatio;
           break;
+        case 'psr':
+          valA = a.psr;
+          valB = b.psr;
+          break;
         case 'dividendYield':
           valA = a.dividendYield;
           valB = b.dividendYield;
@@ -135,6 +165,14 @@ export default function RadarAtivosPage() {
           valA = a.roe;
           valB = b.roe;
           break;
+        case 'roic':
+          valA = a.roic;
+          valB = b.roic;
+          break;
+        case 'profitMargin':
+          valA = a.profitMargin;
+          valB = b.profitMargin;
+          break;
         case 'debtToEquity':
           valA = a.debtToEquity;
           valB = b.debtToEquity;
@@ -142,6 +180,26 @@ export default function RadarAtivosPage() {
         case 'currentRatio':
           valA = a.currentRatio;
           valB = b.currentRatio;
+          break;
+        case 'vacancyRate':
+          valA = a.vacancyRate;
+          valB = b.vacancyRate;
+          break;
+        case 'capRate':
+          valA = a.capRate;
+          valB = b.capRate;
+          break;
+        case 'ffoYield':
+          valA = a.ffoYield;
+          valB = b.ffoYield;
+          break;
+        case 'propertyCount':
+          valA = a.propertyCount;
+          valB = b.propertyCount;
+          break;
+        case 'liquidity':
+          valA = a.liquidity;
+          valB = b.liquidity;
           break;
         case 'userRating':
           valA = a.userRating;
@@ -203,22 +261,67 @@ export default function RadarAtivosPage() {
     }
   };
 
+  const renderSortTh = (
+    label: string,
+    key?: SortKey,
+    align: 'left' | 'right' | 'center' = 'right',
+    className?: string
+  ) => {
+    const isSorted = key && sortKey === key;
+    return (
+      <th
+        onClick={key ? () => handleSort(key) : undefined}
+        className={cn(
+          'px-2 py-2.5 text-[11px] font-extrabold uppercase tracking-wider text-slate-300 select-none whitespace-nowrap',
+          align === 'left' ? 'text-left' : align === 'center' ? 'text-center' : 'text-right',
+          key && 'cursor-pointer hover:text-white hover:bg-obsidian-900/60',
+          className
+        )}
+      >
+        <div
+          className={cn(
+            'inline-flex items-center gap-1',
+            align === 'right' && 'justify-end',
+            align === 'center' && 'justify-center'
+          )}
+        >
+          <span>{label}</span>
+          {key && (
+            <ArrowUpDown
+              className={cn(
+                'h-3 w-3',
+                isSorted ? 'text-emerald-400 opacity-100' : 'opacity-40'
+              )}
+            />
+          )}
+        </div>
+      </th>
+    );
+  };
+
+  const isFiis = typeFilter === 'fiis';
+  const isStocks = typeFilter === 'stocks';
+  const isReits = typeFilter === 'reits';
+  const isFixed = typeFilter === 'fixed';
+  const isAcoes = typeFilter === 'acoes';
+  const isAll = typeFilter === 'all';
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 w-full">
       {/* Top Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+          <h1 className="text-xl font-extrabold text-white sm:text-2xl lg:text-3xl">
             Radar Fundamentalista — Método DAVI
           </h1>
-          <p className="mt-1 text-sm text-slate-200 sm:text-base">
+          <p className="mt-0.5 text-xs text-slate-300 sm:text-sm">
             Peneire empresas e fundos pelos fundamentos, avalie com estrelas (★) e envie suas escolhas direto para Meus Objetivos.
           </p>
         </div>
 
         <Link
           href="/definir-objetivos"
-          className="inline-flex h-11 items-center gap-2 rounded-xl border border-gold-500/50 bg-gold-500/15 px-4 text-sm font-extrabold text-gold-200 transition hover:bg-gold-500/25"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-gold-500/50 bg-gold-500/15 px-3.5 text-xs font-extrabold text-gold-200 transition hover:bg-gold-500/25 sm:text-sm"
         >
           <Target className="h-4 w-4 text-gold-400" />
           Meus Objetivos ({targetCodesSet.size} ativos na meta)
@@ -226,10 +329,10 @@ export default function RadarAtivosPage() {
       </div>
 
       {/* Barra de Busca, Filtro Mobile e Tabs de Categorias */}
-      <Card className="flex flex-wrap items-center justify-between gap-4 p-4 sm:p-5">
+      <Card className="flex flex-wrap items-center justify-between gap-3 p-3 sm:p-4">
         <div className="flex w-full flex-1 items-center gap-2 max-w-md">
           <div className="relative w-full">
-            <Search className="pointer-events-none absolute left-3.5 top-3.5 h-4 w-4 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-400" />
             <label htmlFor="radar-search" className="sr-only">
               Buscar ativo por código, empresa ou setor
             </label>
@@ -238,7 +341,7 @@ export default function RadarAtivosPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar código, nome da empresa ou setor..."
-              className="h-11 pl-10 text-sm sm:text-base"
+              className="h-10 pl-9 text-xs sm:text-sm"
             />
           </div>
 
@@ -246,23 +349,23 @@ export default function RadarAtivosPage() {
             type="button"
             onClick={() => setIsMobileFiltersOpen(true)}
             aria-label="Abrir filtros do Método DAVI"
-            className="flex h-11 items-center gap-1.5 rounded-xl border border-emerald-500/50 bg-emerald-500/15 px-3 text-xs font-extrabold text-emerald-300 lg:hidden"
+            className="flex h-10 items-center gap-1.5 rounded-xl border border-emerald-500/50 bg-emerald-500/15 px-3 text-xs font-extrabold text-emerald-300 lg:hidden"
           >
             <Filter className="h-4 w-4" />
             Filtros
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {CATEGORY_TABS.map((t) => (
             <button
               key={t.id}
               type="button"
               onClick={() => setTypeFilter(t.id)}
               className={cn(
-                'rounded-xl px-3.5 py-2 text-sm font-extrabold transition',
+                'rounded-lg px-3 py-1.5 text-xs font-extrabold transition sm:text-sm',
                 typeFilter === t.id
-                  ? 'bg-gold-500 text-obsidian-950'
+                  ? 'bg-gold-500 text-obsidian-950 shadow-sm'
                   : 'border border-slate-700 bg-obsidian-950 text-slate-200 hover:border-gold-400/50 hover:text-white'
               )}
             >
@@ -273,13 +376,13 @@ export default function RadarAtivosPage() {
       </Card>
 
       {feedback && (
-        <div className="rounded-xl border-2 border-emerald-400/50 bg-[#081a14] p-3.5 text-sm font-bold text-emerald-200">
+        <div className="rounded-xl border-2 border-emerald-400/50 bg-[#081a14] p-3 text-xs font-bold text-emerald-200 sm:text-sm">
           {feedback}
         </div>
       )}
 
-      {/* Layout Principal: Sidebar Método DAVI à Esquerda + Tabela à Direita */}
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+      {/* Layout Principal: Sidebar Método DAVI à Esquerda + Tabela Totalmente Expandida à Direita */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start w-full">
         {/* Sidebar Desktop */}
         <div className="hidden shrink-0 lg:block">
           <DaviSidebarFilters
@@ -319,180 +422,317 @@ export default function RadarAtivosPage() {
           </div>
         )}
 
-        {/* Tabela de Ativos Lapidados */}
-        <div className="min-w-0 flex-1">
+        {/* Box da Tabela de Ativos — Ocupa 100% da Largura Livre */}
+        <div className="min-w-0 flex-1 w-full">
           {isLoading || !data ? (
-            <Skeleton className="h-96" />
+            <Skeleton className="h-96 w-full" />
           ) : (
-            <Card className="p-0 overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="border-b border-slate-800 bg-obsidian-950 text-xs font-bold uppercase tracking-wider text-slate-200 sm:text-sm">
+            <Card className="p-0 overflow-hidden w-full border border-slate-800 shadow-xl">
+              <div className="w-full overflow-x-auto">
+                <table className="w-full text-left text-xs sm:text-[13px] border-collapse">
+                  <thead className="border-b border-slate-800 bg-obsidian-950 text-slate-300">
                     <tr>
-                      <th
-                        className="cursor-pointer px-4 py-3.5 select-none hover:text-white"
-                        onClick={() => handleSort('code')}
-                      >
-                        <span className="flex items-center gap-1">
-                          Código / Ativo
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
+                      {renderSortTh('Código / Ativo', 'code', 'left', 'pl-3 pr-2')}
+
+                      {/* Colunas específicas por classe */}
+                      {isAll && renderSortTh('Classe', undefined, 'center')}
+
+                      {isFixed ? (
+                        <>
+                          {renderSortTh('Instrumento', undefined, 'left')}
+                          {renderSortTh('Taxa / Indexador', undefined, 'left')}
+                          {renderSortTh('Rentab. Est.', 'dividendYield')}
+                          {renderSortTh('Liquidez', undefined, 'center')}
+                          {renderSortTh('Aporte Mín.', undefined)}
+                        </>
+                      ) : isFiis ? (
+                        <>
+                          {renderSortTh('Cotação', 'price')}
+                          {renderSortTh('P/VP', 'pbRatio')}
+                          {renderSortTh('Div. Yield', 'dividendYield')}
+                          {renderSortTh('FFO Yield', 'ffoYield')}
+                          {renderSortTh('Vacância', 'vacancyRate')}
+                          {renderSortTh('Cap Rate', 'capRate')}
+                          {renderSortTh('Qtd Imóv.', 'propertyCount')}
+                          {renderSortTh('Liquidez', 'liquidity')}
+                        </>
+                      ) : isReits ? (
+                        <>
+                          {renderSortTh('Cotação', 'price')}
+                          {renderSortTh('P/FFO', 'peRatio')}
+                          {renderSortTh('P/VP', 'pbRatio')}
+                          {renderSortTh('Div. Yield', 'dividendYield')}
+                          {renderSortTh('FFO Yield', 'ffoYield')}
+                          {renderSortTh('Vacância', 'vacancyRate')}
+                          {renderSortTh('Qtd Imóv.', 'propertyCount')}
+                          {renderSortTh('Dív/PL', 'debtToEquity')}
+                        </>
+                      ) : isStocks ? (
+                        <>
+                          {renderSortTh('Cotação', 'price')}
+                          {renderSortTh('P/L', 'peRatio')}
+                          {renderSortTh('P/VP', 'pbRatio')}
+                          {renderSortTh('PSR', 'psr')}
+                          {renderSortTh('Div. Yield', 'dividendYield')}
+                          {renderSortTh('ROE', 'roe')}
+                          {renderSortTh('ROIC', 'roic')}
+                          {renderSortTh('Mrg. Líq.', 'profitMargin')}
+                          {renderSortTh('Dív/PL', 'debtToEquity')}
+                        </>
+                      ) : (
+                        /* Ações BR e Visão Geral "Todos" */
+                        <>
+                          {renderSortTh('Cotação', 'price')}
+                          {renderSortTh('P/L', 'peRatio')}
+                          {renderSortTh('P/VP', 'pbRatio')}
+                          {isAcoes && renderSortTh('PSR', 'psr')}
+                          {renderSortTh('Div. Yield', 'dividendYield')}
+                          {renderSortTh('ROE', 'roe')}
+                          {renderSortTh('ROIC', 'roic')}
+                          {isAcoes && renderSortTh('Mrg. Líq.', 'profitMargin')}
+                          {renderSortTh('Liq. Corr.', 'currentRatio')}
+                          {renderSortTh('Dív/PL', 'debtToEquity')}
+                        </>
+                      )}
+
+                      {renderSortTh('Sua Nota', 'userRating', 'center')}
+                      <th className="px-3 py-2.5 text-right text-[11px] font-extrabold uppercase tracking-wider text-slate-300 whitespace-nowrap">
+                        Minha Meta
                       </th>
-                      <th className="px-3 py-3.5">Classe</th>
-                      <th className="px-3 py-3.5">Setor / Taxa</th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('price')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          Cotação
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('peRatio')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          P/L
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('pbRatio')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          P/VP
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('dividendYield')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          DY %
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('roe')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          ROE %
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-right select-none hover:text-white"
-                        onClick={() => handleSort('debtToEquity')}
-                      >
-                        <span className="flex items-center justify-end gap-1">
-                          Dív/PL
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th
-                        className="cursor-pointer px-3 py-3.5 text-center select-none hover:text-white"
-                        onClick={() => handleSort('userRating')}
-                      >
-                        <span className="flex items-center justify-center gap-1">
-                          Sua Nota
-                          <ArrowUpDown className="h-3 w-3 opacity-60" />
-                        </span>
-                      </th>
-                      <th className="px-4 py-3.5 text-right">Minha Meta</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/70">
+
+                  <tbody className="divide-y divide-slate-800/60 bg-obsidian-950/40">
                     {sortedItems.slice(0, 300).map((item) => {
                       const inMeta = targetCodesSet.has(item.code.toUpperCase());
                       const showFullName = item.name.toUpperCase() !== item.code.toUpperCase();
                       const isBusy = togglingCode === item.code;
 
                       return (
-                        <tr key={item.code} className="hover:bg-obsidian-800/50">
-                          <td className="px-4 py-3">
-                            <span className="block text-base font-extrabold text-white">
-                              {item.code}
-                            </span>
-                            {showFullName && (
-                              <span className="block max-w-[200px] truncate text-xs font-medium text-slate-300 sm:text-sm">
-                                {item.name}
+                        <tr
+                          key={item.code}
+                          className="hover:bg-obsidian-800/40 transition-colors"
+                        >
+                          {/* Código e Nome */}
+                          <td className="pl-3 pr-2 py-2">
+                            <div className="flex flex-col">
+                              <span className="font-extrabold text-white text-xs sm:text-sm tracking-wide">
+                                {item.code}
                               </span>
-                            )}
+                              {showFullName && (
+                                <span
+                                  className="text-[10.5px] text-slate-400 truncate max-w-[130px] 2xl:max-w-[180px]"
+                                  title={item.name}
+                                >
+                                  {item.name}
+                                </span>
+                              )}
+                            </div>
                           </td>
-                          <td className="px-3 py-3">
-                            <Badge tone="slate" className="text-xs font-bold">
-                              {item.type}
-                            </Badge>
-                          </td>
-                          <td className="px-3 py-3 text-xs text-slate-200 sm:text-sm max-w-[160px] truncate">
-                            {item.rateDescription || item.sector || '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right font-bold text-slate-100">
-                            {item.price > 0
-                              ? item.market === 'US'
-                                ? `US$ ${item.price.toFixed(2)}`
-                                : formatBRL(item.price)
-                              : '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right text-slate-200">
-                            {item.peRatio !== null ? item.peRatio.toFixed(2) : '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right text-slate-200">
-                            {(item.pVpa ?? item.pbRatio) !== null
-                              ? Number(item.pVpa ?? item.pbRatio).toFixed(2)
-                              : '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right font-bold text-emerald-400">
-                            {item.dividendYield !== null ? formatPercent(item.dividendYield) : '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right text-slate-200">
-                            {item.roe !== null ? formatPercent(item.roe) : '—'}
-                          </td>
-                          <td className="money-value px-3 py-3 text-right text-slate-200">
-                            {item.debtToEquity !== null ? item.debtToEquity.toFixed(2) : '—'}
-                          </td>
-                          <td className="px-3 py-3 text-center">
-                            <div className="inline-flex gap-1">
+
+                          {/* Classe (se aba Todos) */}
+                          {isAll && (
+                            <td className="px-2 py-2 text-center whitespace-nowrap">
+                              <Badge tone="slate" className="text-[10.5px] font-bold py-0.5 px-1.5">
+                                {item.type}
+                              </Badge>
+                            </td>
+                          )}
+
+                          {/* Dados de Renda Fixa */}
+                          {isFixed ? (
+                            <>
+                              <td className="px-2 py-2 text-slate-300 truncate max-w-[140px]">
+                                {item.sector || 'Renda Fixa'}
+                              </td>
+                              <td className="px-2 py-2 font-medium text-slate-200 truncate max-w-[140px]">
+                                {item.rateDescription || '100% CDI'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+                                {fmtPercentOrDash(item.dividendYield)}
+                              </td>
+                              <td className="px-2 py-2 text-center text-slate-300 text-xs whitespace-nowrap">
+                                {item.liquidityType || 'D+0'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {item.minInvestment ? formatBRL(item.minInvestment) : '—'}
+                              </td>
+                            </>
+                          ) : isFiis ? (
+                            /* Dados de FIIs */
+                            <>
+                              <td className="px-2 py-2 text-right font-mono font-semibold text-slate-100 whitespace-nowrap">
+                                {item.price > 0 ? formatBRL(item.price) : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+                                {fmtPercentOrDash(item.dividendYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.ffoYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtPercentOrDash(item.vacancyRate)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtPercentOrDash(item.capRate)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {item.propertyCount != null ? Math.round(item.propertyCount) : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtCompactMoney(item.liquidity)}
+                              </td>
+                            </>
+                          ) : isReits ? (
+                            /* Dados de REITs EUA */
+                            <>
+                              <td className="px-2 py-2 text-right font-mono font-semibold text-slate-100 whitespace-nowrap">
+                                {item.price > 0 ? `US$ ${item.price.toFixed(2)}` : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.peRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+                                {fmtPercentOrDash(item.dividendYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.ffoYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtPercentOrDash(item.vacancyRate)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {item.propertyCount != null ? Math.round(item.propertyCount) : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtRatio(item.debtToEquity)}
+                              </td>
+                            </>
+                          ) : isStocks ? (
+                            /* Dados de Stocks EUA */
+                            <>
+                              <td className="px-2 py-2 text-right font-mono font-semibold text-slate-100 whitespace-nowrap">
+                                {item.price > 0 ? `US$ ${item.price.toFixed(2)}` : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.peRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.pbRatio ?? item.pVpa)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtRatio(item.psr)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+                                {fmtPercentOrDash(item.dividendYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.roe)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.roic)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtPercentOrDash(item.profitMargin)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtRatio(item.debtToEquity)}
+                              </td>
+                            </>
+                          ) : (
+                            /* Dados de Ações BR & Visão Geral Todos */
+                            <>
+                              <td className="px-2 py-2 text-right font-mono font-semibold text-slate-100 whitespace-nowrap">
+                                {item.price > 0
+                                  ? item.market === 'US'
+                                    ? `US$ ${item.price.toFixed(2)}`
+                                    : formatBRL(item.price)
+                                  : '—'}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.peRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                              </td>
+                              {isAcoes && (
+                                <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                  {fmtRatio(item.psr)}
+                                </td>
+                              )}
+                              <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
+                                {fmtPercentOrDash(item.dividendYield)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.roe)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
+                                {fmtPercentOrDash(item.roic)}
+                              </td>
+                              {isAcoes && (
+                                <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                  {fmtPercentOrDash(item.profitMargin)}
+                                </td>
+                              )}
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtRatio(item.currentRatio)}
+                              </td>
+                              <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">
+                                {fmtRatio(item.debtToEquity)}
+                              </td>
+                            </>
+                          )}
+
+                          {/* Avaliação por Estrelas (1 a 5) */}
+                          <td className="px-2 py-2 text-center whitespace-nowrap">
+                            <div
+                              className="inline-flex items-center gap-0.5"
+                              title="Avalie com 1 a 5 estrelas"
+                            >
                               {[1, 2, 3, 4, 5].map((star) => (
                                 <button
                                   key={star}
                                   type="button"
-                                  aria-label={`Dar nota ${star} para ${item.code}`}
+                                  aria-label={`Avaliar ${item.code} com ${star} estrela${star > 1 ? 's' : ''}`}
                                   onClick={() => handleRate(item.code, star)}
-                                  className={
+                                  className={cn(
+                                    'p-0.5 transition-colors',
                                     (item.userRating ?? 0) >= star
-                                      ? 'text-gold-400'
-                                      : 'text-slate-600 hover:text-gold-300'
-                                  }
+                                      ? 'text-gold-400 hover:text-gold-300'
+                                      : 'text-slate-700 hover:text-gold-400/80'
+                                  )}
                                 >
-                                  <Star className="h-4 w-4 fill-current" />
+                                  <Star className="h-3.5 w-3.5 fill-current" />
                                 </button>
                               ))}
                             </div>
                           </td>
-                          <td className="px-4 py-3 text-right">
+
+                          {/* Botão Minha Meta */}
+                          <td className="px-3 py-2 text-right whitespace-nowrap">
                             <Button
                               type="button"
                               size="sm"
                               variant={inMeta ? 'emerald' : 'outline'}
                               disabled={isBusy}
                               onClick={() => handleToggleTarget(item)}
-                              className="h-9 px-3 text-xs font-extrabold sm:text-sm"
+                              className="h-7 px-2.5 text-xs font-bold whitespace-nowrap"
                             >
                               {inMeta ? (
                                 <>
-                                  <Check className="h-4 w-4" />
+                                  <Check className="h-3.5 w-3.5 mr-1" />
                                   Na Meta
                                 </>
                               ) : (
                                 <>
-                                  <Plus className="h-4 w-4" />
-                                  Incluir na Meta
+                                  <Plus className="h-3.5 w-3.5 mr-1" />
+                                  + Meta
                                 </>
                               )}
                             </Button>
@@ -504,7 +744,7 @@ export default function RadarAtivosPage() {
                 </table>
 
                 {sortedItems.length === 0 && (
-                  <div className="p-8 text-center text-sm text-slate-200 sm:text-base">
+                  <div className="p-8 text-center text-xs text-slate-300 sm:text-sm">
                     Nenhum ativo passou pelos critérios atuais do filtro DAVI. Relaxe algum indicador na barra lateral ou clique em <strong className="text-gold-300">Limpar</strong>.
                   </div>
                 )}

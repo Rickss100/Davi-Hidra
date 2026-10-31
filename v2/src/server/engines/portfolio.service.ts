@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm';
+import { desc, and, eq } from 'drizzle-orm';
 import { getDb } from '@/db';
 import {
   assets,
@@ -12,11 +12,15 @@ import {
   type MacroAllocationConfig
 } from '@/db/schema';
 import { calculateCustodyPosition, convertToBRL, d, roundCurrency, roundPercent } from '@/lib/money';
+import { resolveAssetDisplayName, resolveAssetSector } from '@/lib/asset-names';
 import {
+  calculateAssetDistancesByCategory,
   calculateCategoryDistances,
   calculateEmergencyReserveStatus,
   calculateMagicNumbers,
-  GOLD_PRESET_BRASIL,
+  EMPTY_ASSET_TARGETS,
+  MACRO_MODEL_BRASIL,
+  type AssetDistanceBreakdownDTO,
   type CategorizedHoldings,
   type CategoryDistanceDTO,
   type EmergencyReserveSummaryDTO,
@@ -24,6 +28,15 @@ import {
   type MagicNumberRowDTO,
   type PortfolioCategoryKey
 } from '@/server/engines/davi-hydra.engine';
+import {
+  buildAllocationBreakdown,
+  type AllocationBreakdownDTO
+} from '@/server/engines/allocation.engine';
+import {
+  calculatePassiveIncomeMetrics,
+  type DividendEventInput,
+  type PassiveIncomeMetricsDTO
+} from '@/server/engines/passive-income.engine';
 
 export interface MonthlyDividendPoint {
   month: string; // YYYY-MM
@@ -47,6 +60,7 @@ export interface PortfolioSnapshotDTO {
     allTimeBrl: number;
     portfolioYieldOnCostPercent: number;
     monthlySeries: MonthlyDividendPoint[];
+    metrics: PassiveIncomeMetricsDTO;
   };
   holdings: CategorizedHoldings;
   flatHoldings: HoldingPosition[];
@@ -57,12 +71,17 @@ export interface PortfolioSnapshotDTO {
     emergencyConfig: EmergencyReserveConfig;
   };
   categoryDistances: CategoryDistanceDTO[];
+  assetDistancesByCategory: Record<PortfolioCategoryKey, AssetDistanceBreakdownDTO[]>;
   emergencyReserve: EmergencyReserveSummaryDTO;
   magicNumbers: MagicNumberRowDTO[];
+  allocation: AllocationBreakdownDTO;
   priceMapBrl: Record<string, number>;
   recentTransactions: Array<{
     id: number;
     assetCode: string;
+    assetName?: string;
+    assetType?: string;
+    category?: PortfolioCategoryKey;
     type: string;
     quantity: number;
     price: number;
@@ -79,7 +98,7 @@ const DEFAULT_EMERGENCY_CONFIG: EmergencyReserveConfig = {
   strategyMode: 'hybrid_70_30'
 };
 
-function mapAssetTypeToCategory(type: string, market: string, code: string): PortfolioCategoryKey {
+export function mapAssetTypeToCategory(type: string, market: string, code: string): PortfolioCategoryKey {
   const t = type.toLowerCase();
   const m = market.toUpperCase();
   const c = code.toUpperCase();
@@ -90,7 +109,11 @@ function mapAssetTypeToCategory(type: string, market: string, code: string): Por
     t.includes('tesouro') ||
     c.includes('TESOURO') ||
     c.includes('SELIC') ||
-    c.includes('CDB')
+    c.includes('CDB') ||
+    c.includes('CDI') ||
+    c.includes('CONTA_REMUNERADA') ||
+    c.includes('LIQ_DIARIA') ||
+    c.includes('RESERVA')
   ) {
     return 'fixed';
   }
@@ -260,10 +283,10 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
       valDec: currentValBrlDec,
       pos: {
         code: displayCode,
-        name: assetInfo?.name || displayCode,
+        name: resolveAssetDisplayName(displayCode, assetInfo?.name),
         category,
         market,
-        sector: assetInfo?.sector || null,
+        sector: resolveAssetSector(displayCode, assetInfo?.sector),
         quantity: Number(calc.quantity.toFixed(6)),
         averagePrice: roundCurrency(calc.averagePrice),
         currentPrice: roundCurrency(nativeCurrentPrice),
@@ -296,10 +319,10 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
   });
   flatHoldings.sort((a, b) => b.currentValueBrl - a.currentValueBrl);
 
-  // Objetivos (ou Preset Padrão Ouro Brasil como baseline inicial)
+  // Objetivos do investidor (contas novas iniciam apenas com divisão macro e lista de ativos limpa para escolha via Método DAVI)
   const savedObj = objRows[0];
-  const macroAllocation = savedObj?.macroAllocation ?? GOLD_PRESET_BRASIL.macroAllocation;
-  const assetTargets = savedObj?.assetTargets ?? GOLD_PRESET_BRASIL.assetTargets;
+  const macroAllocation = savedObj?.macroAllocation ?? MACRO_MODEL_BRASIL;
+  const assetTargets = savedObj?.assetTargets ?? EMPTY_ASSET_TARGETS;
   const emergencyConfig = savedObj?.emergencyConfig ?? DEFAULT_EMERGENCY_CONFIG;
 
   const totalProfitDec = totalEquityDec.minus(totalInvestedDec);
@@ -326,6 +349,13 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
     macroAllocation,
     roundCurrency(totalEquityDec)
   );
+  const assetDistancesByCategory = calculateAssetDistancesByCategory(
+    categorized,
+    assetTargets,
+    categoryDistances,
+    roundCurrency(totalEquityDec),
+    resolveAssetDisplayName
+  );
   const emergencyReserve = calculateEmergencyReserveStatus(categorized, emergencyConfig);
   const magicNumbers = calculateMagicNumbers(categorized);
 
@@ -344,7 +374,12 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
       monthlyAverage12mBrl: roundCurrency(div12m.div(12)),
       allTimeBrl: roundCurrency(divAllTime),
       portfolioYieldOnCostPercent: portfolioYoc,
-      monthlySeries
+      monthlySeries,
+      metrics: calculatePassiveIncomeMetrics({
+        holdings: flatHoldings,
+        dividends12mBrl: roundCurrency(div12m),
+        monthlyExpenseBrl: emergencyConfig.monthlyExpense
+      })
     },
     holdings: categorized,
     flatHoldings,
@@ -355,18 +390,74 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
       emergencyConfig
     },
     categoryDistances,
+    assetDistancesByCategory,
     emergencyReserve,
     magicNumbers,
+    allocation: buildAllocationBreakdown(
+      categorized,
+      emergencyReserve.reserveAssets.map((a) => a.code)
+    ),
     priceMapBrl,
-    recentTransactions: userTxRows.slice(0, 200).map((t) => ({
-      id: t.id,
-      assetCode: t.assetCode,
-      type: t.type,
-      quantity: Number(d(t.quantity).toFixed(4)),
-      price: roundCurrency(t.price),
-      totalValue: roundCurrency(t.totalValue),
-      executedDate: t.executedDate,
-      notes: t.notes
-    }))
+    recentTransactions: userTxRows.slice(0, 500).map((t) => {
+      const assetInfo = assetMap.get(t.assetCode.toUpperCase());
+      const cat = assetInfo
+        ? mapAssetTypeToCategory(assetInfo.type, assetInfo.market, t.assetCode)
+        : mapAssetTypeToCategory('Ações', 'BR', t.assetCode);
+      return {
+        id: t.id,
+        assetCode: t.assetCode,
+        assetName: assetInfo?.name || t.assetCode,
+        assetType: assetInfo?.type || 'Ações',
+        category: cat,
+        type: t.type,
+        quantity: Number(d(t.quantity).toFixed(4)),
+        price: roundCurrency(t.price),
+        totalValue: roundCurrency(t.totalValue),
+        executedDate: t.executedDate,
+        notes: t.notes
+      };
+    })
   };
+}
+
+/**
+ * Carrega todos os proventos reais (type = 'event') do investidor autenticado, convertidos para BRL.
+ * O userId deve vir SEMPRE do contexto autenticado no servidor (auth-dal), nunca do cliente.
+ */
+export async function loadDividendEvents(userId: number): Promise<DividendEventInput[]> {
+  const db = await getDb();
+  const [eventRows, allAssets, econRows] = await Promise.all([
+    db
+      .select()
+      .from(transactions)
+      .where(and(eq(transactions.userId, userId), eq(transactions.type, 'event')))
+      .orderBy(desc(transactions.executedDate)),
+    db.select().from(assets),
+    db.select().from(economicIndicators)
+  ]);
+
+  let usdToBrl = 5.65;
+  for (const row of econRows) {
+    const val = Number(row.value);
+    if (row.indicator.toUpperCase() === 'DOLAR' && val > 0) usdToBrl = val;
+  }
+
+  const assetMap = new Map(allAssets.map((a) => [a.code.toUpperCase(), a]));
+
+  return eventRows.map((tx) => {
+    const upper = tx.assetCode.trim().toUpperCase();
+    const info = assetMap.get(upper);
+    const market: 'BR' | 'US' = info?.market === 'US' ? 'US' : 'BR';
+    const code = info?.code || upper;
+    return {
+      id: tx.id,
+      assetCode: code,
+      assetName: resolveAssetDisplayName(code, info?.name),
+      category: mapAssetTypeToCategory(info?.type || 'Acao', market, code),
+      date: tx.executedDate,
+      quantity: Number(d(tx.quantity).toFixed(6)),
+      totalBrl: roundCurrency(convertToBRL(tx.totalValue, market, usdToBrl)),
+      notes: tx.notes
+    };
+  });
 }

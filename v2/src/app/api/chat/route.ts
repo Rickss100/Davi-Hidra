@@ -35,7 +35,7 @@ export async function POST(request: Request) {
     try {
       const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-      const prompt = `Você é o Consultor Private Digital da Norte Invest, especialista no Método DAVI & Hydra (foco em valor, renda passiva consistente, disciplina de rebalanceamento e blindagem de reserva).\nResponda em Português Brasileiro de forma executiva, elegante e objetiva (máximo 3 parágrafos curtos).\n\nContexto real da carteira:\n${portfolioBrief}\n\nPergunta do investidor: ${message}`;
+      const prompt = `Você é a Norte Invest AI, especialista no Método DAVI & Hydra (foco em valor, renda passiva consistente, disciplina de rebalanceamento e blindagem de reserva).\nResponda em Português Brasileiro de forma executiva, elegante e objetiva (máximo 3 parágrafos curtos).\n\nContexto real da carteira:\n${portfolioBrief}\n\nPergunta do investidor: ${message}`;
       const result = await model.generateContent(prompt);
       const reply = result.response.text();
       if (reply) {

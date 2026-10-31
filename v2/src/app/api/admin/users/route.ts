@@ -27,7 +27,7 @@ export async function GET() {
   }
 
   const db = await getDb();
-  const [allUsers, txCounts] = await Promise.all([
+  const [allUsers, txCounts, txVolumes] = await Promise.all([
     db.select().from(users).orderBy(desc(users.createdAt)),
     db
       .select({
@@ -35,15 +35,25 @@ export async function GET() {
         count: sql<number>`count(*)::int`
       })
       .from(transactions)
+      .groupBy(transactions.userId),
+    db
+      .select({
+        userId: transactions.userId,
+        volume: sql<number>`coalesce(sum(case when type in ('buy', 'aporte') then (quantity::numeric * price::numeric) else 0 end), 0)::float`
+      })
+      .from(transactions)
       .groupBy(transactions.userId)
   ]);
 
   const countMap = new Map(txCounts.map((c) => [c.userId, Number(c.count)]));
+  const volumeMap = new Map(txVolumes.map((v) => [v.userId, Number(v.volume)]));
 
   return NextResponse.json({
+    currentUser: ctx.actor,
     users: allUsers.map((u) => ({
       ...toSafeUserDTO(u),
-      transactionsCount: countMap.get(u.id) ?? 0
+      transactionsCount: countMap.get(u.id) ?? 0,
+      totalInvested: volumeMap.get(u.id) ?? 0
     }))
   });
 }
@@ -85,6 +95,10 @@ export async function POST(request: Request) {
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
+  const status = String(body.status || 'active');
+  const customExpiry = body.planExpiresAt ? new Date(body.planExpiresAt) : null;
+  const planExpiresAt = planPeriod === 'lifetime' ? null : customExpiry || computePlanExpiry(planPeriod);
+
   const inserted = await db
     .insert(users)
     .values({
@@ -92,9 +106,9 @@ export async function POST(request: Request) {
       email,
       passwordHash,
       role,
-      status: 'active',
+      status,
       planPeriod,
-      planExpiresAt: computePlanExpiry(planPeriod)
+      planExpiresAt
     })
     .returning();
 
@@ -103,7 +117,7 @@ export async function POST(request: Request) {
     actorUserId: ctx.actor.id,
     targetUserId: created.id,
     action: 'ADMIN_USER_CREATED',
-    metadata: { role, planPeriod }
+    metadata: { role, planPeriod, status }
   });
 
   return NextResponse.json({ user: toSafeUserDTO(created) }, { status: 201 });
@@ -157,12 +171,37 @@ export async function PATCH(request: Request) {
   };
 
   if (body.name) updates.name = String(body.name).trim();
+
+  if (body.email) {
+    const nextEmail = String(body.email).trim();
+    if (nextEmail !== target.email) {
+      const existing = await db.select().from(users).where(eq(users.email, nextEmail)).limit(1);
+      if (existing.length > 0 && existing[0]?.id !== targetId) {
+        return NextResponse.json(
+          { error: 'CONFLICT', message: 'Já existe um cliente cadastrado com este e-mail/login.' },
+          { status: 409 }
+        );
+      }
+      updates.email = nextEmail;
+    }
+  }
+
   if (body.status) updates.status = String(body.status);
   if (body.role) updates.role = String(body.role);
+
   if (body.planPeriod) {
     updates.planPeriod = String(body.planPeriod);
-    updates.planExpiresAt = computePlanExpiry(String(body.planPeriod));
+    if (body.planPeriod === 'lifetime') {
+      updates.planExpiresAt = null;
+    } else if (body.planExpiresAt) {
+      updates.planExpiresAt = new Date(body.planExpiresAt);
+    } else {
+      updates.planExpiresAt = computePlanExpiry(String(body.planPeriod));
+    }
+  } else if (body.planExpiresAt !== undefined) {
+    updates.planExpiresAt = body.planExpiresAt ? new Date(body.planExpiresAt) : null;
   }
+
   if (body.password && String(body.password).trim().length >= 6) {
     updates.passwordHash = await bcrypt.hash(String(body.password).trim(), 10);
   }
@@ -187,7 +226,8 @@ export async function PATCH(request: Request) {
     metadata: {
       status: updates.status,
       role: updates.role,
-      planPeriod: updates.planPeriod
+      planPeriod: updates.planPeriod,
+      emailChanged: Boolean(updates.email)
     }
   });
 

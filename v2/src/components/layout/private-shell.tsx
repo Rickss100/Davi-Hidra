@@ -241,14 +241,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
             </div>
           </header>
 
-          <main
-            className={cn(
-              'mx-auto w-full flex-1 p-3 sm:p-4 md:p-6 transition-all',
-              pathname === '/radar' || pathname === '/historico'
-                ? 'max-w-[2400px] px-2 sm:px-4 lg:px-6'
-                : 'max-w-7xl md:p-8'
-            )}
-          >
+          <main className="mx-auto w-full max-w-[2400px] flex-1 p-3 sm:p-4 md:p-6 lg:p-8 transition-all">
             {children}
           </main>
         </div>

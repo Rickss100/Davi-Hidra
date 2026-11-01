@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import {
+  GraduationCap,
   BookOpen,
   Layers,
   HelpCircle,
@@ -9,16 +10,17 @@ import {
   Share2
 } from 'lucide-react';
 import { TutorialHeader } from '@/components/tutorial/TutorialHeader';
+import { AcademyTab } from '@/components/tutorial/AcademyTab';
 import { TutorialMethodTab } from '@/components/tutorial/TutorialMethodTab';
 import { TutorialManualTab } from '@/components/tutorial/TutorialManualTab';
 import { TutorialFaqTab } from '@/components/tutorial/TutorialFaqTab';
 import { TutorialNotebookLMTab } from '@/components/tutorial/TutorialNotebookLMTab';
 import { TutorialGrowthTab } from '@/components/tutorial/TutorialGrowthTab';
 
-type TabId = 'metodo' | 'manual' | 'faq' | 'notebooklm' | 'growth';
+type TabId = 'academia' | 'metodo' | 'manual' | 'faq' | 'notebooklm' | 'growth';
 
 export default function TutorialPage() {
-  const [activeTab, setActiveTab] = useState<TabId>('metodo');
+  const [activeTab, setActiveTab] = useState<TabId>('academia');
   const [feedback, setFeedback] = useState('');
 
   const showFeedback = (msg: string) => {
@@ -39,6 +41,19 @@ export default function TutorialPage() {
 
       {/* Navegação entre Abas */}
       <div className="flex border-b border-slate-800/80 overflow-x-auto gap-2 pb-1 scrollbar-none">
+        <button
+          type="button"
+          onClick={() => setActiveTab('academia')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'academia'
+              ? 'border-emerald-500 text-emerald-400 bg-emerald-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <GraduationCap className="h-4 w-4 text-emerald-400" />
+          <span>🎓 Academia Norte Invest (30 Aulas)</span>
+        </button>
+
         <button
           type="button"
           onClick={() => setActiveTab('metodo')}
@@ -106,6 +121,7 @@ export default function TutorialPage() {
       </div>
 
       {/* Conteúdo Dinâmico da Aba Selecionada */}
+      {activeTab === 'academia' && <AcademyTab />}
       {activeTab === 'metodo' && <TutorialMethodTab />}
       {activeTab === 'manual' && <TutorialManualTab />}
       {activeTab === 'faq' && <TutorialFaqTab />}

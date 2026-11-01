@@ -1,69 +1,49 @@
 {
-  "id": "/",
-  "name": "Norte Invest — Método DAVI & Hydra",
+  "name": "Norte Invest Private — Método DAVI & Hydra",
   "short_name": "Norte Invest",
-  "description": "Gestão Inteligente de Patrimônio, Rebalanceamento Padrão Ouro e Renda Passiva (Método DAVI & Hydra).",
+  "description": "Plataforma Institucional de Gestão Patrimonial, Renda Passiva e Rebalanceamento Inteligente",
   "start_url": "/",
-  "scope": "/",
   "display": "standalone",
+  "background_color": "#070A11",
+  "theme_color": "#070A11",
   "orientation": "portrait-primary",
-  "background_color": "#121214",
-  "theme_color": "#121214",
-  "categories": ["finance", "business", "productivity"],
-  "lang": "pt-BR",
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/icon.svg",
       "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/svg+xml"
     }
   ],
   "shortcuts": [
     {
       "name": "Onde Aportar",
       "short_name": "Aportar",
-      "description": "Calcular próximo aporte inteligente na Régua Ouro",
       "url": "/onde-aportar",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Minha Carteira",
       "short_name": "Carteira",
-      "description": "Ver ativos e importar planilha B3",
       "url": "/carteira",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Renda Passiva",
-      "short_name": "Proventos",
-      "description": "Acompanhar dividendos e metas de liberdade financeira",
+      "short_name": "Dividendos",
       "url": "/renda-passiva",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

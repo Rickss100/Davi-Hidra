@@ -1,12 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { FileSpreadsheet, Pencil, Plus, Trash2 } from 'lucide-react';
 import { usePortfolioData } from '@/hooks/use-portfolio';
 import { Button, Card, Badge, Skeleton } from '@/components/ui/primitives';
 import { formatBRL, formatPercent } from '@/lib/money';
 import { NewTransactionModal } from '@/components/portfolio/new-transaction-modal';
-import type { PortfolioCategoryKey } from '@/server/engines/davi-hydra.engine';
+import { B3ImportModal } from '@/components/portfolio/b3-import-modal';
+import {
+  ManageHoldingModal,
+  type ManageHoldingTab
+} from '@/components/portfolio/manage-holding-modal';
+import type {
+  HoldingPosition,
+  PortfolioCategoryKey
+} from '@/server/engines/davi-hydra.engine';
 
 const CATEGORY_TABS: Array<{ key: 'all' | PortfolioCategoryKey; label: string }> = [
   { key: 'all', label: 'Toda a Custódia' },
@@ -21,6 +29,9 @@ export default function CarteiraPage() {
   const { data, isLoading, refetch } = usePortfolioData();
   const [selectedTab, setSelectedTab] = useState<'all' | PortfolioCategoryKey>('all');
   const [modalOpen, setModalOpen] = useState(false);
+  const [b3ModalOpen, setB3ModalOpen] = useState(false);
+  const [managedHolding, setManagedHolding] = useState<HoldingPosition | null>(null);
+  const [managedTab, setManagedTab] = useState<ManageHoldingTab>('transactions');
 
   if (isLoading || !data) {
     return <Skeleton className="h-96" />;
@@ -29,6 +40,11 @@ export default function CarteiraPage() {
   const { snapshot } = data;
   const rows =
     selectedTab === 'all' ? snapshot.flatHoldings : snapshot.holdings[selectedTab] || [];
+
+  const openManage = (holding: HoldingPosition, tab: ManageHoldingTab) => {
+    setManagedTab(tab);
+    setManagedHolding(holding);
+  };
 
   return (
     <div className="space-y-6">
@@ -39,10 +55,26 @@ export default function CarteiraPage() {
             Preço Médio Ponderado calculado com aritmética decimal exata (padrão Receita Federal)
           </p>
         </div>
-        <Button variant="gold" size="sm" onClick={() => setModalOpen(true)}>
-          <Plus className="h-4 w-4" />
-          Nova Operação
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setB3ModalOpen(true)}
+            className="gap-2 text-xs font-semibold"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
+            Importar B3 (.xlsx)
+          </Button>
+          <Button
+            variant="gold"
+            size="sm"
+            onClick={() => setModalOpen(true)}
+            className="gap-2 text-xs font-semibold"
+          >
+            <Plus className="h-4 w-4" />
+            Nova Operação
+          </Button>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
@@ -81,40 +113,77 @@ export default function CarteiraPage() {
                   <th className="pb-3 text-right font-semibold">Saldo Atual (R$)</th>
                   <th className="pb-3 text-right font-semibold">Rentabilidade</th>
                   <th className="pb-3 text-right font-semibold">YoC 12M</th>
+                  <th className="pb-3 text-right font-semibold">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-800/60">
-                {rows.map((h) => (
-                  <tr key={h.code} className="hover:bg-obsidian-800/40">
-                    <td className="py-3">
-                      <span className="font-bold text-white">{h.code}</span>
-                      <span className="ml-2 text-[10px] uppercase text-slate-500">{h.market}</span>
-                    </td>
-                    <td className="py-3 text-slate-400">{h.sector || '—'}</td>
-                    <td className="money-value py-3 text-right text-slate-200">{h.quantity}</td>
-                    <td className="money-value py-3 text-right text-slate-300">
-                      {h.market === 'US' ? `US$ ${h.averagePrice.toFixed(2)}` : formatBRL(h.averagePrice)}
-                    </td>
-                    <td className="money-value py-3 text-right text-slate-200">
-                      {h.market === 'US' ? `US$ ${h.currentPrice.toFixed(2)}` : formatBRL(h.currentPrice)}
-                    </td>
-                    <td className="money-value py-3 text-right text-slate-300">
-                      {formatBRL(h.investedBrl)}
-                    </td>
-                    <td className="money-value py-3 text-right font-bold text-white">
-                      {formatBRL(h.currentValueBrl)}
-                    </td>
-                    <td className="money-value py-3 text-right">
-                      <Badge tone={h.profitBrl >= 0 ? 'emerald' : 'rose'}>
-                        {h.profitBrl >= 0 ? '+' : ''}
-                        {formatPercent(h.profitPercent)}
-                      </Badge>
-                    </td>
-                    <td className="money-value py-3 text-right font-semibold text-gold-300">
-                      {formatPercent(h.yieldOnCostPercent)}
-                    </td>
-                  </tr>
-                ))}
+                {rows.map((h) => {
+                  const hasDistinctName = h.name.toUpperCase() !== h.code.toUpperCase();
+                  return (
+                    <tr key={h.code} className="hover:bg-obsidian-800/40">
+                      <td className="py-3">
+                        <div className="flex items-center gap-1.5">
+                          <span className="font-bold text-white">{h.code}</span>
+                          <span className="text-[10px] uppercase text-slate-500">{h.market}</span>
+                        </div>
+                        {hasDistinctName && (
+                          <span className="block max-w-[180px] truncate text-[11px] text-slate-400">
+                            {h.name}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 text-slate-400">{h.sector || '—'}</td>
+                      <td className="money-value py-3 text-right text-slate-200">{h.quantity}</td>
+                      <td className="money-value py-3 text-right text-slate-300">
+                        {h.market === 'US'
+                          ? `US$ ${h.averagePrice.toFixed(2)}`
+                          : formatBRL(h.averagePrice)}
+                      </td>
+                      <td className="money-value py-3 text-right text-slate-200">
+                        {h.market === 'US'
+                          ? `US$ ${h.currentPrice.toFixed(2)}`
+                          : formatBRL(h.currentPrice)}
+                      </td>
+                      <td className="money-value py-3 text-right text-slate-300">
+                        {formatBRL(h.investedBrl)}
+                      </td>
+                      <td className="money-value py-3 text-right font-bold text-white">
+                        {formatBRL(h.currentValueBrl)}
+                      </td>
+                      <td className="money-value py-3 text-right">
+                        <Badge tone={h.profitBrl >= 0 ? 'emerald' : 'rose'}>
+                          {h.profitBrl >= 0 ? '+' : ''}
+                          {formatPercent(h.profitPercent)}
+                        </Badge>
+                      </td>
+                      <td className="money-value py-3 text-right font-semibold text-gold-300">
+                        {formatPercent(h.yieldOnCostPercent)}
+                      </td>
+                      <td className="py-3 text-right">
+                        <div className="inline-flex items-center justify-end gap-1.5">
+                          <button
+                            type="button"
+                            title={`Editar aportes ou posição de ${h.code}`}
+                            aria-label={`Editar posição de ${h.code}`}
+                            onClick={() => openManage(h, 'transactions')}
+                            className="rounded-lg border border-slate-700/80 bg-obsidian-950 p-1.5 text-slate-300 transition hover:border-gold-500/50 hover:text-gold-300"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            title={`Apagar ${h.code} da carteira`}
+                            aria-label={`Apagar ativo ${h.code} da carteira`}
+                            onClick={() => openManage(h, 'delete')}
+                            className="rounded-lg border border-slate-700/80 bg-obsidian-950 p-1.5 text-slate-400 transition hover:border-rose-500/50 hover:text-rose-400"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -124,6 +193,19 @@ export default function CarteiraPage() {
       <NewTransactionModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
+        onSuccess={() => refetch()}
+      />
+
+      <B3ImportModal
+        open={b3ModalOpen}
+        onClose={() => setB3ModalOpen(false)}
+        onSuccess={() => refetch()}
+      />
+
+      <ManageHoldingModal
+        holding={managedHolding}
+        initialTab={managedTab}
+        onClose={() => setManagedHolding(null)}
         onSuccess={() => refetch()}
       />
     </div>

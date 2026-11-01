@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   History,
   Search,
@@ -8,7 +8,6 @@ import {
   BarChart3,
   Layers,
   Wallet,
-  UploadCloud,
   FileSpreadsheet,
   Pencil,
   Trash2,
@@ -23,20 +22,18 @@ import {
   EditTransactionModal,
   type EditableTransactionItem
 } from '@/components/portfolio/edit-transaction-modal';
+import { B3ImportModal } from '@/components/portfolio/b3-import-modal';
 import { cn } from '@/lib/utils';
 
 export default function HistoricoPage() {
   const { data, isLoading, refetch } = usePortfolioData();
-  const fileRef = useRef<HTMLInputElement | null>(null);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('ALL');
   const [filterType, setFilterType] = useState('ALL');
   const [sortBy, setSortBy] = useState('date-desc');
-  const [showImportZone, setShowImportZone] = useState(false);
+  const [b3ModalOpen, setB3ModalOpen] = useState(false);
 
-  const [uploading, setUploading] = useState(false);
-  const [importFeedback, setImportFeedback] = useState('');
   const [editingTx, setEditingTx] = useState<EditableTransactionItem | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
@@ -156,35 +153,6 @@ export default function HistoricoPage() {
     return <Skeleton className="h-96" />;
   }
 
-  const handleUploadFiles = async (files: FileList | null) => {
-    if (!files || files.length === 0) return;
-    setUploading(true);
-    setImportFeedback('');
-
-    try {
-      const formData = new FormData();
-      Array.from(files).forEach((f) => formData.append('files', f));
-
-      const res = await fetch('/api/portfolio/import-b3', {
-        method: 'POST',
-        body: formData
-      });
-      const json = await res.json();
-      if (!res.ok) {
-        setImportFeedback(`Erro: ${json.message || 'Falha na importação.'}`);
-        return;
-      }
-
-      const r = json.report;
-      setImportFeedback(
-        `✓ ${r.filesProcessed} arquivo(s) B3 processado(s): ${r.insertedCount} novos registros salvos (${r.tradesParsed} operações e ${r.dividendsParsed} proventos identificados; ${r.skippedDuplicates} duplicados ignorados).`
-      );
-      await refetch();
-    } finally {
-      setUploading(false);
-    }
-  };
-
   const handleDelete = async (id: number) => {
     const res = await fetch(`/api/portfolio/transactions?id=${id}`, { method: 'DELETE' });
     if (res.ok) {
@@ -256,61 +224,15 @@ export default function HistoricoPage() {
         </div>
 
         <Button
-          variant={showImportZone ? 'gold' : 'outline'}
+          variant="outline"
           size="sm"
-          onClick={() => setShowImportZone(!showImportZone)}
+          onClick={() => setB3ModalOpen(true)}
           className="h-10 gap-2 text-xs font-bold sm:text-sm"
         >
-          <FileSpreadsheet className="h-4 w-4" />
-          {showImportZone ? 'Fechar Importador' : 'Importar Planilhas B3 (.xlsx)'}
+          <FileSpreadsheet className="h-4 w-4 text-emerald-400" />
+          Importar Planilhas B3 (.xlsx)
         </Button>
       </div>
-
-      {/* Zona Retrátil Drag & Drop Multi-Arquivo B3 */}
-      {showImportZone && (
-        <Card
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            handleUploadFiles(e.dataTransfer.files);
-          }}
-          className="flex flex-col items-center justify-center border-dashed border-gold-500/50 bg-obsidian-950/80 py-7 text-center transition-all shadow-xl"
-        >
-          <FileSpreadsheet className="mb-2 h-9 w-9 text-gold-400" />
-          <h2 className="text-sm font-bold text-white sm:text-base">
-            Arraste suas planilhas de Movimentação B3 (.xlsx) aqui
-          </h2>
-          <p className="mt-1 max-w-lg text-xs text-slate-400 sm:text-sm">
-            Envio simultâneo suportado (ex: 2023.xlsx, 2024.xlsx, 2025.xlsx, 2026.xlsx). Identifica compras, vendas, dividendos, JCP e ignora duplicatas com hash criptográfico SHA-256.
-          </p>
-
-          <input
-            ref={fileRef}
-            type="file"
-            accept=".xlsx"
-            multiple
-            className="hidden"
-            onChange={(e) => handleUploadFiles(e.target.files)}
-          />
-
-          <Button
-            variant="gold"
-            size="sm"
-            className="mt-4"
-            disabled={uploading}
-            onClick={() => fileRef.current?.click()}
-          >
-            <UploadCloud className="h-4 w-4" />
-            {uploading ? 'Processando no Servidor...' : 'Selecionar Planilhas B3 (.xlsx)'}
-          </Button>
-
-          {importFeedback && (
-            <p className="mt-3 text-xs font-semibold text-emerald-400 sm:text-sm">
-              {importFeedback}
-            </p>
-          )}
-        </Card>
-      )}
 
       {/* Os 4 Cards de Métricas Gerais da Carteira (Grid 4 Colunas Perfeito) */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -583,6 +505,12 @@ export default function HistoricoPage() {
       <EditTransactionModal
         transaction={editingTx}
         onClose={() => setEditingTx(null)}
+        onSuccess={() => refetch()}
+      />
+
+      <B3ImportModal
+        open={b3ModalOpen}
+        onClose={() => setB3ModalOpen(false)}
         onSuccess={() => refetch()}
       />
     </div>

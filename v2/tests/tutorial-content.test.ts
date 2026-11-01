@@ -52,4 +52,11 @@ describe('Tutorial & AI Facilitators Content Verification', () => {
     expect(linkedinTemplate).toBeDefined();
     expect(linkedinTemplate?.text).toContain('Michelangelo');
   });
+
+  it('preserves the 30-lesson core curriculum for certification while keeping broker guides elective', async () => {
+    const { TOTAL_LESSONS, ACADEMY_CURRICULUM } = await import('@/data/academy/curriculum');
+    expect(TOTAL_LESSONS).toBe(30);
+    const totalAulasCount = ACADEMY_CURRICULUM.reduce((acc, mod) => acc + mod.aulas.length, 0);
+    expect(totalAulasCount).toBe(30);
+  });
 });

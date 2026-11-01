@@ -1,27 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   GraduationCap,
   BookOpen,
   Layers,
   HelpCircle,
   Headphones,
-  Share2
+  Share2,
+  Building2
 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/primitives';
 import { TutorialHeader } from '@/components/tutorial/TutorialHeader';
 import { AcademyTab } from '@/components/tutorial/AcademyTab';
 import { TutorialMethodTab } from '@/components/tutorial/TutorialMethodTab';
 import { TutorialManualTab } from '@/components/tutorial/TutorialManualTab';
+import { TutorialCorretorasTab } from '@/components/tutorial/TutorialCorretorasTab';
 import { TutorialFaqTab } from '@/components/tutorial/TutorialFaqTab';
 import { TutorialNotebookLMTab } from '@/components/tutorial/TutorialNotebookLMTab';
 import { TutorialGrowthTab } from '@/components/tutorial/TutorialGrowthTab';
 
-type TabId = 'academia' | 'metodo' | 'manual' | 'faq' | 'notebooklm' | 'growth';
+type TabId = 'academia' | 'metodo' | 'manual' | 'corretoras' | 'faq' | 'notebooklm' | 'growth';
 
-export default function TutorialPage() {
-  const [activeTab, setActiveTab] = useState<TabId>('academia');
+function TutorialContent() {
+  const searchParams = useSearchParams();
+  const tabFromQuery = searchParams.get('tab') as TabId;
+  const [activeTab, setActiveTab] = useState<TabId>(tabFromQuery || 'academia');
   const [feedback, setFeedback] = useState('');
+
+  useEffect(() => {
+    const validTabs: TabId[] = ['academia', 'metodo', 'manual', 'corretoras', 'faq', 'notebooklm', 'growth'];
+    if (tabFromQuery && validTabs.includes(tabFromQuery)) {
+      setActiveTab(tabFromQuery);
+    }
+  }, [tabFromQuery]);
 
   const showFeedback = (msg: string) => {
     setFeedback(msg);
@@ -82,6 +95,19 @@ export default function TutorialPage() {
 
         <button
           type="button"
+          onClick={() => setActiveTab('corretoras')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'corretoras'
+              ? 'border-sky-500 text-sky-400 bg-sky-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Building2 className="h-4 w-4 text-sky-400" />
+          <span>🏛️ 3. Guia das Corretoras & B3</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('faq')}
           className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
             activeTab === 'faq'
@@ -90,7 +116,7 @@ export default function TutorialPage() {
           }`}
         >
           <HelpCircle className="h-4 w-4" />
-          <span>3. Perguntas Frequentes (FAQ)</span>
+          <span>4. Perguntas Frequentes (FAQ)</span>
         </button>
 
         <button
@@ -103,7 +129,7 @@ export default function TutorialPage() {
           }`}
         >
           <Headphones className="h-4 w-4" />
-          <span>4. Gerar Podcast (NotebookLM)</span>
+          <span>5. Gerar Podcast (NotebookLM)</span>
         </button>
 
         <button
@@ -116,7 +142,7 @@ export default function TutorialPage() {
           }`}
         >
           <Share2 className="h-4 w-4" />
-          <span>5. Divulgação Boca a Boca</span>
+          <span>6. Divulgação Boca a Boca</span>
         </button>
       </div>
 
@@ -124,9 +150,18 @@ export default function TutorialPage() {
       {activeTab === 'academia' && <AcademyTab />}
       {activeTab === 'metodo' && <TutorialMethodTab />}
       {activeTab === 'manual' && <TutorialManualTab />}
+      {activeTab === 'corretoras' && <TutorialCorretorasTab />}
       {activeTab === 'faq' && <TutorialFaqTab />}
       {activeTab === 'notebooklm' && <TutorialNotebookLMTab onFeedback={showFeedback} />}
       {activeTab === 'growth' && <TutorialGrowthTab onFeedback={showFeedback} />}
     </div>
+  );
+}
+
+export default function TutorialPage() {
+  return (
+    <Suspense fallback={<Skeleton className="h-[560px]" />}>
+      <TutorialContent />
+    </Suspense>
   );
 }

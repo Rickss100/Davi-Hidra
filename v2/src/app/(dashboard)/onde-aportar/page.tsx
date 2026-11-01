@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 import {
   AlertTriangle,
   ArrowRight,
   BookOpen,
+  Building2,
   CheckCircle2,
   Compass,
   Copy,
@@ -224,7 +226,7 @@ export default function OndeAportarPage() {
         onClose={() => setShowMethodModal(false)}
       />
 
-      {/* Cabeçalho Institucional + Botão Reabrir Explicação do Método */}
+      {/* Cabeçalho Institucional + Botões de Ajuda e Método */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
@@ -235,16 +237,26 @@ export default function OndeAportarPage() {
           </p>
         </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          size="md"
-          onClick={() => setShowMethodModal(true)}
-          className="border-gold-500/40 text-sm font-bold text-slate-100"
-        >
-          <BookOpen className="h-4 w-4 text-gold-400" />
-          Como funciona o Método?
-        </Button>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <Link
+            href="/tutorial?tab=corretoras"
+            className="inline-flex items-center gap-2 rounded-xl border border-sky-500/40 bg-sky-500/10 px-3.5 py-2 text-xs font-bold text-sky-300 transition hover:bg-sky-500/20 sm:text-sm"
+          >
+            <Building2 className="h-4 w-4 text-sky-400" />
+            Como comprar na corretora? ➔
+          </Link>
+
+          <Button
+            type="button"
+            variant="outline"
+            size="md"
+            onClick={() => setShowMethodModal(true)}
+            className="border-gold-500/40 text-xs font-bold text-slate-100 sm:text-sm"
+          >
+            <BookOpen className="h-4 w-4 text-gold-400" />
+            Como funciona o Método?
+          </Button>
+        </div>
       </div>
 
       {/* Faixa Informativa Resumida dos 3 Pilares com Tipografia Ampla */}
@@ -587,6 +599,22 @@ export default function OndeAportarPage() {
                     Registrar Aportes na Carteira
                   </Button>
                 )}
+              </div>
+
+              {/* Card de Apoio Operacional ao Aluno */}
+              <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-sky-500/30 bg-[#0c162c] p-3.5 text-xs text-slate-300">
+                <div className="flex items-center gap-2.5">
+                  <Building2 className="h-5 w-5 shrink-0 text-sky-400" />
+                  <span>
+                    Dúvidas de como boletonar no <strong>Nubank</strong>, <strong>Rico</strong>, <strong>Inter</strong>, <strong>BTG</strong> ou <strong>Avenue</strong>?
+                  </span>
+                </div>
+                <Link
+                  href="/tutorial?tab=corretoras"
+                  className="inline-flex items-center gap-1.5 font-bold text-sky-300 hover:text-white transition underline underline-offset-4"
+                >
+                  Passo a Passo da sua Corretora ➔
+                </Link>
               </div>
             </div>
           )}

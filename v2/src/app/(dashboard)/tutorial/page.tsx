@@ -1,56 +1,116 @@
-import React from 'react';
-import { Shield, Target, Compass, Coins } from 'lucide-react';
-import { Card } from '@/components/ui/primitives';
+'use client';
 
-const PILLARS = [
-  {
-    icon: Shield,
-    title: '1. Blindagem Primeiro (Reserva Soberana)',
-    desc: 'Antes de buscar assimetria em renda variável, construímos o colchão de liquidez diária (Tesouro Selic / CDB Soberano D+0) equivalente a 6 a 12 meses do custo familiar, impedindo vendas forçadas na baixa.'
-  },
-  {
-    icon: Target,
-    title: '2. Régua Estratégica (Método DAVI)',
-    desc: 'Você define racionalmente seus pesos ideais entre Renda Fixa e Variável, Brasil e Estados Unidos, e seleciona empresas perenes e FIIs de tijolo/papel de alta qualidade.'
-  },
-  {
-    icon: Compass,
-    title: '3. Rebalanceamento Pelo Aporte (Motor Hydra)',
-    desc: 'Em vez de girar patrimônio pagando taxas e impostos, todo dinheiro novo entra comprando exclusivamente os bons ativos que ficaram para trás da meta — comprando barato de forma automática e sem emoção.'
-  },
-  {
-    icon: Coins,
-    title: '4. Bola de Neve & Magic Number',
-    desc: 'Reinvestindo sistematicamente os dividendos, JCP e rendimentos importados da B3, cada ativo atinge seu Magic Number, passando a comprar novas cotas todos os meses por conta própria.'
-  }
-];
+import React, { useState } from 'react';
+import {
+  BookOpen,
+  Layers,
+  HelpCircle,
+  Headphones,
+  Share2
+} from 'lucide-react';
+import { TutorialHeader } from '@/components/tutorial/TutorialHeader';
+import { TutorialMethodTab } from '@/components/tutorial/TutorialMethodTab';
+import { TutorialManualTab } from '@/components/tutorial/TutorialManualTab';
+import { TutorialFaqTab } from '@/components/tutorial/TutorialFaqTab';
+import { TutorialNotebookLMTab } from '@/components/tutorial/TutorialNotebookLMTab';
+import { TutorialGrowthTab } from '@/components/tutorial/TutorialGrowthTab';
+
+type TabId = 'metodo' | 'manual' | 'faq' | 'notebooklm' | 'growth';
 
 export default function TutorialPage() {
+  const [activeTab, setActiveTab] = useState<TabId>('metodo');
+  const [feedback, setFeedback] = useState('');
+
+  const showFeedback = (msg: string) => {
+    setFeedback(msg);
+    setTimeout(() => setFeedback(''), 4500);
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-white">
-          Filosofia Institucional — Método DAVI & Hydra
-        </h1>
-        <p className="text-xs text-slate-400">
-          Os 4 pilares de construção e preservação patrimonial de longo prazo da Norte Invest Private.
-        </p>
+      {/* Cabeçalho Oficial */}
+      <TutorialHeader onFeedback={showFeedback} />
+
+      {feedback && (
+        <div className="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3 text-xs font-semibold text-emerald-300">
+          {feedback}
+        </div>
+      )}
+
+      {/* Navegação entre Abas */}
+      <div className="flex border-b border-slate-800/80 overflow-x-auto gap-2 pb-1 scrollbar-none">
+        <button
+          type="button"
+          onClick={() => setActiveTab('metodo')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'metodo'
+              ? 'border-emerald-500 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <BookOpen className="h-4 w-4" />
+          <span>1. O Método & Filosofia</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('manual')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'manual'
+              ? 'border-emerald-500 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Layers className="h-4 w-4" />
+          <span>2. Manual do Aplicativo</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('faq')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'faq'
+              ? 'border-emerald-500 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <HelpCircle className="h-4 w-4" />
+          <span>3. Perguntas Frequentes (FAQ)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('notebooklm')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'notebooklm'
+              ? 'border-emerald-500 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Headphones className="h-4 w-4" />
+          <span>4. Gerar Podcast (NotebookLM)</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('growth')}
+          className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-xs font-bold transition-all ${
+            activeTab === 'growth'
+              ? 'border-emerald-500 text-emerald-400'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Share2 className="h-4 w-4" />
+          <span>5. Divulgação Boca a Boca</span>
+        </button>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        {PILLARS.map((p) => {
-          const Icon = p.icon;
-          return (
-            <Card key={p.title} className="space-y-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold-500/15 text-gold-400">
-                <Icon className="h-5 w-5" />
-              </div>
-              <h2 className="text-base font-bold text-white">{p.title}</h2>
-              <p className="text-xs leading-relaxed text-slate-300">{p.desc}</p>
-            </Card>
-          );
-        })}
-      </div>
+      {/* Conteúdo Dinâmico da Aba Selecionada */}
+      {activeTab === 'metodo' && <TutorialMethodTab />}
+      {activeTab === 'manual' && <TutorialManualTab />}
+      {activeTab === 'faq' && <TutorialFaqTab />}
+      {activeTab === 'notebooklm' && <TutorialNotebookLMTab onFeedback={showFeedback} />}
+      {activeTab === 'growth' && <TutorialGrowthTab onFeedback={showFeedback} />}
     </div>
   );
 }

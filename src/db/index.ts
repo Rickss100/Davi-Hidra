@@ -177,11 +177,12 @@ async function createDatabaseConnection(): Promise<AppDatabase> {
   // 1. Conexão Produção / Cloud: PostgreSQL Supabase / Neon via postgres-js
   if (env.DATABASE_URL && env.DATABASE_URL.startsWith('postgres')) {
     const client = postgres(env.DATABASE_URL, {
+      ssl: 'require',
       prepare: false, // Compatível com Supabase Transaction Pooler (Supavisor porta 6543)
-      max: 10,
-      idle_timeout: 20
+      max: 5,
+      idle_timeout: 20,
+      connect_timeout: 15
     });
-    await client.unsafe(BOOTSTRAP_DDL);
     return drizzlePostgres(client, { schema });
   }
 

@@ -133,10 +133,11 @@ export async function POST(request: Request) {
       requires2FA: false,
       user: toSafeUserDTO(userRow)
     });
-  } catch (err) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
     console.error('❌ [POST /api/auth/login]:', err);
     return NextResponse.json(
-      { error: 'INTERNAL_ERROR', message: 'Erro interno ao processar autenticação.' },
+      { error: 'INTERNAL_ERROR', message: 'Erro interno ao processar autenticação.', detail: errorMsg },
       { status: 500 }
     );
   }

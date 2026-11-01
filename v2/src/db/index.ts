@@ -227,6 +227,7 @@ async function createDatabaseConnection(): Promise<AppDatabase> {
     ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS property_count NUMERIC(14, 2);
     ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS price_per_sqm NUMERIC(14, 2);
     ALTER TABLE fundamentals ADD COLUMN IF NOT EXISTS rent_per_sqm NUMERIC(14, 2);
+    ALTER TABLE economic_indicators ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
   `;
   await pglite.exec(ALTER_COLUMNS).catch(() => {});
   await syncV1Fundamentals((sql) => pglite.exec(sql));

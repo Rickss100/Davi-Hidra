@@ -38,9 +38,16 @@ export async function middleware(request: NextRequest) {
   const rawCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   const session = await verifySessionToken(rawCookie);
 
-  // Se já estiver autenticado e abrir /login, redireciona direto para o Dashboard
-  if (pathname === '/login' && session) {
-    return NextResponse.redirect(new URL('/', request.url));
+  // Se a sessão foi revogada no PostgreSQL, limpa o cookie obsoleto e exibe /login sem loop
+  if (pathname === '/login') {
+    if (request.nextUrl.searchParams.has('expired')) {
+      const res = NextResponse.next();
+      res.cookies.delete(SESSION_COOKIE_NAME);
+      return res;
+    }
+    if (session) {
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   }
 
   if (isPublicPage || isPublicApi) {

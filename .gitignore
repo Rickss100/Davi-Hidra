@@ -47,3 +47,14 @@ test-screenshots/
 # Misc
 *.log
 .gemini/
+patch-*.cjs
+*.mjs
+test-*.cjs
+add-*.cjs
+fix-*.cjs
+reset-*.cjs
+update-*.cjs
+query-*.cjs
+check-*.cjs
+get-*.cjs
+v2/.pgdata/

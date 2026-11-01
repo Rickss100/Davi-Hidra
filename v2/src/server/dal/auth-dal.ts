@@ -212,7 +212,7 @@ export async function getAuthorizedContextOrNull(): Promise<AuthorizedPortfolioC
 export async function requirePortfolioContext(): Promise<AuthorizedPortfolioContext> {
   const ctx = await getAuthorizedContextOrNull();
   if (!ctx) {
-    redirect('/login');
+    redirect('/login?expired=1');
   }
   return ctx;
 }

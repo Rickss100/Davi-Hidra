@@ -27,6 +27,34 @@ export const viewport: Viewport = {
   initialScale: 1
 };
 
+const DEV_SW_CLEANUP_SCRIPT = `
+(function() {
+  try {
+    var h = window.location.hostname;
+    if ((h === 'localhost' || h === '127.0.0.1') && 'serviceWorker' in navigator) {
+      var hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.getRegistrations().then(function(regs) {
+        if (!regs.length && !hadController) return;
+        Promise.all(regs.map(function(r) { return r.unregister(); }))
+          .then(function() {
+            if ('caches' in window) {
+              return caches.keys().then(function(keys) {
+                return Promise.all(keys.map(function(k) { return caches.delete(k); }));
+              });
+            }
+          })
+          .then(function() {
+            if (hadController && !sessionStorage.getItem('__sw_purged')) {
+              sessionStorage.setItem('__sw_purged', '1');
+              window.location.reload();
+            }
+          });
+      });
+    }
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -34,6 +62,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: DEV_SW_CLEANUP_SCRIPT }} />
+      </head>
       <body className="min-h-screen bg-obsidian-950 text-slate-100">
         <AppProviders>{children}</AppProviders>
       </body>

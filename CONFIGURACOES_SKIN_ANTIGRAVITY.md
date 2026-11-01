@@ -1,47 +1,30 @@
-# 🚀 Guia de Configuração da 'Skin' do Antigravity (Outros PCs)
+# 🚀 Guia de Configuração do Prompt Mestre & Skill Oficial no Antigravity
 
-Este documento explica como transferir a personalidade, regras de arquitetura e o comportamento (A 'Skin') que criamos para o Norte Invest para qualquer outro computador rodando o Google Antigravity.
-
-Existem duas formas de fazer isso: a nível de **Projeto** (recomendado para quem vai trabalhar no Davi-Hidra) ou a nível **Global** (se quiser que a IA aja assim em *qualquer* outro projeto que você criar).
+Este documento explica como o **Prompt Mestre, Regras DevSecOps e a Skill Padrão Ouro** do projeto **Norte Invest** funcionam automaticamente e como levá-los para outros computadores ou outros projetos futuros.
 
 ---
 
-## Opção 1: Configuração Local (Por Projeto) - RECOMENDADO
+## 1. Carregamento 100% Automático neste Repositório (Zero Configuração Manual)
 
-Se o objetivo é programar no repositório **Davi-Hidra** no outro computador, você não precisa fazer quase nada! O Antigravity tem o conceito de 'Progressive Disclosure' e lê automaticamente as regras de dentro das pastas do repositório.
+O repositório **Davi-Hidra / Norte Invest** já está configurado no padrão nativo do **Google Antigravity 2.0**:
 
-1. Clone o repositório \Davi-Hidra\ no novo PC.
-2. Abra o Antigravity na raiz desse projeto.
-3. O Antigravity detectará automaticamente a pasta interna com as regras de Markdown (atualmente na pasta \.agy/rules\ ou \.agents/rules\) e carregará todas as 6 regras que criamos:
-   - Monólito Modular
-   - Governança de UI React
-   - Leis Semânticas (Acessibilidade)
-   - Design System UX
-   - Testes Automatizados (Anti-regressão)
-   - Fluxo de Git (Pull Requests)
+1. **[`AGENTS.md`](AGENTS.md) (Regra Sempre Ativa na Raiz):**
+   - Carregada automaticamente em **100% das conversas** ao abrir esta pasta em qualquer computador.
+   - Impõe a Stack Padrão Ouro (`Next.js 15 + TypeScript Strict + Tailwind/shadcn + PostgreSQL/Drizzle + Decimal.js + Zod + TanStack Query`), Segurança Zero-Trust (`HttpOnly` + `2FA TOTP AES-256-GCM` + Anti-IDOR) e a **Lei Anti-Trabalho Manual**.
+2. **[`.agents/skills/norte-invest-padrao-ouro/SKILL.md`](.agents/skills/norte-invest-padrao-ouro/SKILL.md) (Skill Operacional sob Demanda):**
+   - Descoberta automaticamente pelo Antigravity como skill especializada do workspace, contendo a matriz comparativa de frameworks (por que usar ou evitar alternativas), o checklist de reutilização de componentes (`BrandLogo`, `AssetAutocompleteInput`, `money.ts`) e o protocolo de testes (`typecheck` + `Vitest`).
+3. **[`.agy/rules/`](.agy/rules/) (`01` a `07`) & [`SKIN_ANTIGRAVITY_NORTE_INVEST.md`](SKIN_ANTIGRAVITY_NORTE_INVEST.md):**
+   - Documentação modular detalhada que viaja junto com o código via Git.
 
-Nesse formato, a 'Skin' viaja junto com o código via Git!
+Ao clonar o repositório em outro PC, basta abrir a pasta no Antigravity e tudo já estará ativo!
 
 ---
 
-## Opção 2: Configuração Global (Aplica a 'Skin' em qualquer projeto do novo PC)
+## 2. Como Aplicar esta Mesma Mentalidade "Padrão Ouro & DevSecOps" em Outros Projetos (Global)
 
-Se você quer que o Antigravity no outro computador utilize a mesma mentalidade de 'Pair Programmer Sênior' para *outros* projetos que não sejam o Davi-Hidra, você deve instalar a Skin na pasta global do sistema operacional.
+Se você quiser que o Antigravity aplique essa mesma exigência de **Segurança Máxima + Frameworks Padrão Ouro + Zero Trabalho Manual** em *qualquer novo projeto* que criar no computador:
 
-### No Windows:
-1. Copie todos os arquivos \.md\ de regras (01 ao 06).
-2. No novo PC, navegue até a pasta de configuração global do Antigravity:
-   \C:\Users\SEU_USUARIO\.gemini\config\rules\ 
-   *(Se a pasta \ules\ não existir, você pode criá-la).*
-3. Cole os arquivos ali dentro.
-4. Reinicie o Antigravity no novo PC.
-
-### No Mac/Linux:
-1. Copie os arquivos de regras.
-2. Cole no diretório global:
-   \~/.gemini/config/rules/\`n3. Reinicie o Antigravity.
-
----
-
-## Como essas regras funcionam sob o capô?
-O Antigravity usa um sistema de prioridade de injeção de contexto. Quando você abre um chat, ele procura configurações Globais primeiro e, depois, sobrepõe com as configurações Locais do Workspace (sua pasta de projeto). Os arquivos de regras agem como 'System Prompts' que governam as decisões arquiteturais da IA sem que você precise ficar repetindo os comandos.
+1. Abra o arquivo global de regras do Antigravity no Windows:
+   `C:\Users\SEU_USUARIO\.gemini\config\AGENTS.md` *(ou `~/.gemini/config/AGENTS.md` no Mac/Linux)*.
+2. Copie para lá as seções universais do nosso [`AGENTS.md`](AGENTS.md) (Hierarquia Segurança -> Anti-Retrabalho -> Performance, Stack Padrão Ouro, Zero-Trust `HttpOnly` + `Zod` + Testes Automatizados).
+3. Para reutilizar a skill em outros projetos, copie a pasta `.agents/skills/norte-invest-padrao-ouro` para `C:\Users\SEU_USUARIO\.gemini\config\skills\`.

@@ -3,6 +3,10 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button, Card, Input, Select } from '@/components/ui/primitives';
+import {
+  AssetAutocompleteInput,
+  type CatalogAssetOption
+} from '@/components/portfolio/asset-autocomplete-input';
 
 interface NewTransactionModalProps {
   open: boolean;
@@ -22,6 +26,16 @@ export function NewTransactionModal({ open, onClose, onSuccess }: NewTransaction
   const [error, setError] = useState('');
 
   if (!open) return null;
+
+  const handleSelectCatalogAsset = (asset: CatalogAssetOption) => {
+    setAssetCode(asset.code);
+    if (asset.category) {
+      setCategoryHint(asset.category);
+    }
+    if (!price && type !== 'event' && asset.price > 0) {
+      setPrice(String(Number(asset.price.toFixed(2))));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +63,10 @@ export function NewTransactionModal({ open, onClose, onSuccess }: NewTransaction
         setError(data.message || 'Erro ao registrar operação.');
         return;
       }
+      setAssetCode('');
+      setPrice('');
+      setQuantity('1');
+      setNotes('');
       onSuccess();
       onClose();
     } finally {
@@ -115,12 +133,12 @@ export function NewTransactionModal({ open, onClose, onSuccess }: NewTransaction
             <label htmlFor="tx-ticker" className="mb-1 block text-xs text-slate-300">
               Código / Ticker do Ativo
             </label>
-            <Input
+            <AssetAutocompleteInput
               id="tx-ticker"
-              required
               value={assetCode}
-              onChange={(e) => setAssetCode(e.target.value)}
-              placeholder="Ex: WEGE3, HGLG11, Tesouro Selic 2029"
+              categoryFilter={categoryHint}
+              onChange={setAssetCode}
+              onSelectAsset={handleSelectCatalogAsset}
             />
           </div>
 

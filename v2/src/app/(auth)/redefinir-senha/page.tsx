@@ -4,6 +4,7 @@ import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Button, Card, Input } from '@/components/ui/primitives';
+import { BrandLogo } from '@/components/ui/brand-logo';
 
 function ResetForm() {
   const searchParams = useSearchParams();
@@ -60,7 +61,10 @@ function ResetForm() {
 
 export default function RedefinirSenhaPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-obsidian-950 p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-obsidian-950 p-4">
+      <div className="mb-6">
+        <BrandLogo size="lg" centered />
+      </div>
       <Card className="w-full max-w-md space-y-4 p-7">
         <h1 className="text-xl font-bold text-white">Redefinir Credencial Private</h1>
         <Suspense fallback={<p className="text-xs text-slate-400">Carregando validação...</p>}>

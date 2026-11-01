@@ -1,64 +1,53 @@
 'use client';
 
 import React from 'react';
+import { FileText } from 'lucide-react';
 import { usePortfolioData } from '@/hooks/use-portfolio';
-import { Card, Badge, Skeleton } from '@/components/ui/primitives';
-import { formatBRL, formatPercent } from '@/lib/money';
+import { useResumoPerformance } from '@/hooks/use-resumo-performance';
+import { Skeleton } from '@/components/ui/primitives';
+import { ResumoGuide } from '@/components/resumo/resumo-guide';
+import { ResumoMetrics } from '@/components/resumo/resumo-metrics';
+import { CapitalEvolutionChart } from '@/components/resumo/capital-evolution-chart';
+import { BenchmarkChart } from '@/components/resumo/benchmark-chart';
+import { AllocationBreakdown } from '@/components/resumo/allocation-breakdown';
+import { AllocationDiagnostic } from '@/components/resumo/allocation-diagnostic';
 
 export default function ResumoPage() {
   const { data, isLoading } = usePortfolioData();
+  // Período do cartão/evolução independe do seletor do gráfico (cache compartilhado em '12m')
+  const performance = useResumoPerformance('12m');
 
   if (isLoading || !data) {
-    return <Skeleton className="h-96" />;
+    return <Skeleton className="h-[560px]" />;
   }
 
   const { snapshot } = data;
+  const hasHoldings = snapshot.flatHoldings.length > 0;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-white">Resumo & Diagnóstico de Alocação</h1>
-        <p className="text-xs text-slate-400">
-          Comparativo direto entre o peso real de cada classe hoje e a meta definida na sua régua DAVI & Hydra.
+      <header>
+        <h1 className="flex items-center gap-2.5 text-2xl font-extrabold text-white sm:text-3xl">
+          <FileText className="h-8 w-8 text-emerald-400" aria-hidden="true" />
+          Resumo Geral da Carteira
+        </h1>
+        <p className="mt-1 text-sm text-slate-200 sm:text-base">
+          Visão executiva: acompanhe o crescimento patrimonial e compare sua performance com os índices de mercado.
         </p>
-      </div>
+      </header>
 
-      <div className="grid gap-4">
-        {snapshot.categoryDistances.map((cat) => {
-          const isUnderweight = cat.distance > 0.5;
-          return (
-            <Card key={cat.category} className="space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <div>
-                  <h2 className="text-sm font-bold text-white">{cat.name}</h2>
-                  <p className="money-value text-xs text-slate-400">
-                    Saldo atual: {formatBRL(cat.currentValueBrl)}
-                  </p>
-                </div>
+      <ResumoGuide hasHoldings={hasHoldings} />
+      <ResumoMetrics snapshot={snapshot} totalSummary={performance.data?.totalSummary} />
 
-                <div className="flex items-center gap-3">
-                  <span className="money-value text-xs text-slate-300">
-                    Atual: <strong>{formatPercent(cat.currentPercent)}</strong> / Meta:{' '}
-                    <strong>{formatPercent(cat.targetPercent)}</strong>
-                  </span>
-                  <Badge tone={isUnderweight ? 'gold' : 'emerald'}>
-                    {isUnderweight
-                      ? `Aportar (+${formatPercent(cat.distance)})`
-                      : 'Alocação em Dia'}
-                  </Badge>
-                </div>
-              </div>
+      {performance.data ? (
+        <CapitalEvolutionChart evolution={performance.data.evolution} />
+      ) : (
+        <Skeleton className="h-[420px]" />
+      )}
 
-              <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-obsidian-950">
-                <div
-                  className="h-full rounded-full bg-gold-500"
-                  style={{ width: `${Math.min(100, cat.currentPercent)}%` }}
-                />
-              </div>
-            </Card>
-          );
-        })}
-      </div>
+      <BenchmarkChart />
+      <AllocationBreakdown allocation={snapshot.allocation} />
+      <AllocationDiagnostic distances={snapshot.categoryDistances} />
     </div>
   );
 }

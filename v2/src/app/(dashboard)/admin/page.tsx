@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -9,7 +10,8 @@ import {
   RefreshCw,
   Search,
   KeyRound,
-  Eye
+  Eye,
+  Code2
 } from 'lucide-react';
 import { Skeleton, Card } from '@/components/ui/primitives';
 import { AdminUserData, EditUserModal } from '@/components/admin/EditUserModal';
@@ -199,6 +201,15 @@ export default function AdminCompliancePage() {
               className={`h-4 w-4 ${usersQuery.isRefetching ? 'animate-spin text-emerald-400' : ''}`}
             />
           </button>
+
+          <Link
+            href="/admin/docs"
+            title="Documentação OpenAPI & Swagger UI"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-[#0d1527] px-3.5 py-2.5 text-xs font-bold text-slate-200 hover:border-emerald-500/50 hover:text-white transition-colors"
+          >
+            <Code2 className="h-4 w-4 text-emerald-400" />
+            <span className="hidden sm:inline">Swagger API</span>
+          </Link>
 
           <button
             type="button"

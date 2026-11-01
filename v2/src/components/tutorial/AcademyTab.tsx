@@ -193,6 +193,31 @@ export function AcademyTab() {
         </div>
       </div>
 
+      {/* Certificado Digital de Conclusão da Metodologia */}
+      {progressPercent === 100 && (
+        <div className="relative overflow-hidden rounded-2xl border-2 border-gold-500/50 bg-gradient-to-r from-amber-950/40 via-obsidian-950 to-emerald-950/40 p-6 sm:p-8 text-center space-y-3 shadow-2xl animate-in zoom-in-95 duration-500">
+          <div className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-gold-500/20 text-gold-400 border border-gold-500/40 mb-1">
+            <Award className="h-8 w-8 text-gold-400" />
+          </div>
+          <h2 className="text-xl sm:text-2xl font-black text-white">
+            🎓 Certificado de Formação: Investidor Método DAVI & Hydra
+          </h2>
+          <p className="max-w-xl mx-auto text-xs sm:text-sm text-slate-200 leading-relaxed">
+            Parabéns! Você concluiu as 30 aulas da metodologia e dominou a Tríade de Riqueza, a blindagem da Reserva de Emergência, os setores perenes BEST, a diversificação global e o motor de alocação AM2O.
+          </p>
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="inline-flex items-center gap-2 rounded-xl bg-gold-500 px-5 py-2.5 text-xs sm:text-sm font-extrabold text-obsidian-950 hover:bg-gold-400 transition-all shadow-md"
+            >
+              <Award className="h-4 w-4" />
+              Imprimir / Salvar Certificado em PDF
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Grade de Módulos Expansíveis */}
       <div className="space-y-4">
         {ACADEMY_CURRICULUM.map((mod: AcademyModule) => {

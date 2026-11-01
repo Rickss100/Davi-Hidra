@@ -344,6 +344,7 @@ export default function OndeAportarPage() {
                 placeholder="Ex: 1000,00"
                 required
                 value={amountInput}
+                onFocus={(e) => e.target.select()}
                 onChange={(e) =>
                   setAmountInput(e.target.value.replace(/[^0-9.,]/g, ''))
                 }

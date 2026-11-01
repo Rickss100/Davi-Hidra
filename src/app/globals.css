@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --font-scale: 1;
+
+    /* Tema Padrão: Obsidian Private */
+    --bg-canvas: #070A11;
+    --bg-surface: #0B101B;
+    --bg-card: #0D1527;
+    --border-color: #1E293B;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent-brand: #10B981;
+    --accent-gold: #FBBF24;
+    --gain-green: #34D399;
+    --loss-red: #F87171;
+    --focus-ring: #10B981;
+  }
+
+  /* Tema Alto Contraste Puro (WCAG AAA - Preto e Amarelo Neon) */
+  html[data-theme="high_contrast"] {
+    --bg-canvas: #000000;
+    --bg-surface: #050505;
+    --bg-card: #0A0A0A;
+    --border-color: #FDE047;
+    --text-primary: #FFFFFF;
+    --text-secondary: #FEF08A;
+    --text-muted: #FDE047;
+    --accent-brand: #FDE047;
+    --accent-gold: #FDE047;
+    --gain-green: #4ADE80;
+    --loss-red: #FF4D4D;
+    --focus-ring: #FDE047;
+  }
+
+  /* Tema Deuteranopia (Daltonismo Verde-Vermelho: Azul Cobalto & Âmbar) */
+  html[data-theme="deuteranopia"] {
+    --bg-canvas: #070B14;
+    --bg-surface: #0C1220;
+    --bg-card: #0F172A;
+    --border-color: #25334D;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent-brand: #38BDF8;
+    --accent-gold: #FB923C;
+    --gain-green: #38BDF8; /* Azul cobalto vibrante no lugar de verde */
+    --loss-red: #F97316;   /* Laranja âmbar vívido no lugar de vermelho */
+    --focus-ring: #38BDF8;
+  }
+
+  /* Tema Protanopia (Ausência de Cones Vermelhos: Azul Elétrico & Amarelo) */
+  html[data-theme="protanopia"] {
+    --bg-canvas: #070B14;
+    --bg-surface: #0C1220;
+    --bg-card: #0F172A;
+    --border-color: #25334D;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent-brand: #60A5FA;
+    --accent-gold: #FACC15;
+    --gain-green: #60A5FA;
+    --loss-red: #EAB308;
+    --focus-ring: #60A5FA;
+  }
+
+  /* Tema Tritanopia (Ausência de Cones Azuis: Ciano Água & Magenta) */
+  html[data-theme="tritanopia"] {
+    --bg-canvas: #090B12;
+    --bg-surface: #101422;
+    --bg-card: #141B2D;
+    --border-color: #2A334E;
+    --text-primary: #F8FAFC;
+    --text-secondary: #A5B4FC;
+    --text-muted: #6B7280;
+    --accent-brand: #2DD4BF;
+    --accent-gold: #F472B6;
+    --gain-green: #2DD4BF; /* Ciano água */
+    --loss-red: #EC4899;   /* Magenta vibrante */
+    --focus-ring: #2DD4BF;
+  }
+
+  /* Tema Titânio Suave (Modo Claro Balanceado sem Brilho Ofuscante) */
+  html[data-theme="light_titanium"] {
+    color-scheme: light;
+    --bg-canvas: #F1F5F9;
+    --bg-surface: #E2E8F0;
+    --bg-card: #FFFFFF;
+    --border-color: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #334155;
+    --text-muted: #64748B;
+    --accent-brand: #059669;
+    --accent-gold: #D97706;
+    --gain-green: #059669;
+    --loss-red: #DC2626;
+    --focus-ring: #059669;
+  }
+
+  /* Escalas Tipográficas */
+  html[data-font-scale="medium"] {
+    font-size: 115%;
+  }
+
+  html[data-font-scale="large"] {
+    font-size: 130%;
+  }
+
+  html[data-font-scale="extra_large"] {
+    font-size: 145%;
+  }
+
+  /* Tipografia para Dislexia */
+  html[data-dyslexic="true"] body {
+    letter-spacing: 0.05em;
+    word-spacing: 0.12em;
+    line-height: 1.75;
+  }
+
+  /* Realce de Elementos Clicáveis */
+  html[data-highlight-targets="true"] button,
+  html[data-highlight-targets="true"] a,
+  html[data-highlight-targets="true"] input,
+  html[data-highlight-targets="true"] select {
+    outline: 2px dashed var(--focus-ring) !important;
+    outline-offset: 2px !important;
+  }
+
+  /* Redução de Movimento */
+  html[data-reduce-motion="true"] *,
+  html[data-reduce-motion="true"] *::before,
+  html[data-reduce-motion="true"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    @apply antialiased selection:bg-emerald-500/30 selection:text-emerald-300;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Tipografia Tabular para Valores Financeiros */
+  .money-value {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Indicador Visual do Elemento sendo lido por voz (TTS) */
+.speech-highlight-active {
+  outline: 3px solid #10B981 !important;
+  outline-offset: 3px !important;
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Scrollbar institucional */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

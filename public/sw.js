@@ -1,64 +1,59 @@
-const CACHE_NAME = 'norte-invest-pwa-v2';
-const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.svg',
-  '/icon-192.png',
-  '/icon-512.png',
-  '/apple-touch-icon.png'
-];
+const CACHE_NAME = 'norte-invest-private-v2.2';
+const IS_LOCAL_DEV =
+  self.location.hostname === 'localhost' || self.location.hostname === '127.0.0.1';
 
-self.addEventListener('install', (event) => {
+self.addEventListener('install', () => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS).catch(() => {});
-    })
-  );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
+    (async () => {
+      const keys = await caches.keys();
+      if (IS_LOCAL_DEV) {
+        // Ambiente local (next dev): limpa 100% dos caches para não congelar Hot-Reload e desregistra o SW
+        await Promise.all(keys.map((k) => caches.delete(k)));
+        await self.registration.unregister();
+        const clients = await self.clients.matchAll({ type: 'window' });
+        for (const client of clients) {
+          client.navigate(client.url);
+        }
+        return;
+      }
+
+      await Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)));
+      await self.clients.claim();
+    })()
   );
 });
 
+// Zero-Trust: NUNCA faz cache em localhost nem de endpoints /api/ ou documentos autenticados
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
+  if (IS_LOCAL_DEV) return;
 
-  // Never cache API requests or non-GET requests (financial data must always be fresh)
-  if (request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+  const url = new URL(event.request.url);
+  if (
+    event.request.method !== 'GET' ||
+    url.pathname.startsWith('/api/') ||
+    !url.pathname.startsWith('/_next/static/')
+  ) {
     return;
   }
 
-  // Network-First strategy for HTML navigation & assets, fallback to cache if offline
+  // Em produção HTTPS: Network-First com fallback seguro para não prender versões antigas
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        if (response && response.status === 200 && response.type === 'basic') {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
+    fetch(event.request)
+      .then(async (fresh) => {
+        if (fresh.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          cache.put(event.request, fresh.clone());
         }
-        return response;
+        return fresh;
       })
-      .catch(() => {
-        return caches.match(request).then((cached) => {
-          if (cached) return cached;
-          if (request.mode === 'navigate') {
-            return caches.match('/index.html');
-          }
-          return new Response('', { status: 503, statusText: 'Offline' });
-        });
+      .catch(async () => {
+        const cached = await caches.match(event.request);
+        if (cached) return cached;
+        throw new Error('Network unavailable');
       })
   );
 });

@@ -21,13 +21,18 @@ import {
   Smartphone,
   EyeOff,
   Menu,
-  X
+  X,
+  Settings
 } from 'lucide-react';
 import { usePortfolioData, useSyncLivePrices } from '@/hooks/use-portfolio';
 import { Button, Badge } from '@/components/ui/primitives';
 import { BrandLogo } from '@/components/ui/brand-logo';
 import { TwoFactorModal } from '@/components/security/two-factor-modal';
 import { PrivateAiDrawer } from '@/components/chat/private-ai-drawer';
+import { useAccessibility } from '@/contexts/accessibility-context';
+import { useClickToSpeech } from '@/lib/accessibility/use-click-to-speech';
+import { CursorMagnifier } from '@/components/accessibility/cursor-magnifier';
+import { AccessibilityDrawer } from '@/components/accessibility/accessibility-drawer';
 import { cn } from '@/lib/utils';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -57,6 +62,9 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIosGuide, setShowIosGuide] = useState(false);
+
+  const { openDrawer } = useAccessibility();
+  useClickToSpeech();
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -160,6 +168,20 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
           <div className="space-y-2 border-t border-slate-800/80 p-3">
             <button
               type="button"
+              onClick={openDrawer}
+              className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-obsidian-950 px-3 py-2 text-xs font-medium text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <Settings className="h-4 w-4 text-emerald-400" />
+                Acessibilidade & Cores
+              </span>
+              <span className="rounded bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/20">
+                WCAG
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={() => setShow2FAModal(true)}
               className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-obsidian-950 px-3 py-2 text-xs font-medium text-slate-300 hover:border-gold-500/40"
             >
@@ -238,6 +260,16 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                   {syncPrices.isPending ? 'Sincronizando B3...' : 'Atualizar Cotações'}
                 </span>
               </Button>
+
+              <button
+                type="button"
+                onClick={openDrawer}
+                title="Configurações & Acessibilidade"
+                aria-label="Configurações & Acessibilidade"
+                className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-800 bg-[#0d1527] text-slate-300 hover:border-emerald-500/40 hover:text-emerald-400 transition-colors"
+              >
+                <Settings className="h-4 w-4" />
+              </button>
             </div>
           </header>
 
@@ -293,6 +325,18 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
             <div className="space-y-2 border-t border-slate-800 pt-3">
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start gap-2"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openDrawer();
+                }}
+              >
+                <Settings className="h-4 w-4 text-emerald-400" />
+                Configurações & Acessibilidade
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
@@ -374,6 +418,8 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
         onStatusChanged={() => refetch()}
       />
       <PrivateAiDrawer />
+      <CursorMagnifier />
+      <AccessibilityDrawer />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Button, Card, Badge, Skeleton } from '@/components/ui/primitives';
 import { formatBRL, formatPercent } from '@/lib/money';
 import { NewTransactionModal } from '@/components/portfolio/new-transaction-modal';
 import { B3ImportModal } from '@/components/portfolio/b3-import-modal';
+import { PortfolioMetricsBar } from '@/components/portfolio/portfolio-metrics-bar';
 import {
   ManageHoldingModal,
   type ManageHoldingTab
@@ -76,6 +77,8 @@ export default function CarteiraPage() {
           </Button>
         </div>
       </div>
+
+      <PortfolioMetricsBar snapshot={snapshot} />
 
       <div className="flex flex-wrap gap-2">
         {CATEGORY_TABS.map((tab) => (

@@ -22,6 +22,11 @@ import {
 } from '@/components/radar/davi-sidebar-filters';
 import {
   matchesDaviFilterMap,
+  isNovoMercadoAsset,
+  isBestSectorAsset,
+  isMultiPropertyFii,
+  isPaperFii,
+  isEtfGlobalAsset,
   type ComprehensiveRadarItem
 } from '@/components/radar/radar-matcher';
 import { cn } from '@/lib/utils';
@@ -373,6 +378,126 @@ export default function RadarAtivosPage() {
             </button>
           ))}
         </div>
+
+        {/* Chips de Atalhos Rápidos do Método DAVI */}
+        <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+          <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
+            <Target className="h-3.5 w-3.5 text-gold-400" />
+            Atalhos do Método:
+          </span>
+
+          <button
+            type="button"
+            onClick={() =>
+              setDaviFilters((prev) => ({
+                ...prev,
+                only_best_sectors: !prev.only_best_sectors
+              }))
+            }
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-bold transition flex items-center gap-1',
+              daviFilters.only_best_sectors
+                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-sm'
+                : 'border border-slate-800 bg-obsidian-900/60 text-slate-400 hover:border-amber-400/40 hover:text-slate-200'
+            )}
+            title="Aula 4.2: Filtra empresas dos setores perenes BEST (Bancos, Energia, Saneamento, Telecom e Seguros)"
+          >
+            ⚡ Setores Perenes (BEST)
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setDaviFilters((prev) => ({
+                ...prev,
+                only_novo_mercado: !prev.only_novo_mercado
+              }))
+            }
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-bold transition flex items-center gap-1',
+              daviFilters.only_novo_mercado
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-sm'
+                : 'border border-slate-800 bg-obsidian-900/60 text-slate-400 hover:border-emerald-400/40 hover:text-slate-200'
+            )}
+            title="Aula 4.1: Filtra apenas empresas com Tag Along 100% e Governança Novo Mercado"
+          >
+            🛡️ Novo Mercado
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setDaviFilters((prev) => ({
+                ...prev,
+                only_multi_property: !prev.only_multi_property
+              }))
+            }
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-bold transition flex items-center gap-1',
+              daviFilters.only_multi_property
+                ? 'bg-sky-500/20 text-sky-300 border border-sky-500/50 shadow-sm'
+                : 'border border-slate-800 bg-obsidian-900/60 text-slate-400 hover:border-sky-400/40 hover:text-slate-200'
+            )}
+            title="Aula 5.1: Exige FIIs com mais de 5 imóveis físicos (elimina risco monoimóvel)"
+          >
+            🏢 FIIs Multiativo (&gt;5)
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setDaviFilters((prev) => ({
+                ...prev,
+                smart_fii_pvp: !prev.smart_fii_pvp
+              }))
+            }
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-bold transition flex items-center gap-1',
+              daviFilters.smart_fii_pvp
+                ? 'bg-purple-500/20 text-purple-300 border border-purple-500/50 shadow-sm'
+                : 'border border-slate-800 bg-obsidian-900/60 text-slate-400 hover:border-purple-400/40 hover:text-slate-200'
+            )}
+            title="Aula 5.2: FII de Papel com P/VP ≤ 1,02 e Tijolo ≤ 1,08"
+          >
+            🎯 P/VP Inteligente
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setDaviFilters((prev) => ({
+                ...prev,
+                only_etfs: !prev.only_etfs
+              }))
+            }
+            className={cn(
+              'rounded-full px-2.5 py-1 text-xs font-bold transition flex items-center gap-1',
+              daviFilters.only_etfs
+                ? 'bg-blue-500/20 text-blue-300 border border-blue-500/50 shadow-sm'
+                : 'border border-slate-800 bg-obsidian-900/60 text-slate-400 hover:border-blue-400/40 hover:text-slate-200'
+            )}
+            title="Aula 6.2: Filtra ETFs Globais neutros de baixo custo (VOO, VT, SPY, etc.)"
+          >
+            🌍 ETFs Globais
+          </button>
+
+          {Object.keys(daviFilters).some((k) => {
+            const val = daviFilters[k];
+            if (val === undefined || val === false) return false;
+            if (typeof val === 'object' && val !== null) {
+              return val.min != null || val.max != null;
+            }
+            return Boolean(val);
+          }) && (
+            <button
+              type="button"
+              onClick={() => setDaviFilters({})}
+              className="ml-auto text-xs text-rose-400 hover:text-rose-300 underline font-semibold"
+            >
+              Limpar Filtros
+            </button>
+          )}
+        </div>
       </Card>
 
       {feedback && (
@@ -516,9 +641,35 @@ export default function RadarAtivosPage() {
                           {/* Código e Nome */}
                           <td className="pl-3 pr-2 py-2">
                             <div className="flex flex-col">
-                              <span className="font-extrabold text-white text-xs sm:text-sm tracking-wide">
-                                {item.code}
-                              </span>
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <span className="font-extrabold text-white text-xs sm:text-sm tracking-wide">
+                                  {item.code}
+                                </span>
+                                {isNovoMercadoAsset(item) && (
+                                  <span
+                                    className="rounded bg-emerald-500/15 border border-emerald-500/30 px-1 py-0.2 text-[9.5px] font-bold text-emerald-400"
+                                    title="Governança Novo Mercado / Tag Along 100%"
+                                  >
+                                    🛡️ NM
+                                  </span>
+                                )}
+                                {isBestSectorAsset(item) && (
+                                  <span
+                                    className="rounded bg-amber-500/15 border border-amber-500/30 px-1 py-0.2 text-[9.5px] font-bold text-amber-400"
+                                    title="Setor Perene BEST (Bancos, Energia, Saneamento, Telecom, Seguros)"
+                                  >
+                                    ⚡ BEST
+                                  </span>
+                                )}
+                                {isEtfGlobalAsset(item) && (
+                                  <span
+                                    className="rounded bg-blue-500/15 border border-blue-500/30 px-1 py-0.2 text-[9.5px] font-bold text-blue-400"
+                                    title="ETF Global Neutro / Baixo Custo"
+                                  >
+                                    🌍 ETF
+                                  </span>
+                                )}
+                              </div>
                               {showFullName && (
                                 <span
                                   className="text-[10.5px] text-slate-400 truncate max-w-[130px] 2xl:max-w-[180px]"
@@ -565,7 +716,15 @@ export default function RadarAtivosPage() {
                                 {item.price > 0 ? formatBRL(item.price) : '—'}
                               </td>
                               <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
-                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                                <span>{fmtRatio(item.pVpa ?? item.pbRatio)}</span>
+                                {isPaperFii(item) && (item.pVpa ?? item.pbRatio ?? 0) > 1.02 && (
+                                  <span
+                                    className="ml-1 rounded bg-amber-500/20 px-1 py-0.5 text-[9px] font-extrabold text-amber-300"
+                                    title="Alerta Aula 5.2: FII de papel com ágio acima de 1.02 (P/VP > 1.02)"
+                                  >
+                                    ⚠️ Ágio
+                                  </span>
+                                )}
                               </td>
                               <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
                                 {fmtPercentOrDash(item.dividendYield)}
@@ -596,7 +755,15 @@ export default function RadarAtivosPage() {
                                 {fmtRatio(item.peRatio)}
                               </td>
                               <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
-                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                                <span>{fmtRatio(item.pVpa ?? item.pbRatio)}</span>
+                                {isPaperFii(item) && (item.pVpa ?? item.pbRatio ?? 0) > 1.02 && (
+                                  <span
+                                    className="ml-1 rounded bg-amber-500/20 px-1 py-0.5 text-[9px] font-extrabold text-amber-300"
+                                    title="Alerta Aula 5.2: FII de papel com ágio acima de 1.02 (P/VP > 1.02)"
+                                  >
+                                    ⚠️ Ágio
+                                  </span>
+                                )}
                               </td>
                               <td className="px-2 py-2 text-right font-mono font-bold text-emerald-400 whitespace-nowrap">
                                 {fmtPercentOrDash(item.dividendYield)}
@@ -659,7 +826,15 @@ export default function RadarAtivosPage() {
                                 {fmtRatio(item.peRatio)}
                               </td>
                               <td className="px-2 py-2 text-right font-mono text-slate-200 whitespace-nowrap">
-                                {fmtRatio(item.pVpa ?? item.pbRatio)}
+                                <span>{fmtRatio(item.pVpa ?? item.pbRatio)}</span>
+                                {isPaperFii(item) && (item.pVpa ?? item.pbRatio ?? 0) > 1.02 && (
+                                  <span
+                                    className="ml-1 rounded bg-amber-500/20 px-1 py-0.5 text-[9px] font-extrabold text-amber-300"
+                                    title="Alerta Aula 5.2: FII de papel com ágio acima de 1.02 (P/VP > 1.02)"
+                                  >
+                                    ⚠️ Ágio
+                                  </span>
+                                )}
                               </td>
                               {isAcoes && (
                                 <td className="px-2 py-2 text-right font-mono text-slate-300 whitespace-nowrap">

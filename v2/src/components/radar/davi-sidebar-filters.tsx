@@ -19,12 +19,21 @@ export interface FilterBound {
   max?: number | null;
 }
 
-export type DaviFilterMap = Record<string, FilterBound>;
+export type DaviFilterValue = FilterBound | boolean | undefined;
+
+export type DaviFilterMap = {
+  [key: string]: DaviFilterValue;
+  only_novo_mercado?: boolean | FilterBound;
+  only_best_sectors?: boolean | FilterBound;
+  only_multi_property?: boolean | FilterBound;
+  smart_fii_pvp?: boolean | FilterBound;
+  only_etfs?: boolean | FilterBound;
+};
 
 export interface FilterDefinition {
   key: string;
   label: string;
-  type: 'min' | 'max' | 'range';
+  type: 'min' | 'max' | 'range' | 'boolean';
   step?: number;
 }
 
@@ -40,9 +49,11 @@ export const PRESETS: Record<
   conservador: {
     name: 'Conservador',
     icon: Shield,
-    description: 'Filtros rigorosos para máxima segurança e empresas sólidas',
+    description: 'Filtros rigorosos para máxima segurança, governança Novo Mercado e setores perenes BEST',
     filters: {
       acoes: {
+        only_novo_mercado: { min: 1, max: 1 },
+        only_best_sectors: { min: 1, max: 1 },
         pe_ratio: { min: 0.01, max: 12 },
         pb_ratio: { max: 2 },
         dividend_yield: { min: 4 },
@@ -51,6 +62,8 @@ export const PRESETS: Record<
         debt_to_equity: { max: 0.5 }
       },
       fiis: {
+        only_multi_property: { min: 1, max: 1 },
+        smart_fii_pvp: { min: 1, max: 1 },
         p_vpa: { min: 0.85, max: 1.05 },
         dividend_yield: { min: 9 },
         vacancy_rate: { max: 5 },
@@ -78,9 +91,10 @@ export const PRESETS: Record<
   moderado: {
     name: 'Moderado',
     icon: TrendingUp,
-    description: 'Equilíbrio padrão ouro entre segurança, dividendos e valuation',
+    description: 'Equilíbrio padrão ouro entre governança Novo Mercado, dividendos e valuation justo',
     filters: {
       acoes: {
+        only_novo_mercado: { min: 1, max: 1 },
         pe_ratio: { min: 0.01, max: 15 },
         pb_ratio: { max: 3 },
         dividend_yield: { min: 3 },
@@ -89,6 +103,7 @@ export const PRESETS: Record<
         debt_to_equity: { max: 1.0 }
       },
       fiis: {
+        smart_fii_pvp: { min: 1, max: 1 },
         p_vpa: { min: 0.8, max: 1.15 },
         dividend_yield: { min: 7 },
         vacancy_rate: { max: 10 },
@@ -145,6 +160,10 @@ export const PRESETS: Record<
 
 export const FILTER_GROUPS: Record<string, Record<string, FilterDefinition[]>> = {
   acoes: {
+    '🏛️ Governança & Setor (Método DAVI)': [
+      { key: 'only_novo_mercado', label: '🛡️ Novo Mercado / Tag Along 100%', type: 'boolean' },
+      { key: 'only_best_sectors', label: '⚡ Setores Perenes (BEST)', type: 'boolean' }
+    ],
     Valuation: [
       { key: 'pe_ratio', label: 'P/L', type: 'range', step: 0.5 },
       { key: 'pb_ratio', label: 'P/VP', type: 'max', step: 0.1 },
@@ -177,6 +196,10 @@ export const FILTER_GROUPS: Record<string, Record<string, FilterDefinition[]>> =
     '⭐ Minhas Notas': [{ key: 'user_rating', label: 'Nota mínima', type: 'min', step: 1 }]
   },
   fiis: {
+    '🏢 Governança & Imóveis': [
+      { key: 'only_multi_property', label: '🏢 Apenas Multiativo (> 5 Imóveis)', type: 'boolean' },
+      { key: 'smart_fii_pvp', label: '🎯 P/VP Inteligente (Papel máx 1,02)', type: 'boolean' }
+    ],
     Valuation: [{ key: 'p_vpa', label: 'P/VP', type: 'range', step: 0.05 }],
     Rentabilidade: [
       { key: 'dividend_yield', label: 'Div. Yield (%)', type: 'min', step: 0.5 },
@@ -196,6 +219,9 @@ export const FILTER_GROUPS: Record<string, Record<string, FilterDefinition[]>> =
     '⭐ Minhas Notas': [{ key: 'user_rating', label: 'Nota mínima', type: 'min', step: 1 }]
   },
   stocks: {
+    '🌍 Veículo de Acesso': [
+      { key: 'only_etfs', label: '🌍 Apenas ETFs Globais (VOO, VT...)', type: 'boolean' }
+    ],
     Valuation: [
       { key: 'pe_ratio', label: 'P/L (P/E)', type: 'range', step: 1 },
       { key: 'pb_ratio', label: 'P/VP (P/B)', type: 'max', step: 0.5 },
@@ -311,9 +337,24 @@ export function DaviSidebarFilters({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
 
-  const handleToggle = (key: string) => {
+  const handleToggle = (key: string, isBoolean = false) => {
+    setSelectedPreset(null);
     setActiveCheckboxes((prev) => {
-      const next = { ...prev, [key]: !prev[key] };
+      const nextChecked = !prev[key];
+      const next = { ...prev, [key]: nextChecked };
+
+      if (isBoolean) {
+        setFilters((prevFilters) => {
+          if (nextChecked) {
+            return { ...prevFilters, [key]: { min: 1, max: 1 } };
+          } else {
+            const copy = { ...prevFilters };
+            delete copy[key];
+            return copy;
+          }
+        });
+      }
+
       return next;
     });
   };
@@ -323,8 +364,9 @@ export function DaviSidebarFilters({
     const num = valStr === '' ? null : parseFloat(valStr.replace(',', '.'));
 
     setFilters((prev) => {
-      const current = prev[key] || {};
-      const nextBound = { ...current, [boundType]: num };
+      const rawCurrent = prev[key];
+      const current: FilterBound = (typeof rawCurrent === 'object' && rawCurrent !== null) ? rawCurrent : {};
+      const nextBound: FilterBound = { ...current, [boundType]: num };
       return { ...prev, [key]: nextBound };
     });
 
@@ -337,8 +379,12 @@ export function DaviSidebarFilters({
   const handleApply = () => {
     const activeFilters: DaviFilterMap = {};
     Object.entries(filters).forEach(([k, bound]) => {
-      if (activeCheckboxes[k] && (bound.min != null || bound.max != null)) {
-        activeFilters[k] = bound;
+      if (activeCheckboxes[k]) {
+        if (typeof bound === 'boolean') {
+          if (bound) activeFilters[k] = true;
+        } else if (bound && typeof bound === 'object' && (bound.min != null || bound.max != null)) {
+          activeFilters[k] = bound;
+        }
       }
     });
     onApplyFilters(activeFilters);
@@ -351,9 +397,12 @@ export function DaviSidebarFilters({
     onClearFilters();
   };
 
-  const activeCount = Object.keys(activeCheckboxes).filter(
-    (k) => activeCheckboxes[k] && (filters[k]?.min != null || filters[k]?.max != null)
-  ).length;
+  const activeCount = Object.keys(activeCheckboxes).filter((k) => {
+    if (!activeCheckboxes[k]) return false;
+    const b = filters[k];
+    if (typeof b === 'boolean') return b;
+    return b && typeof b === 'object' && (b.min != null || b.max != null);
+  }).length;
 
   return (
     <aside
@@ -446,7 +495,9 @@ export function DaviSidebarFilters({
                 </div>
                 <div className="space-y-2">
                   {defs.map((def) => {
-                    const bound = filters[def.key] || {};
+                    const rawBound = filters[def.key];
+                    const bound: FilterBound =
+                      typeof rawBound === 'object' && rawBound !== null ? rawBound : {};
                     const isChecked = Boolean(activeCheckboxes[def.key]);
                     return (
                       <div key={def.key} className="space-y-1 text-xs">
@@ -454,34 +505,40 @@ export function DaviSidebarFilters({
                           <input
                             type="checkbox"
                             checked={isChecked}
-                            onChange={() => handleToggle(def.key)}
+                            onChange={() => handleToggle(def.key, def.type === 'boolean')}
                             className="h-3.5 w-3.5 rounded border-slate-700 bg-obsidian-950 accent-emerald-500"
                           />
                           <span className="truncate">{def.label}</span>
                         </label>
 
-                        <div className="flex items-center gap-1.5 pl-5">
-                          {(def.type === 'min' || def.type === 'range') && (
-                            <input
-                              type="number"
-                              step={def.step ?? 0.5}
-                              placeholder="Min"
-                              value={bound.min ?? ''}
-                              onChange={(e) => handleValueChange(def.key, 'min', e.target.value)}
-                              className="h-7 w-full rounded border border-slate-800 bg-obsidian-950 px-2 text-xs font-medium text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-                            />
-                          )}
-                          {(def.type === 'max' || def.type === 'range') && (
-                            <input
-                              type="number"
-                              step={def.step ?? 0.5}
-                              placeholder="Max"
-                              value={bound.max ?? ''}
-                              onChange={(e) => handleValueChange(def.key, 'max', e.target.value)}
-                              className="h-7 w-full rounded border border-slate-800 bg-obsidian-950 px-2 text-xs font-medium text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
-                            />
-                          )}
-                        </div>
+                        {def.type === 'boolean' ? (
+                          <div className="pl-5 text-[10px] font-semibold text-emerald-400">
+                            {isChecked ? '✓ Ativo no Radar' : 'Desativado'}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 pl-5">
+                            {(def.type === 'min' || def.type === 'range') && (
+                              <input
+                                type="number"
+                                step={def.step ?? 0.5}
+                                placeholder="Min"
+                                value={bound.min ?? ''}
+                                onChange={(e) => handleValueChange(def.key, 'min', e.target.value)}
+                                className="h-7 w-full rounded border border-slate-800 bg-obsidian-950 px-2 text-xs font-medium text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                              />
+                            )}
+                            {(def.type === 'max' || def.type === 'range') && (
+                              <input
+                                type="number"
+                                step={def.step ?? 0.5}
+                                placeholder="Max"
+                                value={bound.max ?? ''}
+                                onChange={(e) => handleValueChange(def.key, 'max', e.target.value)}
+                                className="h-7 w-full rounded border border-slate-800 bg-obsidian-950 px-2 text-xs font-medium text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none"
+                              />
+                            )}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

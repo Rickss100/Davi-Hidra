@@ -64,8 +64,20 @@ export interface EmergencyReserveSummaryDTO {
   reserveAssets: HoldingPosition[];
 }
 
+export interface AssetDistanceBreakdownDTO {
+  ticker: string;
+  name: string;
+  category: PortfolioCategoryKey;
+  currentPercent: number;
+  targetPercent: number;
+  classTargetPercent: number;
+  distance: number;
+  inObjective: boolean;
+}
+
 export interface InvestmentSuggestionDTO {
   ticker: string;
+  assetName?: string;
   categoria: PortfolioCategoryKey;
   cotas: number;
   currentPrice: number;
@@ -73,6 +85,8 @@ export interface InvestmentSuggestionDTO {
   distance: number;
   isEmergencyReserve?: boolean;
   reason: string;
+  daviWarning?: string;
+  magicNumberText?: string;
 }
 
 export interface MagicNumberRowDTO {
@@ -86,25 +100,67 @@ export interface MagicNumberRowDTO {
   missingShares: number;
   investmentNeededBrl: number;
   progressPercent: number;
+  monthlyIncomeBrl: number;
+  sharesGeneratedPerMonth: number;
+  isMagicReached: boolean;
+  dataSource: 'real_12m' | 'dy_fundamentalista';
 }
 
 // ============================================================================
-// PRESETS PADRÃO OURO OFICIAIS (100% SERVER-SIDE)
+// MODELOS EDUCACIONAIS DE ALOCAÇÃO MACRO (SEM INDICAÇÃO DE ATIVOS — CVM 19/2021)
 // ============================================================================
+export const MACRO_MODEL_BRASIL: MacroAllocationConfig = {
+  fixed: 15,
+  variable: 85,
+  brasil: 100,
+  usa: 0,
+  acoes: 60,
+  fiis: 40,
+  stocks: 0,
+  reits: 0
+};
+
+export const MACRO_MODEL_GLOBAL: MacroAllocationConfig = {
+  fixed: 15,
+  variable: 85,
+  brasil: 60,
+  usa: 40,
+  acoes: 60,
+  fiis: 40,
+  stocks: 70,
+  reits: 30
+};
+
+export const EMPTY_ASSET_TARGETS: AssetTargetsConfig = {
+  acoes: [],
+  fiis: [],
+  stocks: [],
+  reits: [],
+  fixed: [],
+  reserva: []
+};
+
+/**
+ * Distribui 100% igualmente entre os ativos escolhidos pelo investidor sem sobras de arredondamento.
+ */
+export function distributeEqualTargetWeights<T extends { code: string; target: number }>(
+  items: T[]
+): T[] {
+  if (items.length === 0) return [];
+  const base = Math.floor(100 / items.length);
+  const remainder = 100 - base * items.length;
+  return items.map((item, idx) => ({
+    ...item,
+    target: base + (idx < remainder ? 1 : 0)
+  }));
+}
+
+// Fixtures internas mantidas apenas para testes automatizados de regressão matemática
 export const GOLD_PRESET_BRASIL: {
   macroAllocation: MacroAllocationConfig;
   assetTargets: AssetTargetsConfig;
 } = {
-  macroAllocation: {
-    fixed: 15,
-    variable: 85,
-    brasil: 100,
-    usa: 0,
-    acoes: 60,
-    fiis: 40,
-    stocks: 0,
-    reits: 0
-  },
+  macroAllocation: MACRO_MODEL_BRASIL,
   assetTargets: {
     acoes: [
       { code: 'WEGE3', sector: 'Bens Industriais', target: 15 },
@@ -234,6 +290,95 @@ export function calculateCategoryDistances(
       distance: roundPercent(distDec, 4)
     };
   });
+}
+
+export function calculateAssetDistancesByCategory(
+  holdings: CategorizedHoldings,
+  assetTargets: AssetTargetsConfig,
+  categoryDistances: CategoryDistanceDTO[],
+  totalPortfolioBrl: number,
+  nameResolver?: (code: string, fallback?: string | null) => string
+): Record<PortfolioCategoryKey, AssetDistanceBreakdownDTO[]> {
+  const totalDec = d(totalPortfolioBrl);
+  const result: Record<PortfolioCategoryKey, AssetDistanceBreakdownDTO[]> = {
+    acoes: [],
+    fiis: [],
+    stocks: [],
+    reits: [],
+    fixed: []
+  };
+
+  for (const catDist of categoryDistances) {
+    const cat = catDist.category;
+    const catHoldings = holdings[cat] || [];
+    const targets = assetTargets[cat] || [];
+    const seen = new Set<string>();
+    const rows: AssetDistanceBreakdownDTO[] = [];
+
+    for (const t of targets) {
+      const code = String(t.code || t.ticker || '').trim();
+      if (!code) continue;
+      const upper = code.toUpperCase();
+      seen.add(upper);
+
+      const holding = catHoldings.find((h) => h.code.toUpperCase() === upper);
+      const currentValDec = holding ? d(holding.currentValueBrl) : d(0);
+      const currentPctDec = totalDec.greaterThan(0)
+        ? currentValDec.div(totalDec).mul(100)
+        : d(0);
+      const classTargetDec = d(t.target || 0);
+      const globalTargetDec = d(catDist.targetPercent).mul(classTargetDec).div(100);
+      const distDec = globalTargetDec.minus(currentPctDec);
+
+      rows.push({
+        ticker: holding?.code || code,
+        name: nameResolver ? nameResolver(code, holding?.name) : holding?.name || code,
+        category: cat,
+        currentPercent: roundPercent(currentPctDec, 2),
+        targetPercent: roundPercent(globalTargetDec, 2),
+        classTargetPercent: roundPercent(classTargetDec, 2),
+        distance: roundPercent(distDec, 2),
+        inObjective: true
+      });
+    }
+
+    // Inclui também ativos em custódia que não estão na meta (meta 0% -> acima da meta)
+    for (const h of catHoldings) {
+      const upper = h.code.toUpperCase();
+      if (seen.has(upper)) continue;
+      const currentPctDec = totalDec.greaterThan(0)
+        ? d(h.currentValueBrl).div(totalDec).mul(100)
+        : d(0);
+      rows.push({
+        ticker: h.code,
+        name: nameResolver ? nameResolver(h.code, h.name) : h.name,
+        category: cat,
+        currentPercent: roundPercent(currentPctDec, 2),
+        targetPercent: 0,
+        classTargetPercent: 0,
+        distance: roundPercent(d(0).minus(currentPctDec), 2),
+        inObjective: false
+      });
+    }
+
+    if (cat === 'fixed' && rows.length === 0) {
+      rows.push({
+        ticker: 'Reserva / Renda Fixa Geral',
+        name: 'Tesouro Selic & Liquidez',
+        category: 'fixed',
+        currentPercent: catDist.currentPercent,
+        targetPercent: catDist.targetPercent,
+        classTargetPercent: 100,
+        distance: roundPercent(catDist.distance, 2),
+        inObjective: true
+      });
+    }
+
+    rows.sort((a, b) => b.distance - a.distance);
+    result[cat] = rows;
+  }
+
+  return result;
 }
 
 export function calculateEmergencyReserveStatus(
@@ -418,11 +563,15 @@ export function suggestInvestments(params: {
       let priceBrl = d(0);
       let nativePrice = d(0);
 
+      const upperCode = code.toUpperCase();
+      const mappedPriceBrl =
+        params.priceMapBrl[code] ?? params.priceMapBrl[upperCode] ?? 0;
+
       if (holding && holding.currentPrice > 0) {
         nativePrice = d(holding.currentPrice);
         priceBrl = isUs ? nativePrice.mul(usdRateDec) : nativePrice;
-      } else if (params.priceMapBrl[code] && params.priceMapBrl[code]! > 0) {
-        priceBrl = d(params.priceMapBrl[code]);
+      } else if (mappedPriceBrl > 0) {
+        priceBrl = d(mappedPriceBrl);
         nativePrice = isUs ? priceBrl.div(usdRateDec) : priceBrl;
       } else if (cat === 'fixed') {
         priceBrl = d(1);
@@ -458,22 +607,34 @@ export function suggestInvestments(params: {
   }
 
   candidates.sort((a, b) => b.distance - a.distance);
-  const selected = candidates.slice(0, numAssets);
-  if (selected.length === 0) return [];
-
-  const totalDistDec = selected.reduce((acc, item) => acc.plus(d(item.distance)), d(0));
-  if (totalDistDec.lessThanOrEqualTo(0)) return [];
+  if (candidates.length === 0) return [];
 
   const output: InvestmentSuggestionDTO[] = [];
+  let remainingBudgetDec = availableDec;
 
-  for (const item of selected) {
-    const weight = d(item.distance).div(totalDistDec);
-    const allocatedBrl = availableDec.mul(weight);
+  for (let i = 0; i < candidates.length && output.length < numAssets; i++) {
+    const item = candidates[i]!;
+    if (remainingBudgetDec.lessThan(1)) break;
+
+    const slotsLeft = numAssets - output.length;
+    // Soma as distâncias deste item e dos próximos candidatos necessários para preencher os slots restantes
+    const windowSlice = candidates.slice(i, i + slotsLeft);
+    const windowDistDec = windowSlice.reduce((acc, c) => acc.plus(d(c.distance)), d(0));
+    const weight = windowDistDec.greaterThan(0)
+      ? d(item.distance).div(windowDistDec)
+      : d(1).div(slotsLeft);
+
+    let allocatedBrl = remainingBudgetDec.mul(weight);
+    if (allocatedBrl.greaterThan(remainingBudgetDec)) {
+      allocatedBrl = remainingBudgetDec;
+    }
+
     const unitBrl = d(item.currentPriceBrl > 0 ? item.currentPriceBrl : 1);
 
+    // 1. Renda Fixa: aplicação monetária direta em R$
     if (item.category === 'fixed') {
       const valFixed = roundCurrency(allocatedBrl);
-      if (valFixed > 0) {
+      if (valFixed >= 1) {
         output.push({
           ticker: item.ticker,
           categoria: 'fixed',
@@ -481,28 +642,54 @@ export function suggestInvestments(params: {
           currentPrice: 1,
           valorTotal: valFixed,
           distance: roundPercent(item.distance, 2),
-          reason: `Rebalanceamento DAVI: classe Renda Fixa ${roundPercent(item.distance, 2)}% abaixo da meta.`
+          reason: `Rebalanceamento DAVI: Renda Fixa ${roundPercent(item.distance, 2)}% abaixo da meta.`
         });
+        remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(valFixed));
       }
       continue;
     }
 
+    // 2. Stocks e REITs (EUA): corretoras internacionais operam frações de ações (até 4 casas decimais)
+    if (item.category === 'stocks' || item.category === 'reits') {
+      const valUsBrl = roundCurrency(allocatedBrl);
+      if (valUsBrl >= 5) {
+        const fractionalShares = Number(d(valUsBrl).div(unitBrl).toFixed(4));
+        if (fractionalShares > 0) {
+          output.push({
+            ticker: item.ticker,
+            categoria: item.category,
+            cotas: fractionalShares,
+            currentPrice: roundCurrency(unitBrl),
+            valorTotal: valUsBrl,
+            distance: roundPercent(item.distance, 2),
+            reason: `Equilíbrio Global Hydra: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
+          });
+          remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(valUsBrl));
+        }
+      }
+      continue;
+    }
+
+    // 3. Ações BR e FIIs BR (B3): cotas inteiras com realocação inteligente de orçamento
     let shares = allocatedBrl.div(unitBrl).floor().toNumber();
-    if (shares === 0 && availableDec.greaterThanOrEqualTo(unitBrl) && output.length === 0) {
+    if (shares === 0 && remainingBudgetDec.greaterThanOrEqualTo(unitBrl)) {
       shares = 1;
     }
 
     if (shares > 0) {
       const totalOrderBrl = roundCurrency(d(shares).mul(unitBrl));
-      output.push({
-        ticker: item.ticker,
-        categoria: item.category,
-        cotas: shares,
-        currentPrice: roundCurrency(unitBrl),
-        valorTotal: totalOrderBrl,
-        distance: roundPercent(item.distance, 2),
-        reason: `Desconto de Alocação Hydra: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% alvo.`
-      });
+      if (d(totalOrderBrl).lessThanOrEqualTo(remainingBudgetDec)) {
+        output.push({
+          ticker: item.ticker,
+          categoria: item.category,
+          cotas: shares,
+          currentPrice: roundCurrency(unitBrl),
+          valorTotal: totalOrderBrl,
+          distance: roundPercent(item.distance, 2),
+          reason: `Desconto de Alocação Hydra: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
+        });
+        remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(totalOrderBrl));
+      }
     }
   }
 
@@ -528,10 +715,12 @@ export function calculateMagicNumbers(holdings: CategorizedHoldings): MagicNumbe
 
     // Usa dividendos reais 12m por cota ou DY anual fundamentalista como estimativa
     let monthlyDivPerShare = d(0);
+    let dataSource: MagicNumberRowDTO['dataSource'] = 'real_12m';
     if (h.dividends12mBrl > 0) {
       monthlyDivPerShare = d(h.dividends12mBrl).div(12).div(d(h.quantity));
     } else if (h.dividendYieldAnnual > 0) {
       monthlyDivPerShare = unitPriceBrl.mul(d(h.dividendYieldAnnual).div(100)).div(12);
+      dataSource = 'dy_fundamentalista';
     }
 
     if (monthlyDivPerShare.lessThanOrEqualTo(0)) continue;
@@ -542,6 +731,7 @@ export function calculateMagicNumbers(holdings: CategorizedHoldings): MagicNumbe
     const missingShares = Math.max(0, magicShares - h.quantity);
     const investmentNeeded = roundCurrency(d(missingShares).mul(unitPriceBrl));
     const progress = Math.min(100, roundPercent(d(h.quantity).div(magicShares).mul(100), 1));
+    const monthlyIncome = monthlyDivPerShare.mul(d(h.quantity));
 
     rows.push({
       code: h.code,
@@ -553,7 +743,11 @@ export function calculateMagicNumbers(holdings: CategorizedHoldings): MagicNumbe
       magicNumberShares: magicShares,
       missingShares,
       investmentNeededBrl: investmentNeeded,
-      progressPercent: progress
+      progressPercent: progress,
+      monthlyIncomeBrl: roundCurrency(monthlyIncome),
+      sharesGeneratedPerMonth: roundPercent(monthlyIncome.div(unitPriceBrl), 2),
+      isMagicReached: h.quantity >= magicShares,
+      dataSource
     });
   }
 

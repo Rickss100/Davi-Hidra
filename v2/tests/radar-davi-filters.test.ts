@@ -97,4 +97,99 @@ describe('Radar DAVI Filters Matcher', () => {
     const unratedAcao = { ...sampleAcao, userRating: 2 };
     expect(matchesDaviFilterMap(unratedAcao, starFilter)).toBe(false);
   });
+
+  describe('Novos Filtros do Método DAVI (Alinhados às 30 Aulas da Academia)', () => {
+    it('deve aprovar ações Novo Mercado (Tag Along 100%) e reprovar PN sem tag along', () => {
+      const filterNM = { only_novo_mercado: true };
+      expect(matchesDaviFilterMap(sampleAcao, filterNM)).toBe(true); // BBAS3 é Novo Mercado
+
+      const acaoPN = { ...sampleAcao, code: 'PETR4', name: 'Petrobras PN' };
+      expect(matchesDaviFilterMap(acaoPN, filterNM)).toBe(false);
+    });
+
+    it('deve filtrar setores perenes BEST (Bancos, Energia, Saneamento, Telecom, Seguros)', () => {
+      const filterBest = { only_best_sectors: true };
+      // BBAS3 é Financeiro/Bancos -> BEST
+      expect(matchesDaviFilterMap(sampleAcao, filterBest)).toBe(true);
+
+      const acaoEnergia = { ...sampleAcao, code: 'EGIE3', name: 'Engie Brasil', sector: 'Energia Elétrica' };
+      expect(matchesDaviFilterMap(acaoEnergia, filterBest)).toBe(true);
+
+      const acaoVarejo = { ...sampleAcao, code: 'MGLU3', name: 'Magazine Luiza', sector: 'Varejo' };
+      expect(matchesDaviFilterMap(acaoVarejo, filterBest)).toBe(false);
+    });
+
+    it('deve filtrar FIIs multiativo (>5 imóveis) e reprovar monoativos ou sem imóveis físicos', () => {
+      const filterMulti = { only_multi_property: true };
+
+      const fiiMultiativo: ComprehensiveRadarItem = {
+        ...sampleAcao,
+        code: 'HGLG11',
+        type: 'fiis',
+        category: 'fiis',
+        propertyCount: 20
+      };
+      expect(matchesDaviFilterMap(fiiMultiativo, filterMulti)).toBe(true);
+
+      const fiiMonoativo: ComprehensiveRadarItem = {
+        ...sampleAcao,
+        code: 'FAMB11B',
+        type: 'fiis',
+        category: 'fiis',
+        propertyCount: 1
+      };
+      expect(matchesDaviFilterMap(fiiMonoativo, filterMulti)).toBe(false);
+    });
+
+    it('deve aplicar régua inteligente de P/VP: papel máximo 1.02 e tijolo até 1.08', () => {
+      const filterSmartPvp = { smart_fii_pvp: true };
+
+      // FII de Papel com P/VP 1.05 -> DEVE REPROVAR (Aula 5.2: risco de pagar ágio sobre dívida)
+      const fiiPapelCaro: ComprehensiveRadarItem = {
+        ...sampleAcao,
+        code: 'KNCR11',
+        name: 'Kinea Rendimentos Imobiliários',
+        type: 'fiis',
+        category: 'fiis',
+        sector: 'Títulos e Val. Mob.',
+        pVpa: 1.05
+      };
+      expect(matchesDaviFilterMap(fiiPapelCaro, filterSmartPvp)).toBe(false);
+
+      // FII de Papel com P/VP 0.99 -> DEVE APROVAR
+      const fiiPapelJusto: ComprehensiveRadarItem = {
+        ...fiiPapelCaro,
+        pVpa: 0.99
+      };
+      expect(matchesDaviFilterMap(fiiPapelJusto, filterSmartPvp)).toBe(true);
+
+      // FII de Tijolo com P/VP 1.06 -> DEVE APROVAR (tijolo aceita até 1.08 pela qualidade do imóvel)
+      const fiiTijolo: ComprehensiveRadarItem = {
+        ...sampleAcao,
+        code: 'HGLG11',
+        name: 'CSHG Logística',
+        type: 'fiis',
+        category: 'fiis',
+        sector: 'Logística',
+        pVpa: 1.06
+      };
+      expect(matchesDaviFilterMap(fiiTijolo, filterSmartPvp)).toBe(true);
+    });
+
+    it('deve filtrar ETFs Globais e reprovar ações pontuais', () => {
+      const filterEtf = { only_etfs: true };
+
+      const etfVoo: ComprehensiveRadarItem = {
+        ...sampleAcao,
+        code: 'VOO',
+        name: 'Vanguard S&P 500 ETF',
+        type: 'stocks',
+        category: 'stocks'
+      };
+      expect(matchesDaviFilterMap(etfVoo, filterEtf)).toBe(true);
+
+      // Ação individual não é ETF
+      expect(matchesDaviFilterMap(sampleAcao, filterEtf)).toBe(false);
+    });
+  });
 });

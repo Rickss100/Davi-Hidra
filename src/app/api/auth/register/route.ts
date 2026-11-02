@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { users } from '@/db/schema';
 import { checkRateLimit } from '@/server/rate-limit';
@@ -14,7 +14,7 @@ import {
 
 const registerSchema = z.object({
   name: z.string().trim().min(2, 'Informe seu nome completo.').max(120),
-  email: z.string().trim().email('Informe um e-mail válido.').max(160),
+  email: z.string().trim().toLowerCase().email('Informe um e-mail válido.').max(160),
   password: z.string().min(8, 'A senha deve ter no mínimo 8 caracteres.')
 });
 
@@ -36,31 +36,34 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'VALIDATION_ERROR', message: firstIssue }, { status: 400 });
     }
 
+    const cleanEmail = parsed.data.email.toLowerCase().trim();
     const db = await getDb();
     const existing = await db
       .select({ id: users.id })
       .from(users)
-      .where(eq(users.email, parsed.data.email.toLowerCase()))
+      .where(sql`LOWER(${users.email}) = ${cleanEmail}`)
       .limit(1);
 
     if (existing.length > 0) {
       return NextResponse.json(
-        { error: 'EMAIL_EXISTS', message: 'Já existe uma conta cadastrada com este e-mail.' },
+        { error: 'EMAIL_EXISTS', message: 'Já existe uma conta cadastrada com este e-mail. Faça login ou recupere seu acesso.' },
         { status: 409 }
       );
     }
 
     const passwordHash = await bcrypt.hash(parsed.data.password, 10);
+    const planExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 dias de degustação gratuita
 
     const inserted = await db
       .insert(users)
       .values({
         name: parsed.data.name,
-        email: parsed.data.email.toLowerCase(),
+        email: cleanEmail,
         passwordHash,
         role: 'user',
         status: 'active',
-        planPeriod: 'lifetime',
+        planPeriod: '1_month',
+        planExpiresAt,
         lastLoginAt: new Date()
       })
       .returning();

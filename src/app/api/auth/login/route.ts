@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { users } from '@/db/schema';
 import { env } from '@/env';
@@ -43,11 +43,12 @@ export async function POST(request: Request) {
       );
     }
 
+    const cleanEmail = parsed.data.email.toLowerCase().trim();
     const db = await getDb();
     const found = await db
       .select()
       .from(users)
-      .where(eq(users.email, parsed.data.email))
+      .where(sql`LOWER(${users.email}) = ${cleanEmail}`)
       .limit(1);
 
     const userRow = found[0];

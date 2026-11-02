@@ -193,18 +193,28 @@ export function EditUserModal({
           </div>
 
           <div>
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-slate-400">
-              Nova Senha
-            </label>
+            <div className="mb-1.5 flex items-center justify-between">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-400">
+                Nova Senha
+              </label>
+              <button
+                type="button"
+                onClick={() => setPassword(email.trim().toLowerCase())}
+                className="text-[11px] font-semibold text-emerald-400 hover:text-emerald-300 hover:underline flex items-center gap-1 transition-colors"
+                title="Preenche a senha provisória com o e-mail do usuário"
+              >
+                ⚡ Usar E-mail como Senha Provisória
+              </button>
+            </div>
             <input
-              type="password"
-              placeholder="Digite a nova senha..."
+              type="text"
+              placeholder="Digite a nova senha ou use o atalho acima..."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border border-slate-700/60 bg-[#111c34] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"
+              className="w-full rounded-xl border border-slate-700/60 bg-[#111c34] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors font-mono"
             />
             <p className="mt-1 text-[11px] text-slate-400">
-              Deixe em branco para não alterar. A senha atual não pode ser visualizada por segurança.
+              Deixe em branco para não alterar. Se preenchida, esta passará a ser a senha de acesso do usuário.
             </p>
           </div>
 

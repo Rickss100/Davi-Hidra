@@ -22,12 +22,14 @@ import {
   EyeOff,
   Menu,
   X,
-  Settings
+  Settings,
+  KeyRound
 } from 'lucide-react';
 import { usePortfolioData, useSyncLivePrices } from '@/hooks/use-portfolio';
 import { Button, Badge } from '@/components/ui/primitives';
 import { BrandLogo } from '@/components/ui/brand-logo';
 import { TwoFactorModal } from '@/components/security/two-factor-modal';
+import { ChangePasswordModal } from '@/components/security/change-password-modal';
 import { PrivateAiDrawer } from '@/components/chat/private-ai-drawer';
 import { useAccessibility } from '@/contexts/accessibility-context';
 import { useClickToSpeech } from '@/lib/accessibility/use-click-to-speech';
@@ -59,6 +61,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
   const syncPrices = useSyncLivePrices();
 
   const [show2FAModal, setShow2FAModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIosGuide, setShowIosGuide] = useState(false);
@@ -192,6 +195,17 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
               <Badge tone={ctx?.actor.totpEnabled ? 'emerald' : 'gold'}>
                 {ctx?.actor.totpEnabled ? 'Ativo' : 'Ativar'}
               </Badge>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setShowChangePasswordModal(true)}
+              className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-obsidian-950 px-3 py-2 text-xs font-medium text-slate-300 hover:border-gold-500/40 hover:text-gold-300 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <KeyRound className="h-4 w-4 text-gold-400" />
+                Alterar Minha Senha
+              </span>
             </button>
 
             <button
@@ -349,6 +363,18 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                 <ShieldCheck className="h-4 w-4 text-emerald-400" />
                 Configurar 2FA QR Code
               </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full justify-start gap-2"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setShowChangePasswordModal(true);
+                }}
+              >
+                <KeyRound className="h-4 w-4 text-gold-400" />
+                Alterar Minha Senha
+              </Button>
               <Button variant="danger" size="sm" className="w-full justify-start" onClick={handleLogout}>
                 <LogOut className="h-4 w-4" />
                 Sair da Conta
@@ -412,6 +438,9 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
+      {showChangePasswordModal && (
+        <ChangePasswordModal onClose={() => setShowChangePasswordModal(false)} />
+      )}
       <TwoFactorModal
         open={show2FAModal}
         onClose={() => setShow2FAModal(false)}

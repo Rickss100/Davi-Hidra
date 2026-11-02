@@ -30,6 +30,8 @@ import { Button, Badge } from '@/components/ui/primitives';
 import { BrandLogo } from '@/components/ui/brand-logo';
 import { TwoFactorModal } from '@/components/security/two-factor-modal';
 import { ChangePasswordModal } from '@/components/security/change-password-modal';
+import { SubscriptionCard } from '@/components/subscription/subscription-card';
+import { PlansModal } from '@/components/subscription/plans-modal';
 import { PrivateAiDrawer } from '@/components/chat/private-ai-drawer';
 import { useAccessibility } from '@/contexts/accessibility-context';
 import { useClickToSpeech } from '@/lib/accessibility/use-click-to-speech';
@@ -62,6 +64,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
 
   const [show2FAModal, setShow2FAModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
+  const [showPlansModal, setShowPlansModal] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showIosGuide, setShowIosGuide] = useState(false);
@@ -168,7 +171,12 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
             )}
           </nav>
 
-          <div className="space-y-2 border-t border-slate-800/80 p-3">
+          <div className="space-y-2.5 border-t border-slate-800/80 p-3">
+            <SubscriptionCard
+              user={ctx?.actor}
+              onOpenPlans={() => setShowPlansModal(true)}
+            />
+
             <button
               type="button"
               onClick={openDrawer}
@@ -339,6 +347,15 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
               )}
             </div>
             <div className="space-y-2 border-t border-slate-800 pt-3">
+              <div className="mb-2">
+                <SubscriptionCard
+                  user={ctx?.actor}
+                  onOpenPlans={() => {
+                    setMobileMenuOpen(false);
+                    setShowPlansModal(true);
+                  }}
+                />
+              </div>
               <Button
                 variant="outline"
                 size="sm"
@@ -440,6 +457,13 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
 
       {showChangePasswordModal && (
         <ChangePasswordModal onClose={() => setShowChangePasswordModal(false)} />
+      )}
+      {showPlansModal && (
+        <PlansModal
+          onClose={() => setShowPlansModal(false)}
+          userEmail={ctx?.actor.email}
+          currentPlan={ctx?.actor.planPeriod}
+        />
       )}
       <TwoFactorModal
         open={show2FAModal}

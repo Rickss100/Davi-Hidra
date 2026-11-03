@@ -9,7 +9,21 @@ import { formatBRL, formatPercent } from '@/lib/money';
 import { HomeCharts } from '@/components/dashboard/home-charts';
 
 export default function HomeExecutivePage() {
-  const { data, isLoading } = usePortfolioData();
+  const { data, isLoading, isError, error, refetch } = usePortfolioData();
+
+  if (isError) {
+    return (
+      <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-6 text-center space-y-3">
+        <h2 className="text-lg font-bold text-white">Falha ao consolidar dados da carteira</h2>
+        <p className="text-xs text-rose-300">
+          {(error as Error)?.message || 'Ocorreu um erro ao carregar as posições no banco de dados.'}
+        </p>
+        <Button onClick={() => refetch()} variant="outline" size="sm" className="mt-2">
+          Recarregar Carteira
+        </Button>
+      </div>
+    );
+  }
 
   if (isLoading || !data) {
     return (

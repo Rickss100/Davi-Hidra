@@ -188,8 +188,8 @@ async function createDatabaseConnection(): Promise<AppDatabase> {
     const client = postgres(connectionUrl, {
       ssl: 'require',
       prepare: false, // Obrigatório para Supabase Transaction Pooler (porta 6543)
-      max: process.env.VERCEL ? 1 : 2, // Pool enxuto por lambda para evitar contenção
-      idle_timeout: 10,
+      max: 10, // Permite execução paralela de queries concorrentes (Promise.all) sem deadlock
+      idle_timeout: 15,
       connect_timeout: 10
     });
     return drizzlePostgres(client, { schema });

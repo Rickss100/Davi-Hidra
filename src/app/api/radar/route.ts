@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { getDb } from '@/db';
 import { assets, cachedPrices, fundamentals, userAssetNotes } from '@/db/schema';
 import { getAuthorizedContextOrNull } from '@/server/dal/auth-dal';
@@ -171,31 +171,77 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => ({}));
   const assetCode = String(body.assetCode || '').trim();
-  const rating = Math.max(1, Math.min(5, Number(body.rating || 5)));
-  const notes = String(body.notes || '').slice(0, 500);
-
   if (!assetCode) {
     return NextResponse.json({ error: 'INVALID_ASSET' }, { status: 400 });
   }
 
+  // Permite rating de 0 a 5. Se rating for 0 ou null, a nota é removida/zerada
+  const rawRating = body.rating !== undefined && body.rating !== null ? Number(body.rating) : null;
+  const rating = rawRating !== null && !isNaN(rawRating) ? Math.max(0, Math.min(5, rawRating)) : 0;
+  const notes = body.notes !== undefined ? String(body.notes || '').slice(0, 500) : undefined;
+
   const db = await getDb();
+
+  // Se a nota foi zerada (rating === 0)
+  if (rating === 0) {
+    // Se não enviou notas de texto ou a anotação está vazia:
+    if (notes === undefined || !notes.trim()) {
+      const existing = await db
+        .select()
+        .from(userAssetNotes)
+        .where(
+          and(
+            eq(userAssetNotes.userId, ctx.portfolioOwner.id),
+            eq(userAssetNotes.assetCode, assetCode)
+          )
+        )
+        .limit(1);
+
+      if (existing.length > 0 && existing[0]?.notes?.trim()) {
+        // Preserva o texto da anotação, zerando apenas a nota
+        await db
+          .update(userAssetNotes)
+          .set({ rating: 0, updatedAt: new Date() })
+          .where(
+            and(
+              eq(userAssetNotes.userId, ctx.portfolioOwner.id),
+              eq(userAssetNotes.assetCode, assetCode)
+            )
+          );
+      } else {
+        // Se não há anotação textual prévia, exclui o registro completamente
+        await db
+          .delete(userAssetNotes)
+          .where(
+            and(
+              eq(userAssetNotes.userId, ctx.portfolioOwner.id),
+              eq(userAssetNotes.assetCode, assetCode)
+            )
+          );
+      }
+
+      return NextResponse.json({ success: true, rating: 0 });
+    }
+  }
+
+  // Inserção ou atualização com nota (1 a 5) ou com anotação textual
   await db
     .insert(userAssetNotes)
     .values({
       userId: ctx.portfolioOwner.id,
       assetCode,
       rating,
-      notes,
+      notes: notes ?? '',
       updatedAt: new Date()
     })
     .onConflictDoUpdate({
       target: [userAssetNotes.userId, userAssetNotes.assetCode],
       set: {
         rating,
-        notes,
+        ...(notes !== undefined ? { notes } : {}),
         updatedAt: new Date()
       }
     });
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true, rating });
 }

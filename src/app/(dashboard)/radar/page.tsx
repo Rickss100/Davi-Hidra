@@ -86,6 +86,7 @@ export default function RadarAtivosPage() {
   const [sortKey, setSortKey] = useState<SortKey>('dividendYield');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [localRatings, setLocalRatings] = useState<Record<string, number>>({});
 
   const { data: portfolioData, refetch: refetchPortfolio } = usePortfolioData();
 
@@ -228,13 +229,25 @@ export default function RadarAtivosPage() {
     }
   };
 
-  const handleRate = async (assetCode: string, rating: number) => {
-    await fetch('/api/radar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ assetCode, rating })
-    });
-    await refetch();
+  const handleRate = async (assetCode: string, targetStar: number, currentRating: number) => {
+    // Se clicou na mesma estrela da nota atual ou em 0, zera a nota (toggle off)
+    const nextRating = targetStar === 0 || currentRating === targetStar ? 0 : targetStar;
+    const upperCode = assetCode.toUpperCase();
+
+    // Atualização otimista imediata na interface
+    setLocalRatings((prev) => ({ ...prev, [upperCode]: nextRating }));
+
+    try {
+      await fetch('/api/radar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ assetCode, rating: nextRating })
+      });
+      await refetch();
+    } catch {
+      // Reverte em caso de falha de rede
+      setLocalRatings((prev) => ({ ...prev, [upperCode]: currentRating }));
+    }
   };
 
   const handleToggleTarget = async (item: ComprehensiveRadarItem) => {
@@ -864,29 +877,59 @@ export default function RadarAtivosPage() {
                             </>
                           )}
 
-                          {/* Avaliação por Estrelas (1 a 5) */}
+                          {/* Avaliação por Estrelas (1 a 5) com Toggle para Zerar e Botão Limpar */}
                           <td className="px-2 py-2 text-center whitespace-nowrap">
-                            <div
-                              className="inline-flex items-center gap-0.5"
-                              title="Avalie com 1 a 5 estrelas"
-                            >
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <button
-                                  key={star}
-                                  type="button"
-                                  aria-label={`Avaliar ${item.code} com ${star} estrela${star > 1 ? 's' : ''}`}
-                                  onClick={() => handleRate(item.code, star)}
-                                  className={cn(
-                                    'p-0.5 transition-colors',
-                                    (item.userRating ?? 0) >= star
-                                      ? 'text-gold-400 hover:text-gold-300'
-                                      : 'text-slate-700 hover:text-gold-400/80'
-                                  )}
+                            {(() => {
+                              const upperCode = item.code.toUpperCase();
+                              const effectiveRating =
+                                localRatings[upperCode] !== undefined
+                                  ? (localRatings[upperCode] ?? 0)
+                                  : (item.userRating ?? 0);
+
+                              return (
+                                <div
+                                  className="inline-flex items-center gap-0.5"
+                                  title={
+                                    effectiveRating > 0
+                                      ? `Nota atual: ${effectiveRating} estrela${effectiveRating > 1 ? 's' : ''}. Clique na estrela ${effectiveRating} para retirar.`
+                                      : 'Clique para avaliar com 1 a 5 estrelas'
+                                  }
                                 >
-                                  <Star className="h-3.5 w-3.5 fill-current" />
-                                </button>
-                              ))}
-                            </div>
+                                  {[1, 2, 3, 4, 5].map((star) => (
+                                    <button
+                                      key={star}
+                                      type="button"
+                                      aria-label={
+                                        effectiveRating === star
+                                          ? `Retirar avaliação de ${item.code}`
+                                          : `Avaliar ${item.code} com ${star} estrela${star > 1 ? 's' : ''}`
+                                      }
+                                      onClick={() => handleRate(item.code, star, effectiveRating)}
+                                      className={cn(
+                                        'p-0.5 transition-colors',
+                                        effectiveRating >= star
+                                          ? 'text-gold-400 hover:text-gold-300'
+                                          : 'text-slate-700 hover:text-gold-400/80'
+                                      )}
+                                    >
+                                      <Star className="h-3.5 w-3.5 fill-current" />
+                                    </button>
+                                  ))}
+
+                                  {effectiveRating > 0 && (
+                                    <button
+                                      type="button"
+                                      aria-label={`Retirar todas as estrelas de ${item.code}`}
+                                      title="Retirar nota (zerar estrelas)"
+                                      onClick={() => handleRate(item.code, 0, effectiveRating)}
+                                      className="ml-1 rounded p-0.5 text-slate-500 transition-colors hover:bg-obsidian-800 hover:text-rose-400"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           </td>
 
                           {/* Botão Minha Meta */}

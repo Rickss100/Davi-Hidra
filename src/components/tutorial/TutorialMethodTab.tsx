@@ -122,7 +122,7 @@ export function TutorialMethodTab() {
           </span>
         </div>
         <h3 className="text-lg font-bold text-white">
-          O Método Davi & O Mecanismo Hydra: Esculpa o Seu Império
+          O Método Davi & O Carteira Antifrágil: Esculpa o Seu Império
         </h3>
 
         <div className="mt-4 space-y-4">
@@ -139,17 +139,17 @@ export function TutorialMethodTab() {
 
           <div className="rounded-xl border-l-4 border-emerald-500 bg-[#111c34]/60 p-4">
             <h4 className="mb-1 text-sm font-bold text-white">
-              🐉 O Mecanismo Hydra: Os tentáculos antifrágeis do seu Império
+              🐉 O Carteira Antifrágil: Os tentáculos antifrágeis do seu Império
             </h4>
             <p className="text-xs leading-relaxed text-slate-300">
               Na mitologia, quando alguém tenta cortar uma cabeça da Hidra, novas cabeças nascem ainda mais fortes.  
-              No <strong>Norte Invest</strong>, você não investe em uma única empresa ou aposta isolada — <strong>você constrói um império patrimonial</strong> distribuído em múltiplos tentáculos: Ações, Fundos Imobiliários, Renda Fixa Soberana e Ativos Globais. Quando o mercado entra em crise e &quot;tenta cortar uma cabeça&quot; (um setor em baixa ou inflação alta), o algoritmo da Hydra automaticamente se reposiciona, aportando com desconto nos ativos mais baratos e fazendo o seu império florescer ainda mais forte.
+              No <strong>MANTFRAI</strong>, você não investe em uma única empresa ou aposta isolada — <strong>você constrói um império patrimonial</strong> distribuído em múltiplos tentáculos: Ações, Fundos Imobiliários, Renda Fixa Soberana e Ativos Globais. Quando o mercado entra em crise e &quot;tenta cortar uma cabeça&quot; (um setor em baixa ou inflação alta), o algoritmo da Hydra automaticamente se reposiciona, aportando com desconto nos ativos mais baratos e fazendo o seu império florescer ainda mais forte.
             </p>
           </div>
         </div>
       </div>
 
-      {/* Card Algoritmo de Alocação AM2O */}
+      {/* Card Algoritmo de Alocação Motor RDM */}
       <div className="rounded-2xl border border-slate-800 bg-[#0d1527] p-6 shadow-sm">
         <div className="mb-3">
           <span className="inline-flex rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-emerald-400">
@@ -157,10 +157,10 @@ export function TutorialMethodTab() {
           </span>
         </div>
         <h3 className="text-lg font-bold text-white">
-          A Metodologia AM2O: Por que nunca tentamos adivinhar o mercado?
+          A Metodologia Motor RDM: Por que nunca tentamos adivinhar o mercado?
         </h3>
         <p className="mt-2 text-xs leading-relaxed text-slate-300">
-          <strong>AM2O</strong> significa <em>&quot;Aporte no Mais Distante do Objetivo&quot;</em>. A cada mês, o mercado estará em uma fase diferente: às vezes ações brasileiras caem, enquanto o dólar sobe; em outros momentos, os fundos imobiliários ficam baratos enquanto a renda fixa recua.
+          <strong>Motor RDM</strong> significa <em>&quot;Aporte no Mais Distante do Objetivo&quot;</em>. A cada mês, o mercado estará em uma fase diferente: às vezes ações brasileiras caem, enquanto o dólar sobe; em outros momentos, os fundos imobiliários ficam baratos enquanto a renda fixa recua.
         </p>
         <p className="mt-2 text-xs leading-relaxed text-slate-300">
           Em vez de tentar prever o futuro (o que ninguém consegue com consistência), você abre o aplicativo, informa o valor disponível para investir e o sistema aponta matematicamente para o ativo que mais se distanciou da sua meta ideal.

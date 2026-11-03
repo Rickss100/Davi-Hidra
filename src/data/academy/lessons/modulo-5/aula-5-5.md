@@ -3,17 +3,17 @@ id: "mod-5-aula-5"
 moduloId: "modulo-5"
 moduloTitulo: "Módulo 5: Selecionando os Melhores Fundos Imobiliários (FIIs)"
 numeroAula: "5.5"
-titulo: "O Método DAVI para FIIs: Filtro Completo, Carteira Blindada & Renda Perpétua"
+titulo: "O Filtro MFS para FIIs: Filtro Completo, Carteira Blindada & Renda Perpétua"
 duracaoLeitura: "6 min"
 arquivoOrigem: "public/Curso IDV/5. Selecionando os Melhores FIIs/Transcrição - Aula 5.5.pdf"
 status: "ready"
 ---
 
-# Aula 5.5 — O Método DAVI para FIIs: Carteira Blindada & Renda Perpétua
+# Aula 5.5 — O Filtro MFS para FIIs: Carteira Blindada & Renda Perpétua
 
 Chegamos à aula culminante do Módulo de Fundos Imobiliários. Nas aulas anteriores, você dominou a anatomia dos ativos (Tijolo vs Papel), a qualidade física dos imóveis (localização e contratos atípicos) e a idoneidade das gestoras.
 
-Agora, vamos unificar todo esse conhecimento através do **cinzel do Método DAVI aplicado aos FIIs** e aprender a estruturar uma carteira imobiliária diversificada, antifrágil e capaz de pingar aluguéis crescentes na sua conta corrente todos os meses pelo resto da sua vida.
+Agora, vamos unificar todo esse conhecimento através do **cinzel do Filtro MFS aplicado aos FIIs** e aprender a estruturar uma carteira imobiliária diversificada, antifrágil e capaz de pingar aluguéis crescentes na sua conta corrente todos os meses pelo resto da sua vida.
 
 ---
 
@@ -21,7 +21,7 @@ Agora, vamos unificar todo esse conhecimento através do **cinzel do Método DAV
 
 Hoje existem mais de **450 Fundos Imobiliários listados na B3**. Mais de 70% deles são fundos pequenos, ilíquidos, monoativos ou com gestoras inexperientes.
 
-Veja como o Método DAVI elimina as imperfeições do bloco bruto:
+Veja como o Filtro MFS elimina as imperfeições do bloco bruto:
 
 ```mermaid
 flowchart TD
@@ -36,7 +36,7 @@ flowchart TD
 
 ## 🏛️ 2. A Estrutura da Carteira Imobiliária Perfeita (8 a 12 FIIs)
 
-Para construir um império de renda passiva que não sofra abalos, o Norte Invest recomenda selecionar entre **8 a 12 Fundos Imobiliários** da Lista de Ouro, distribuídos estrategicamente em quatro grandes pilares:
+Para construir um império de renda passiva que não sofra abalos, o MANTFRAI recomenda selecionar entre **8 a 12 Fundos Imobiliários** da Lista de Ouro, distribuídos estrategicamente em quatro grandes pilares:
 
 | Pilar Imobiliário | Peso Sugerido | Função Estratégica na Carteira | Exemplos Típicos de Excelência |
 | :--- | :---: | :--- | :--- |
@@ -49,12 +49,12 @@ Para construir um império de renda passiva que não sofra abalos, o Norte Inves
 
 ---
 
-## 📱 3. Aplicação Prática no App Norte Invest
+## 📱 3. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, todo esse ecossistema trabalha de forma integrada:
+No **MANTFRAI Enterprise**, todo esse ecossistema trabalha de forma integrada:
 1. Acesse o **Radar de Ativos** (`/radar`) para selecionar os FIIs da Lista de Ouro e incluí-los na sua carteira.
 2. Defina os percentuais de cada um no menu **Definir Objetivos** (`/definir-objetivos`).
-3. No dia do seu aporte mensal, abra a tela **Onde Aportar** (`/onde-aportar`): o algoritmo **AM2O** verifica automaticamente qual fundo de tijolo ou papel está com o melhor preço e menor P/VP no momento e indica o aporte exato com desconto!
+3. No dia do seu aporte mensal, abra a tela **Onde Aportar** (`/onde-aportar`): o algoritmo **Motor RDM** verifica automaticamente qual fundo de tijolo ou papel está com o melhor preço e menor P/VP no momento e indica o aporte exato com desconto!
 4. Acompanhe a bola de neve crescendo na tela **Renda Passiva** (`/renda-passiva`).
 
 ---
@@ -63,7 +63,7 @@ No **Norte Invest V2 Enterprise**, todo esse ecossistema trabalha de forma integ
 
 > 🚫 **O Erro:** Vender as cotas de um FII excelente de tijolo só porque a cotação caiu 5% no mês devido ao anúncio de uma alta temporária na taxa Selic.
 > 
-> 🛡️ **A Postura Norte Invest:** Os prédios continuam no mesmo lugar e os contratos continuam sendo pagos. Queda de cotação em bons FIIs é apenas um convite para o algoritmo AM2O comprar mais cotas com desconto e aumentar a sua taxa de retorno em proventos (*Yield on Cost*).
+> 🛡️ **A Postura MANTFRAI:** Os prédios continuam no mesmo lugar e os contratos continuam sendo pagos. Queda de cotação em bons FIIs é apenas um convite para o algoritmo Motor RDM comprar mais cotas com desconto e aumentar a sua taxa de retorno em proventos (*Yield on Cost*).
 
 ---
 
@@ -86,4 +86,4 @@ pie title Distribuição Setorial Ideal em FIIs (8 a 12 Fundos)
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula final empolgante e muito prática sobre como montar uma carteira completa de Fundos Imobiliários com o Método DAVI. Usem o funil de eliminação para mostrar como 450 fundos se transformam em uma Lista de Ouro de elite, detalhem a divisão setorial recomendada (logística, papel, shoppings e lajes corporativas) e mostrem como o algoritmo AM2O do Norte Invest garante compras mecânicas com desconto e renda passiva crescente para toda a vida."*
+> *"Apresentem uma aula final empolgante e muito prática sobre como montar uma carteira completa de Fundos Imobiliários com o Filtro MFS. Usem o funil de eliminação para mostrar como 450 fundos se transformam em uma Lista de Ouro de elite, detalhem a divisão setorial recomendada (logística, papel, shoppings e lajes corporativas) e mostrem como o algoritmo Motor RDM do MANTFRAI garante compras mecânicas com desconto e renda passiva crescente para toda a vida."*

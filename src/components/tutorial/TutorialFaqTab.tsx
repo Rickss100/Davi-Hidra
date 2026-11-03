@@ -55,7 +55,7 @@ export function TutorialFaqTab() {
               : 'border border-slate-800 bg-[#0d1527] text-slate-400 hover:text-white'
           }`}
         >
-          Método DAVI & Hydra
+          MANTFRAI (Método Antifrágil de Investimento)
         </button>
         <button
           type="button"

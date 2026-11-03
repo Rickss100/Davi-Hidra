@@ -68,10 +68,10 @@ Os psicólogos ganhadores do Prêmio Nobel Daniel Kahneman e Amos Tversky compro
 
 ---
 
-## 📱 5. Como o App Norte Invest Blindará Você na Prática
+## 📱 5. Como o App MANTFRAI Blindará Você na Prática
 
-Para que você nunca dependa da sua força de vontade emocional no calor de uma crise, o Norte Invest V2 Enterprise foi desenhado com arquitetura de contenção:
-1. **Onde Aportar (`/onde-aportar`):** O algoritmo AM2O inverte a psicologia amadora. Quando uma classe cai de preço, o algoritmo identifica que ela se distanciou da meta e manda você comprar justamente os ativos com desconto. Você compra barato sem hesitar.
+Para que você nunca dependa da sua força de vontade emocional no calor de uma crise, o MANTFRAI Enterprise foi desenhado com arquitetura de contenção:
+1. **Onde Aportar (`/onde-aportar`):** O algoritmo Motor RDM inverte a psicologia amadora. Quando uma classe cai de preço, o algoritmo identifica que ela se distanciou da meta e manda você comprar justamente os ativos com desconto. Você compra barato sem hesitar.
 2. **Resumo & Radar (`/resumo` e `/radar`):** Em vez de gráficos histéricos de piscar vermelho e verde, nosso painel foca na solidez dos fundamentos (Lucro Líquido, ROE, Payout e Margem Líquida).
 3. **Reserva de Emergência (`/reserva-emergencia`):** Garante que você tenha um colchão de segurança 100% líquido em renda fixa, impedindo que você seja forçado a resgatar ações na baixa diante de um imprevisto da vida.
 
@@ -93,7 +93,7 @@ flowchart TD
         C3 --> C4["Decisões no Calor do Pânico"]
     end
 
-    subgraph LongoPrazo["🛡️ Longo Prazo Norte Invest (5 a 20 Anos)"]
+    subgraph LongoPrazo["🛡️ Longo Prazo MANTFRAI (5 a 20 Anos)"]
         L1["Foco nos Lucros & Fundamentos"] --> L2["Proventos Reinvestidos Constantes"]
         L2 --> L3["Curva Exponencial dos Juros Compostos 📈"]
         L3 --> L4["Probabilidade de Ganho Histórico: ~100% 👑"]
@@ -109,4 +109,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma reflexão profunda e inspiradora sobre o maior desafio psicológico de um investidor: lidar com a volatilidade. Expliquem a diferença fundamental entre volatilidade passageira e perda permanente, usem a analogia impecável do prédio e do vizinho desesperado, e demonstrem com dados históricos por que o tempo zera o risco na renda variável. Mostrem como o algoritmo AM2O do Norte Invest transforma as crises em oportunidades automáticas de compra barata."*
+> *"Apresentem uma reflexão profunda e inspiradora sobre o maior desafio psicológico de um investidor: lidar com a volatilidade. Expliquem a diferença fundamental entre volatilidade passageira e perda permanente, usem a analogia impecável do prédio e do vizinho desesperado, e demonstrem com dados históricos por que o tempo zera o risco na renda variável. Mostrem como o algoritmo Motor RDM do MANTFRAI transforma as crises em oportunidades automáticas de compra barata."*

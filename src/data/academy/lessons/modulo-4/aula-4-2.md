@@ -1,7 +1,7 @@
 ---
 id: "mod-4-aula-2"
 moduloId: "modulo-4"
-moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Método DAVI"
+moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Filtro MFS"
 numeroAula: "4.2"
 titulo: "Fundamentos das Ações I: Sociedade, Governança & Tag Along (O Filtro de Integridade)"
 duracaoLeitura: "5 min"
@@ -17,7 +17,7 @@ Porém, o seu sócio administra o caixa, contrata parentes com salários exorbit
 
 Qual será o resultado dessa sociedade? **Você será lesado e perderá o seu dinheiro**, por mais lucrativa que a padaria pudesse ser no papel.
 
-Na Bolsa de Valores a dinâmica é idêntica. É por isso que no Método DAVI nós **nunca começamos olhando gráficos ou lucros**. Nós começamos sempre pelo primeiro e mais inegociável fundamento: **a idoneidade e o alinhamento da Sociedade**.
+Na Bolsa de Valores a dinâmica é idêntica. É por isso que no Filtro MFS nós **nunca começamos olhando gráficos ou lucros**. Nós começamos sempre pelo primeiro e mais inegociável fundamento: **a idoneidade e o alinhamento da Sociedade**.
 
 ---
 
@@ -25,12 +25,12 @@ Na Bolsa de Valores a dinâmica é idêntica. É por isso que no Método DAVI n�
 
 A Bolsa de Valores brasileira divide as empresas em diferentes "prateleiras" de governança corporativa. O investidor inteligente só coloca os pés onde os direitos dos sócios minoritários são respeitados por contrato:
 
-| Segmento B3 | Nível de Proteção | Regras Principais | Aprovação Norte Invest |
+| Segmento B3 | Nível de Proteção | Regras Principais | Aprovação MANTFRAI |
 | :--- | :--- | :--- | :--- |
 | **Novo Mercado** | 🥇 **Padrão Ouro Máximo** | Apenas ações ON (100% alinhamento, uma ação = um voto); **Tag Along de 100% obrigatório**; mínimo de 20% de conselheiros independentes; comitê de auditoria obrigatório. | ✅ **Recomendação Prioritária** |
 | **Nível 2** | 🥈 Alto | Permite emissão de ações PN, mas exige Tag Along de 100% para ações ON e PN, além de relatórios contábeis internacionais (IFRS). | ✅ **Aprovado com Ressalvas** |
 | **Nível 1** | 🥉 Médio | Exige maior divulgação de informações trimestrais, mas não garante Tag Along de 100%. | ⚠️ **Análise Crítica Estrita** |
-| **Básico / Balcão** | ❌ Baixo | Regras mínimas da Lei das S/A (Tag Along mínimo de 80% só para ON). Risco elevado para o minoritário. | 🚫 **Eliminado pelo Método DAVI** |
+| **Básico / Balcão** | ❌ Baixo | Regras mínimas da Lei das S/A (Tag Along mínimo de 80% só para ON). Risco elevado para o minoritário. | 🚫 **Eliminado pelo Filtro MFS** |
 
 ---
 
@@ -50,16 +50,16 @@ O **Tag Along** (ou Direito de Saída Conjunta) é a garantia jurídica de que v
 
 ## ⏳ 3. Tempo de Listagem & Liquidez Mínima
 
-Para garantir que a governança não seja apenas uma fachada de marketing, o Método DAVI aplica mais dois critérios eliminatórios:
+Para garantir que a governança não seja apenas uma fachada de marketing, o Filtro MFS aplica mais dois critérios eliminatórios:
 
 1. **Tempo de Bolsa (Mínimo de 5 Anos):** Fugimos de IPOs recentes (ofertas públicas inaugurais). Quem abre capital costuma "maquiar a noiva" para vender caro. Queremos empresas que já estejam sob o escrutínio público há pelo menos meia década.
 2. **Liquidez Financeira Diária (Mínimo de R$ 1 Milhão/dia):** Garante que você possa comprar frações ou lotes e resgatar quando quiser sem travar o mercado e sem sofrer com distorções de preço (spread alto).
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, todo esse trabalho investigativo já vem pronto:
+No **MANTFRAI Enterprise**, todo esse trabalho investigativo já vem pronto:
 1. Abra o **Radar de Ativos** (`/radar`).
 2. Ao clicar em qualquer ação (ex: `WEGE3`, `EGIE3`, `BBAS3`), veja os selos de **Governança (Novo Mercado)**, **Tag Along (100%)** e o volume financeiro diário.
 3. Se um ativo não cumpre esses critérios, o sistema emite um alerta de segurança visual.
@@ -70,7 +70,7 @@ No **Norte Invest V2 Enterprise**, todo esse trabalho investigativo já vem pron
 
 > 🚫 **O Erro:** Comprar ações de empresas com histórico de escândalos de corrupção, fraudes contábeis ou brigas societárias na justiça só porque a cotação "parece barata".
 > 
-> 🛡️ **A Postura Norte Invest:** Quem se associa a maus sócios colhe maus frutos. Caráter, governança e respeito aos minoritários vêm antes de qualquer múltiplo de preço.
+> 🛡️ **A Postura MANTFRAI:** Quem se associa a maus sócios colhe maus frutos. Caráter, governança e respeito aos minoritários vêm antes de qualquer múltiplo de preço.
 
 ---
 
@@ -100,4 +100,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam uma conversa envolvente e didática sobre a importância da governança e do alinhamento societário na Bolsa de Valores. Usem a analogia da sociedade na padaria para demonstrar o perigo de ter sócios desonestos, expliquem com clareza o mecanismo do Tag Along de 100% e por que o selo Novo Mercado da B3 é o primeiro filtro inegociável do Método DAVI do Norte Invest."*
+> *"Produzam uma conversa envolvente e didática sobre a importância da governança e do alinhamento societário na Bolsa de Valores. Usem a analogia da sociedade na padaria para demonstrar o perigo de ter sócios desonestos, expliquem com clareza o mecanismo do Tag Along de 100% e por que o selo Novo Mercado da B3 é o primeiro filtro inegociável do Filtro MFS do MANTFRAI."*

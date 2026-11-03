@@ -46,7 +46,7 @@ E a melhor notícia para o investidor pessoa física: **os rendimentos mensais d
 
 ## 📊 3. Imóvel Físico vs Fundo Imobiliário: O Comparativo Definitivo
 
-| Característica | Imóvel Físico Tradicional | Fundo Imobiliário (FII) no Norte Invest |
+| Característica | Imóvel Físico Tradicional | Fundo Imobiliário (FII) no MANTFRAI |
 | :--- | :--- | :--- |
 | **Capital Inicial** | R$ 200.000 a R$ 1.000.000+ | **A partir de R$ 10 a R$ 100** |
 | **Imposto sobre o Aluguel** | Até **27,5%** pelo Carnê-Leão | **0% (100% Isento para Pessoa Física)** |
@@ -56,9 +56,9 @@ E a melhor notícia para o investidor pessoa física: **os rendimentos mensais d
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, os FIIs são a engrenagem central da sua renda mensal:
+No **MANTFRAI Enterprise**, os FIIs são a engrenagem central da sua renda mensal:
 1. Acesse o menu **Renda Passiva** (`/renda-passiva`).
 2. Veja a projeção dos seus aluguéis do mês e o histórico acumulado.
 3. No **Radar de Ativos** (`/radar`), selecione a aba **FIIs** para analisar os fundos divididos entre Galpões Logísticos, Lajes Corporativas, Shoppings e Recebíveis Imobiliários.
@@ -69,7 +69,7 @@ No **Norte Invest V2 Enterprise**, os FIIs são a engrenagem central da sua rend
 
 > 🚫 **O Erro:** Achar que cota de FII deve dobrar de preço todo ano como se fosse ação de tecnologia.
 > 
-> 🛡️ **A Postura Norte Invest:** Fundos Imobiliários são instrumentos geradores de **renda e estabilidade**. A cotação de um bom FII oscila moderadamente ao redor do seu valor patrimonial enquanto entrega um fluxo constante e previsível de aluguéis todos os meses.
+> 🛡️ **A Postura MANTFRAI:** Fundos Imobiliários são instrumentos geradores de **renda e estabilidade**. A cotação de um bom FII oscila moderadamente ao redor do seu valor patrimonial enquanto entrega um fluxo constante e previsível de aluguéis todos os meses.
 
 ---
 
@@ -79,8 +79,8 @@ No **Norte Invest V2 Enterprise**, os FIIs são a engrenagem central da sua rend
 flowchart LR
     A["Inquilinos Gigantes<br/>(Amazon, Mercado Livre, Ambev)"] -->|Pagamento do Aluguel Mensal| B["Caixa do Fundo Imobiliário"]
     B -->|Lei 8.668/93 (95% do Lucro)| C["Distribuição Mensal aos Cotistas"]
-    C -->|Isento de IR| D["Você (Investidor Norte Invest) 💵"]
-    D -->|Algoritmo AM2O| E["Compra Novas Cotas (/onde-aportar)"]
+    C -->|Isento de IR| D["Você (Investidor MANTFRAI) 💵"]
+    D -->|Algoritmo Motor RDM| E["Compra Novas Cotas (/onde-aportar)"]
     E -->|Aumenta a Participação| B
 ```
 
@@ -93,4 +93,4 @@ flowchart LR
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula empolgante e muito esclarecedora sobre a revolução dos Fundos Imobiliários. Façam o comparativo completo e bem-humorado entre o sofrimento do dono de imóvel tradicional (reformas, inquilinos inadimplentes e mordida de 27,5% no imposto) versus a praticidade dos FIIs com renda mensal isenta no Norte Invest. Detalhem a garantia legal da Lei 8.668/93 e demonstrem como qualquer pessoa pode começar com apenas 100 reais."*
+> *"Apresentem uma aula empolgante e muito esclarecedora sobre a revolução dos Fundos Imobiliários. Façam o comparativo completo e bem-humorado entre o sofrimento do dono de imóvel tradicional (reformas, inquilinos inadimplentes e mordida de 27,5% no imposto) versus a praticidade dos FIIs com renda mensal isenta no MANTFRAI. Detalhem a garantia legal da Lei 8.668/93 e demonstrem como qualquer pessoa pode começar com apenas 100 reais."*

@@ -1,7 +1,7 @@
 ---
 id: "mod-4-aula-1"
 moduloId: "modulo-4"
-moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Método DAVI"
+moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Filtro MFS"
 numeroAula: "4.1"
 titulo: "O que São e Como Funcionam as Ações: A Mentalidade de Sócio vs Especulador"
 duracaoLeitura: "5 min"
@@ -11,7 +11,7 @@ status: "ready"
 
 # Aula 4.1 — O que São e Como Funcionam as Ações
 
-Bem-vindo ao coração do Método Norte Invest. A partir deste módulo, você aprenderá a técnica refinada para garimpar as empresas mais lucrativas e resilientes do país.
+Bem-vindo ao coração do Método MANTFRAI. A partir deste módulo, você aprenderá a técnica refinada para garimpar as empresas mais lucrativas e resilientes do país.
 
 Para a maioria das pessoas que assiste aos jornais sensacionalistas, uma "ação" é vista como uma linha que sobe e desce na tela, uma aposta de cassino onde você tenta comprar por 10 para revender por 12 na semana que vem.
 
@@ -36,13 +36,13 @@ Se a empresa vende mais motores elétricos, abre novas agências ou gera mais en
 
 Ao navegar pelo mercado acionário brasileiro, você notará números no final dos códigos das ações:
 
-| Tipo | Código Típico | Características Principais | Recomendação Norte Invest |
+| Tipo | Código Típico | Características Principais | Recomendação MANTFRAI |
 | :--- | :--- | :--- | :--- |
 | **ON (Ordinária)** | Final **3** (Ex: `WEGE3`, `VALE3`) | Dá direito a voto nas assembleias e garante **alinhamento total com o controlador**. Se o controlador vender a empresa, você tem direito ao mesmo tratamento. | ✅ **Preferência Absoluta** (Padrão Novo Mercado). |
 | **PN (Preferencial)** | Final **4** (Ex: `ITUB4`, `PETR4`) | Não dá direito a voto, mas dá prioridade no recebimento de dividendos. | Aceitável em empresas históricas com excelente governança e liquidez. |
 | **Units** | Final **11** (Ex: `SAPR11`, `KLBN11`) | Pacote combinado contendo ações ON e PN juntas. | Aceitável dependendo da governança do ativo. |
 
-> 🛡️ **O Padrão Norte Invest:** Sempre que possível, priorizamos ações **Ordinárias (ON - final 3)** ou empresas listadas no **Novo Mercado**, garantindo que estejamos sentados exatamente no mesmo barco dos donos controladores.
+> 🛡️ **O Padrão MANTFRAI:** Sempre que possível, priorizamos ações **Ordinárias (ON - final 3)** ou empresas listadas no **Novo Mercado**, garantindo que estejamos sentados exatamente no mesmo barco dos donos controladores.
 
 ---
 
@@ -57,9 +57,9 @@ Ao se tornar sócio de negócios lucrativos, o retorno retorna para o seu bolso 
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você acompanha suas ações com foco nos fundamentos:
+No **MANTFRAI Enterprise**, você acompanha suas ações com foco nos fundamentos:
 1. Acesse o **Radar de Ativos** (`/radar`) e selecione a aba **Ações**.
 2. Note que cada ativo exibe o setor perene, a governança corporativa e os indicadores fundamentais de retorno.
 3. No menu **Renda Passiva** (`/renda-passiva`), veja o calendário estimado e a previsão de proventos que suas empresas depositarão na sua conta.
@@ -70,7 +70,7 @@ No **Norte Invest V2 Enterprise**, você acompanha suas ações com foco nos fun
 
 > 🚫 **O Erro:** Ficar acompanhando o "home broker" minuto a minuto, comemorando quando a ação sobe 2% e sofrendo quando cai 2%.
 > 
-> 🛡️ **A Postura Norte Invest:** Donos de empresas não fecham e abrem seu comércio de cinco em cinco minutos para ver quanto ele vale. Nós olhamos balanços trimestrais e anuais. Se os lucros continuam crescendo, o trabalho do investidor inteligente é apenas continuar comprando mais participações pelo algoritmo AM2O.
+> 🛡️ **A Postura MANTFRAI:** Donos de empresas não fecham e abrem seu comércio de cinco em cinco minutos para ver quanto ele vale. Nós olhamos balanços trimestrais e anuais. Se os lucros continuam crescendo, o trabalho do investidor inteligente é apenas continuar comprando mais participações pelo algoritmo Motor RDM.
 
 ---
 
@@ -82,7 +82,7 @@ flowchart LR
     B --> C["A Empresa Produz, Vende & Lucra"]
     C -->|Distribuição Trimestral| D["Dividendos & JCP no Bolso 💰"]
     C -->|Reinvestimento| E["Empresa Cresce & Se Valoriza 📈"]
-    D -->|Algoritmo AM2O| B
+    D -->|Algoritmo Motor RDM| B
 ```
 
 ---
@@ -94,4 +94,4 @@ flowchart LR
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula empolgante e desmistificadora sobre o que significa de verdade possuir ações na Bolsa de Valores. Contrastem com humor e perspicácia a loucura do especulador que olha gráficos o dia inteiro com a serenidade do sócio que investe na economia real. Expliquem a diferença entre ações ON e PN e reforcem por que o Norte Invest prioriza o alinhamento societário e o fluxo de dividendos."*
+> *"Apresentem uma aula empolgante e desmistificadora sobre o que significa de verdade possuir ações na Bolsa de Valores. Contrastem com humor e perspicácia a loucura do especulador que olha gráficos o dia inteiro com a serenidade do sócio que investe na economia real. Expliquem a diferença entre ações ON e PN e reforcem por que o MANTFRAI prioriza o alinhamento societário e o fluxo de dividendos."*

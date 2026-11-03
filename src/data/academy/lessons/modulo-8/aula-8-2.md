@@ -15,7 +15,7 @@ Chegou o momento de desarmar qualquer receio operacional sobre como preencher o 
 
 Hoje, declarar seus investimentos na Bolsa de Valores é um processo extremamente rápido e quase todo automatizado. Com a integração do sistema **gov.br (Conta Prata ou Ouro)** e os relatórios anuais fornecidos pelas corretoras e pela B3, você consegue preencher toda a sua declaração em menos de meia hora.
 
-Nesta aula prática, você terá o mapa das fichas exatas onde cada investimento do Norte Invest deve ser lançado no programa do IRPF.
+Nesta aula prática, você terá o mapa das fichas exatas onde cada investimento do MANTFRAI deve ser lançado no programa do IRPF.
 
 ---
 
@@ -75,9 +75,9 @@ Com a Lei 14.754/2023, o processo para declarar ativos nos EUA (como `VOO`, `VT`
 
 ---
 
-## 📱 5. Aplicação Prática no App Norte Invest
+## 📱 5. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você exporta tudo pronto:
+No **MANTFRAI Enterprise**, você exporta tudo pronto:
 1. Acesse o menu **Histórico** (`/historico`).
 2. Utilize o filtro por ano fiscal para auditar o somatório de compras e proventos recebidos.
 3. Consulte o **Preço Médio de Aquisição** oficial de cada papel no painel da **Carteira** (`/carteira`).
@@ -88,7 +88,7 @@ No **Norte Invest V2 Enterprise**, você exporta tudo pronto:
 
 > 🚫 **O Erro:** Deixar para organizar as notas de corretagem e extratos no último dia do prazo (31 de maio) e cair na malha fina por erro de digitação.
 > 
-> 🛡️ **A Postura Norte Invest:** Com o hábito dos 15 minutos mensais do Módulo 7, todas as suas compras já estão registradas no Norte Invest. Quando chega a época da declaração, basta baixar os informes da corretora e cruzar os dados com a declaração pré-preenchida do gov.br. É rápido, sereno e sem surpresas.
+> 🛡️ **A Postura MANTFRAI:** Com o hábito dos 15 minutos mensais do Módulo 7, todas as suas compras já estão registradas no MANTFRAI. Quando chega a época da declaração, basta baixar os informes da corretora e cruzar os dados com a declaração pré-preenchida do gov.br. É rápido, sereno e sem surpresas.
 
 ---
 
@@ -114,4 +114,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula definitiva, prática e extremamente amigável sobre como preencher a declaração anual do Imposto de Renda sem estresse. Expliquem a facilidade da declaração pré-preenchida do gov.br, detalhem o código de cada ficha para Ações, FIIs e Ativos no Exterior, enfatizem por que o valor declarado é sempre o custo de aquisição e mostrem como a organização mensal do Norte Invest transforma o IRPF em uma tarefa rápida de 20 minutos."*
+> *"Apresentem uma aula definitiva, prática e extremamente amigável sobre como preencher a declaração anual do Imposto de Renda sem estresse. Expliquem a facilidade da declaração pré-preenchida do gov.br, detalhem o código de cada ficha para Ações, FIIs e Ativos no Exterior, enfatizem por que o valor declarado é sempre o custo de aquisição e mostrem como a organização mensal do MANTFRAI transforma o IRPF em uma tarefa rápida de 20 minutos."*

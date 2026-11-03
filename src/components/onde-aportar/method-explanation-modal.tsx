@@ -55,10 +55,10 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
                 id="method-modal-title"
                 className="text-xl font-extrabold leading-snug text-white sm:text-2xl"
               >
-                Explicação do Método DAVI & Hydra
+                Explicação do MANTFRAI (Método Antifrágil de Investimento)
               </h2>
               <p className="mt-0.5 text-sm font-semibold text-gold-300">
-                Equilíbrio Matemático de Carteira (AM2O) & Proteção Patrimonial
+                Equilíbrio Matemático de Carteira (Motor RDM) & Proteção Patrimonial
               </p>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
         {/* Corpo com Tipografia Ampla e Alto Contraste */}
         <div className="space-y-4 px-6 py-6 text-base leading-relaxed text-slate-100 sm:px-8">
           <p>
-            No modelo <strong className="text-white">AM2O*</strong> (<em>Always Move To Objective</em>),
+            No modelo <strong className="text-white">Motor RDM*</strong> (<em>Always Move To Objective</em>),
             sempre direcionamos o novo aporte para as classes e ativos da sua carteira que estão{' '}
             <strong className="text-gold-300">mais distantes abaixo do seu objetivo percentual</strong>.
           </p>
@@ -143,7 +143,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
           </div>
 
           <p className="text-sm font-medium text-slate-300">
-            * Ferramenta oficial da Metodologia Norte Invest (DAVI & Hydra).
+            * Ferramenta oficial da Metodologia MANTFRAI (DAVI & Hydra).
           </p>
         </div>
 

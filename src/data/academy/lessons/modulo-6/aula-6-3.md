@@ -60,12 +60,12 @@ Com a modernização das regras tributárias brasileiras (Lei 14.754/2023), o in
 
 ---
 
-## 📱 5. Aplicação Prática no App Norte Invest
+## 📱 5. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você unifica suas contas sem dor de cabeça:
+No **MANTFRAI Enterprise**, você unifica suas contas sem dor de cabeça:
 1. Ao registrar transações no **Histórico** (`/historico`), basta selecionar a moeda (Dólar) ou o ativo internacional.
 2. O sistema armazena a cotação de aquisição e mantém a posição consolidada convertida em Reais na sua **Carteira** (`/carteira`).
-3. O algoritmo **AM2O** cuida para que você aporte lá fora de forma constante e sem estresse emocional.
+3. O algoritmo **Motor RDM** cuida para que você aporte lá fora de forma constante e sem estresse emocional.
 
 ---
 
@@ -73,7 +73,7 @@ No **Norte Invest V2 Enterprise**, você unifica suas contas sem dor de cabeça:
 
 > 🚫 **O Erro:** Ficar com medo de enviar dinheiro para os Estados Unidos por achar que é "ilegal" ou "coisa de quem quer esconder dinheiro".
 > 
-> 🛡️ **A Postura Norte Invest:** Investir no exterior é 100% legal, regulamentado pelo Banco Central do Brasil e pela Receita Federal. O mundo inteiro investe em Dólar; deixar todo o seu patrimônio amarrado a uma única moeda emergente é que é a verdadeira temeridade.
+> 🛡️ **A Postura MANTFRAI:** Investir no exterior é 100% legal, regulamentado pelo Banco Central do Brasil e pela Receita Federal. O mundo inteiro investe em Dólar; deixar todo o seu patrimônio amarrado a uma única moeda emergente é que é a verdadeira temeridade.
 
 ---
 
@@ -104,4 +104,4 @@ sequenceDiagram
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula descontraída, prática e animadora sobre como investir nos Estados Unidos na vida real. Expliquem como é fácil abrir uma conta internacional em português, detalhem a enorme segurança da blindagem de até 500 mil dólares pelo SIPC, passem o passo a passo do envio de Pix com câmbio instantâneo e desmistifiquem a tributação da Receita Federal. Mostrem como o Norte Invest ajuda o investidor comum a dormir tranquilo com patrimônio em dólar."*
+> *"Apresentem uma aula descontraída, prática e animadora sobre como investir nos Estados Unidos na vida real. Expliquem como é fácil abrir uma conta internacional em português, detalhem a enorme segurança da blindagem de até 500 mil dólares pelo SIPC, passem o passo a passo do envio de Pix com câmbio instantâneo e desmistifiquem a tributação da Receita Federal. Mostrem como o MANTFRAI ajuda o investidor comum a dormir tranquilo com patrimônio em dólar."*

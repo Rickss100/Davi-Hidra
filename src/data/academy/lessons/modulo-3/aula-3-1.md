@@ -11,7 +11,7 @@ status: "ready"
 
 # Aula 3.1 — A Fundação Inegociável: Reserva de Emergência & Renda Fixa
 
-Antes de comprar uma única cota de Fundo Imobiliário ou ação de empresa, existe um mandamento inegociável na metodologia Norte Invest: **construir a sua trincheira de defesa**.
+Antes de comprar uma única cota de Fundo Imobiliário ou ação de empresa, existe um mandamento inegociável na metodologia MANTFRAI: **construir a sua trincheira de defesa**.
 
 Investidores que pulam direto para a renda variável sem uma reserva financeira sólida cometem o erro mais comum e destrutivo do mercado: na primeira emergência pessoal (um problema de saúde na família, um conserto inesperado no carro ou uma demissão), eles são **forçados a vender seus ativos na Bolsa**. E pela Lei de Murphy dos mercados, essa emergência quase sempre acontece justamente em um momento de queda temporária das cotações.
 
@@ -37,7 +37,7 @@ O tripé obrigatório da Reserva de Emergência é composto por:
 2. **Liquidez Imediata (D+0 ou D+1):** Capacidade de resgatar o dinheiro no mesmo dia ou no próximo dia útil sem burocracia.
 3. **Ausência de Volatilidade Negativa:** O saldo nunca pode amanhecer menor do que no dia anterior.
 
-### Os Veículos Aprovados pelo Norte Invest:
+### Os Veículos Aprovados pelo MANTFRAI:
 - ✅ **Tesouro Selic (Tesouro Direto):** O título público mais seguro do país, lastreado pelo Tesouro Nacional, com liquidez diária e rendimento atrelado à taxa básica de juros.
 - ✅ **CDB de Liquidez Diária (100% do CDI) de Grandes Bancos:** Garantido pelo FGC (Fundo Garantidor de Créditos) até R$ 250.000 por CPF e por instituição.
 - ❌ **Onde NUNCA colocar a reserva:** Fundos imobiliários, ações, debêntures, criptomoedas, títulos prefixados ou CDBs com prazo de resgate travado (ex: "resgate só em 2029").
@@ -58,9 +58,9 @@ Nem toda renda fixa serve para a mesma coisa. O mercado divide os títulos em tr
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você tem um módulo exclusivo para gerenciar essa etapa:
+No **MANTFRAI Enterprise**, você tem um módulo exclusivo para gerenciar essa etapa:
 1. Acesse o menu **Reserva de Emergência** (`/reserva-emergencia`).
 2. Insira o seu **Custo de Vida Básico Mensal** e selecione o seu perfil de estabilidade (6, 9 ou 12 meses).
 3. O sistema calcula a sua meta monetária exata e apresenta uma barra de progresso visual de conclusão.
@@ -72,7 +72,7 @@ No **Norte Invest V2 Enterprise**, você tem um módulo exclusivo para gerenciar
 
 > 🚫 **O Erro:** Achar que deixar dinheiro na reserva de emergência é "perder dinheiro" e colocar tudo na Bolsa para tentar ganhar mais rápido.
 > 
-> 🛡️ **A Postura Norte Invest:** A reserva de emergência não é um investimento para maximizar rentabilidade; ela é **o seguro de vida da sua estratégia patrimonial**. Sem ela, você é um castelo de cartas esperando o primeiro vento para desmoronar.
+> 🛡️ **A Postura MANTFRAI:** A reserva de emergência não é um investimento para maximizar rentabilidade; ela é **o seguro de vida da sua estratégia patrimonial**. Sem ela, você é um castelo de cartas esperando o primeiro vento para desmoronar.
 
 ---
 
@@ -101,4 +101,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula esclarecedora e muito prática sobre por que a Reserva de Emergência é a fundação inegociável de qualquer investidor de sucesso. Detalhem a fórmula de cálculo (6 a 12 meses de custo de vida), expliquem didaticamente a diferença entre Tesouro Selic, Prefixado e Tesouro IPCA+, alertem sobre os perigos da marcação a mercado para quem não entende o mecanismo, e mostrem como a tela de Reserva de Emergência do Norte Invest organiza essa proteção."*
+> *"Apresentem uma aula esclarecedora e muito prática sobre por que a Reserva de Emergência é a fundação inegociável de qualquer investidor de sucesso. Detalhem a fórmula de cálculo (6 a 12 meses de custo de vida), expliquem didaticamente a diferença entre Tesouro Selic, Prefixado e Tesouro IPCA+, alertem sobre os perigos da marcação a mercado para quem não entende o mecanismo, e mostrem como a tela de Reserva de Emergência do MANTFRAI organiza essa proteção."*

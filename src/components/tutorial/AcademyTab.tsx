@@ -139,7 +139,7 @@ export function AcademyTab() {
             </div>
 
             <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Academia Norte Invest: Método DAVI & Mecanismo Hydra
+              Academia MANTFRAI: Filtro MFS & Carteira Antifrágil
             </h1>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               Currículo master de formação de investidores. Aprenda passo a passo a construir seu império patrimonial com aulas práticas, infográficos e geração de podcasts.
@@ -200,10 +200,10 @@ export function AcademyTab() {
             <Award className="h-8 w-8 text-gold-400" />
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-white">
-            🎓 Certificado de Formação: Investidor Método DAVI & Hydra
+            🎓 Certificado de Formação: Investidor MANTFRAI (Método Antifrágil de Investimento)
           </h2>
           <p className="max-w-xl mx-auto text-xs sm:text-sm text-slate-200 leading-relaxed">
-            Parabéns! Você concluiu as 30 aulas da metodologia e dominou a Tríade de Riqueza, a blindagem da Reserva de Emergência, os setores perenes BEST, a diversificação global e o motor de alocação AM2O.
+            Parabéns! Você concluiu as 30 aulas da metodologia e dominou a Tríade de Riqueza, a blindagem da Reserva de Emergência, os setores perenes BEST, a diversificação global e o motor de alocação Motor RDM.
           </p>
           <div className="pt-2">
             <button

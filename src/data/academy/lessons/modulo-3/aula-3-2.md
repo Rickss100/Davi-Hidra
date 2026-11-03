@@ -33,7 +33,7 @@ Muitos investidores acreditam erroneamente que o dinheiro aplicado em ações ou
 
 ## 🔍 2. Critérios de Ouro para Selecionar sua Corretora
 
-Não caia no conto de corretoras que cobram taxas abusivas por serviços básicos. Para aplicar a metodologia Norte Invest, sua corretora deve atender rigorosamente a estes requisitos:
+Não caia no conto de corretoras que cobram taxas abusivas por serviços básicos. Para aplicar a metodologia MANTFRAI, sua corretora deve atender rigorosamente a estes requisitos:
 
 1. **Corretagem Zero para Ações e FIIs:** Você não deve pagar R$ 10, R$ 15 ou R$ 20 cada vez que executar um aporte mensal. Quase todas as grandes corretoras do país hoje oferecem corretagem zero.
 2. **Taxa Zero de Custódia:** Nenhuma cobrança mensal apenas para manter seus títulos guardados.
@@ -51,9 +51,9 @@ Ao abrir o aplicativo da sua corretora e buscar o código de um ativo (por exemp
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você unifica toda a sua inteligência patrimonial em um único lugar:
+No **MANTFRAI Enterprise**, você unifica toda a sua inteligência patrimonial em um único lugar:
 1. **Lançamento Rápido de Transações:** No painel lateral ou no menu **Histórico** (`/historico`), clique em `+ Nova Transação` para registrar suas compras e proventos com precisão monetária de centavos.
 2. **Calculadora Inteligente de Preço Médio:** O sistema recalcula automaticamente a sua posição consolidada e seu preço médio real.
 3. **Privacidade e Segurança:** Seus dados ficam protegidos no seu ambiente seguro, sem exposição de credenciais bancárias.
@@ -64,7 +64,7 @@ No **Norte Invest V2 Enterprise**, você unifica toda a sua inteligência patrim
 
 > 🚫 **O Erro:** Deixar dinheiro parado sem render no saldo da conta corrente da corretora por semanas a fio enquanto espera uma "dica de ouro".
 > 
-> 🛡️ **A Postura Norte Invest:** A corretora é apenas a estrada de passagem. Transferiu o dinheiro via Pix? Execute imediatamente o aporte indicado pelo **AM2O** ou aplique no Tesouro Selic. Dinheiro parado na conta corrente da corretora não rende juros e não tem garantia da B3.
+> 🛡️ **A Postura MANTFRAI:** A corretora é apenas a estrada de passagem. Transferiu o dinheiro via Pix? Execute imediatamente o aporte indicado pelo **Motor RDM** ou aplique no Tesouro Selic. Dinheiro parado na conta corrente da corretora não rende juros e não tem garantia da B3.
 
 ---
 
@@ -95,4 +95,4 @@ sequenceDiagram
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Gravem uma conversa prática, descomplicada e muito encorajadora para desmistificar o funcionamento de uma corretora de investimentos. Expliquem como a custódia centralizada na B3 protege o investidor mesmo em caso de falência da instituição financeira, citem os critérios inegociáveis para escolher uma corretora sem taxa de corretagem, e demonstrem a simplicidade de emitir uma ordem de compra na prática com o apoio do Norte Invest."*
+> *"Gravem uma conversa prática, descomplicada e muito encorajadora para desmistificar o funcionamento de uma corretora de investimentos. Expliquem como a custódia centralizada na B3 protege o investidor mesmo em caso de falência da instituição financeira, citem os critérios inegociáveis para escolher uma corretora sem taxa de corretagem, e demonstrem a simplicidade de emitir uma ordem de compra na prática com o apoio do MANTFRAI."*

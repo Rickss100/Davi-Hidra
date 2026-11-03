@@ -65,7 +65,7 @@ Na Bolsa acontece exatamente a mesma coisa:
 - O amador vê uma ação que custava R$ 100,00 há 3 anos e hoje está custando R$ 5,00. Ele pensa: *"Nossa, caiu 95%, está dada de graça! Se voltar para R$ 50,00 eu fico rico!"*
 - O que ele não percebeu: o preço caiu porque a empresa acumulou bilhões em dívidas, perdeu todos os clientes e está à beira da falência. **Preço que caiu não é garantia de desconto; muitas vezes é reflexo de destruição de valor.**
 
-> 🛡️ **No Norte Invest:** Preço é o que você paga; **Valor é o que você recebe**. Nunca compre um ativo só porque ele parece "barato" na cotação. Só compramos negócios com lucros consistentes, margens altas e baixa alavancagem.
+> 🛡️ **No MANTFRAI:** Preço é o que você paga; **Valor é o que você recebe**. Nunca compre um ativo só porque ele parece "barato" na cotação. Só compramos negócios com lucros consistentes, margens altas e baixa alavancagem.
 
 ---
 
@@ -82,27 +82,27 @@ Agora, olhe o que o investidor emocional faz na Bolsa:
 3. Em pânico, ele vende o ativo excelente com prejuízo (derruba a laranjeira).
 4. Em seguida, pega esse dinheiro e compra uma ação especulativa de centavos que subiu 20% no dia (planta uma erva daninha esperando que ela dê frutos milagrosos).
 
-No **Método DAVI & Hydra**, nós somos agricultores de proventos: plantamos boas árvores, alimentamos com adubo (aportes mensais) e deixamos que a natureza dos juros compostos faça a colheita.
+No **MANTFRAI (Método Antifrágil de Investimento)**, nós somos agricultores de proventos: plantamos boas árvores, alimentamos com adubo (aportes mensais) e deixamos que a natureza dos juros compostos faça a colheita.
 
 ---
 
-## 📱 5. Como o App Norte Invest Protege Você na Prática
+## 📱 5. Como o App MANTFRAI Protege Você na Prática
 
 Você não precisa lutar contra a sua própria mente ou ter medo de comprar na hora errada:
-1. **O Algoritmo AM2O (`/onde-aportar`):** O Norte Invest calcula matematicamente qual classe de ativo e qual papel está mais para trás em relação à sua meta patrimonial. Ele faz você comprar ativos de valor com desconto natural, de forma mecânica, sem hesitação e sem tentar adivinhar notícias.
+1. **O Algoritmo Motor RDM (`/onde-aportar`):** O MANTFRAI calcula matematicamente qual classe de ativo e qual papel está mais para trás em relação à sua meta patrimonial. Ele faz você comprar ativos de valor com desconto natural, de forma mecânica, sem hesitação e sem tentar adivinhar notícias.
 2. **Radar de Ativos (`/radar`):** Filtra automaticamente apenas empresas com selo de governança, ROE robusto e endividamento sob controle, impedindo que você caia na armadilha da ancoragem em empresas podres.
-3. **Definir Objetivos (`/definir-objetivos`):** Estabelece os percentuais ideais da sua Carteira Hydra para que nenhum evento isolado de mercado balance a sua tranquilidade.
+3. **Definir Objetivos (`/definir-objetivos`):** Estabelece os percentuais ideais da sua Carteira Antifrágil para que nenhum evento isolado de mercado balance a sua tranquilidade.
 
 ---
 
 ## ⚠️ 6. Resumo dos Erros Fatais a Evitar
 
-| Erro do Amador | Postura do Investidor Norte Invest |
+| Erro do Amador | Postura do Investidor MANTFRAI |
 | :--- | :--- |
 | Esperar a "próxima crise" com dinheiro parado para tentar acertar o fundo. | **Aporte mensal constante (DCA):** acumula mais patrimônio e aproveita os proventos. |
 | Girar a carteira o tempo todo buscando a "ação do momento". | **Comprar e manter (Buy & Hold de Valor):** menos taxas, menos impostos, mais paz de espírito. |
 | Achar que ação que caiu 90% está "barata" (ancoragem). | **Avaliação por fundamentos:** só investe onde há lucro, caixa e gestão comprovada. |
-| Vender bons ativos no pânico temporário. | **Compreensão do pomar:** foco nos dividendos gerados e rebalanceamento frio pelo AM2O. |
+| Vender bons ativos no pânico temporário. | **Compreensão do pomar:** foco nos dividendos gerados e rebalanceamento frio pelo Motor RDM. |
 
 ---
 
@@ -116,9 +116,9 @@ flowchart TD
         A3 --> A4["Giro excessivo de carteira<br/>(Resultado: Perda de patrimônio)"]
     end
 
-    subgraph InvestidorNorte["🛡️ O Caminho Norte Invest (DCA + Hydra)"]
+    subgraph InvestidorNorte["🛡️ O Caminho MANTFRAI (DCA + Hydra)"]
         B1["Aporte Mensal Constante<br/>(Sem tentar adivinhar timing)"] --> B2["Reinvestimento dos Dividendos<br/>(Efeito Bola de Neve)"]
-        B2 --> B3["Algoritmo AM2O<br/>(Aporte no Mais Distante do Objetivo)"]
+        B2 --> B3["Algoritmo Motor RDM<br/>(Aporte no Mais Distante do Objetivo)"]
         B3 --> B4["Crescimento Exponencial Seguro<br/>(Ponto Mágico Alcançado 👑)"]
     end
 ```
@@ -132,4 +132,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma discussão cativante e de alto nível sobre a ciência do comportamento financeiro. Contem a história do estudo de Yale sobre DCA versus tentar acertar o fundo do poço, debatam o estudo 'Boys will be Boys' sobre os perigos de girar a carteira, e usem com vivacidade o exemplo da blusinha em promoção e a metáfora do pomar de laranjas para explicar por que a constância e o método AM2O do Norte Invest vencem qualquer tentativa de adivinhação do mercado."*
+> *"Apresentem uma discussão cativante e de alto nível sobre a ciência do comportamento financeiro. Contem a história do estudo de Yale sobre DCA versus tentar acertar o fundo do poço, debatam o estudo 'Boys will be Boys' sobre os perigos de girar a carteira, e usem com vivacidade o exemplo da blusinha em promoção e a metáfora do pomar de laranjas para explicar por que a constância e o método Motor RDM do MANTFRAI vencem qualquer tentativa de adivinhação do mercado."*

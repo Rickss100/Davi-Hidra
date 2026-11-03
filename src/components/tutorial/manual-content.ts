@@ -1,5 +1,5 @@
 export const FULL_MANUAL_TEXT = `# NORTE INVEST — O GUIA DEFINITIVO DO INVESTIDOR INTELIGENTE
-## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial da Plataforma (Método DAVI & Mecanismo Hydra)
+## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial da Plataforma (Filtro MFS & Carteira Antifrágil)
 
 ---
 
@@ -19,9 +19,9 @@ No mercado financeiro, enriquecer com consistência não é tentar adivinhar a p
 - Decisões emocionais tomadas no pânico ou na euforia.
 O que sobra após essa lapidação é a obra de arte: um patrimônio sólido, composto pelas maiores e mais lucrativas empresas do Brasil e do mundo.
 
-#### 3. O Mecanismo Hydra — Os Tentáculos Antifrágeis do seu Império
+#### 3. O Carteira Antifrágil — Os Tentáculos Antifrágeis do seu Império
 Na mitologia grega, quando alguém tenta cortar uma cabeça da Hidra, duas novas cabeças nascem ainda mais fortes no lugar.
-No Norte Invest, você nunca investe em uma única empresa ou setor isolado: você constrói um **império patrimonial antifrágil** dividido em quatro tentáculos soberanos:
+No MANTFRAI, você nunca investe em uma única empresa ou setor isolado: você constrói um **império patrimonial antifrágil** dividido em quatro tentáculos soberanos:
 1. **Ações Brasil:** Sociedades em empresas perenes e lucrativas que repassam inflação e pagam dividendos.
 2. **Fundos Imobiliários (FIIs):** Aluguéis mensais isentos de imposto de renda pingando todos os meses na sua conta.
 3. **Renda Fixa Soberana:** Tesouro IPCA+ para ganho real garantido e blindagem do poder de compra.
@@ -29,10 +29,10 @@ No Norte Invest, você nunca investe em uma única empresa ou setor isolado: voc
 
 Quando uma crise econômica tenta "cortar uma cabeça" (como um setor em queda temporária), o algoritmo da Hydra se reposiciona automaticamente, aportando mais barato exatamente no tentáculo com maior desconto e fazendo o seu império florescer ainda mais robusto.
 
-#### 4. O Algoritmo AM2O: Aporte no Mais Distante do Objetivo
-AM2O significa *"Aporte no Mais Distante do Objetivo"*. 
+#### 4. O Algoritmo Motor RDM: Aporte no Mais Distante do Objetivo
+Motor RDM significa *"Aporte no Mais Distante do Objetivo"*. 
 A cada mês, o mercado estará em uma fase diferente: às vezes as ações caem enquanto o dólar sobe; em outros momentos, os fundos imobiliários ficam baratos enquanto a renda fixa recua.
-Em vez de tentar prever o futuro (o que nenhum analista consegue fazer com consistência), você abre o Norte Invest, informa o valor disponível para investir no mês e o sistema aponta matematicamente para o ativo que mais se distanciou da sua meta ideal.
+Em vez de tentar prever o futuro (o que nenhum analista consegue fazer com consistência), você abre o MANTFRAI, informa o valor disponível para investir no mês e o sistema aponta matematicamente para o ativo que mais se distanciou da sua meta ideal.
 - **Resultado Prático:** Você sempre compra na baixa com desconto, evita comprar no topo da euforia e **nunca precisa vender ativos para rebalancear**, economizando impostos de renda e taxas de corretagem!
 
 #### 5. A Pirâmide de Segurança Patrimonial
@@ -54,7 +54,7 @@ O *Magic Number* é o momento matemático em que os dividendos mensais pagos por
    - Autocompletar inteligente com mais de 1.500 ativos cadastrados da B3 e mercado americano.
 
 2. **Onde Aportar (/onde-aportar):**
-   - Motor matemático do algoritmo Hydra.
+   - Motor matemático do motor RDM.
    - Digite o valor do aporte mensal e receba a sugestão exata de compra calculada centavo a centavo.
 
 3. **Definir Objetivos (/definir-objetivos):**
@@ -70,7 +70,7 @@ O *Magic Number* é o momento matemático em que os dividendos mensais pagos por
    - Simulador de Ponto Mágico e projeção de liberdade financeira para 5, 10, 15 e 20 anos.
 
 6. **Radar de Ativos (/radar):**
-   - Filtro fundamentalista com múltiplos completos do Método DAVI (P/L, P/VP, Dividend Yield, ROE, Margem Líquida, Dívida Líquida/EBITDA).
+   - Filtro fundamentalista com múltiplos completos do Filtro MFS (P/L, P/VP, Dividend Yield, ROE, Margem Líquida, Dívida Líquida/EBITDA).
    - Eliminação automática de empresas sem lucro ou alavancadas.
 
 7. **Histórico (/historico):**
@@ -86,7 +86,7 @@ O *Magic Number* é o momento matemático em que os dividendos mensais pagos por
 ### PARTE 3: GUIA PARA GERAR PODCAST NO GOOGLE NOTEBOOKLM
 
 1. Acesse https://notebooklm.google.com/
-2. Crie um novo caderno com o título "Método DAVI & Hydra — Norte Invest".
+2. Crie um novo caderno com o título "MANTFRAI (Método Antifrágil de Investimento) — MANTFRAI".
 3. Clique em "Adicionar Fonte" e selecione "Texto Copiado" (ou faça o upload deste arquivo).
 4. No painel direito "Studio de Áudio" (Audio Overview), clique no botão "Gerar".
 5. Em cerca de 3 a 5 minutos, a IA criará uma conversa em formato de podcast com dois apresentadores debatendo a filosofia de Michelangelo, a antifragilidade da Hydra e o rebalanceamento inteligente sem vender ativos!
@@ -101,7 +101,7 @@ export interface FaqItem {
 export const FAQ_ITEMS: FaqItem[] = [
   {
     category: 'iniciante',
-    q: 'Preciso de muito dinheiro para começar a investir com o Método DAVI & Hydra?',
+    q: 'Preciso de muito dinheiro para começar a investir com o MANTFRAI (Método Antifrágil de Investimento)?',
     a: 'Absolutamente não! No mercado moderno brasileiro, você pode começar com quantias a partir de R$ 30 a R$ 100. Títulos públicos do Tesouro Direto aceitam frações acessíveis, e cotas de Fundos Imobiliários e Ações na B3 permitem que qualquer pessoa inicie a construção de patrimônio regular desde o primeiro mês.'
   },
   {
@@ -112,12 +112,12 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     category: 'metodo',
     q: 'O que fazer quando uma ação ou FII da minha carteira cair de preço?',
-    a: 'Se os fundamentos da empresa continuarem sólidos (lucros consistentes, boa governança e dívida controlada), uma queda de preço significa liquidação e desconto! O algoritmo AM2O indicará o aporte exatamente nesse ativo, diminuindo seu preço médio e aumentando seu retorno em dividendos futuros sem que você precise tomar decisões emocionais.'
+    a: 'Se os fundamentos da empresa continuarem sólidos (lucros consistentes, boa governança e dívida controlada), uma queda de preço significa liquidação e desconto! O algoritmo Motor RDM indicará o aporte exatamente nesse ativo, diminuindo seu preço médio e aumentando seu retorno em dividendos futuros sem que você precise tomar decisões emocionais.'
   },
   {
     category: 'metodo',
-    q: 'Por que o Método DAVI diz que nunca devemos vender ativos para rebalancear?',
-    a: 'Vender ativos gera imposto de renda, taxas de corretagem e interrompe o efeito dos juros compostos. No Norte Invest, rebalanceamos a carteira exclusivamente pelo dinheiro novo dos aportes mensais e reinvestimento de dividendos. Você compra o que ficou para trás, mantendo os ativos vencedores intactos gerando renda.'
+    q: 'Por que o Filtro MFS diz que nunca devemos vender ativos para rebalancear?',
+    a: 'Vender ativos gera imposto de renda, taxas de corretagem e interrompe o efeito dos juros compostos. No MANTFRAI, rebalanceamos a carteira exclusivamente pelo dinheiro novo dos aportes mensais e reinvestimento de dividendos. Você compra o que ficou para trás, mantendo os ativos vencedores intactos gerando renda.'
   },
   {
     category: 'metodo',
@@ -135,15 +135,15 @@ export const PROMPTS_IA = [
   {
     title: '🎙️ Prompt para Google NotebookLM (Podcast de Alta Performance)',
     description: 'Use este prompt nas instruções de personalização do Audio Overview no NotebookLM:',
-    prompt: `Crie um episódio dinâmico de podcast onde dois especialistas em finanças pessoais debatem a genialidade do Método DAVI & Mecanismo Hydra do Norte Invest.
-Destaque a metáfora de Michelangelo ("retirar tudo o que não presta em vez de tentar adivinhar a ação milagrosa") e explique como o algoritmo AM2O elimina a ansiedade do investidor comum rebalanceando a carteira apenas com dinheiro novo, sem pagar impostos desnecessários.
+    prompt: `Crie um episódio dinâmico de podcast onde dois especialistas em finanças pessoais debatem a genialidade do Filtro MFS & Carteira Antifrágil do MANTFRAI.
+Destaque a metáfora de Michelangelo ("retirar tudo o que não presta em vez de tentar adivinhar a ação milagrosa") e explique como o algoritmo Motor RDM elimina a ansiedade do investidor comum rebalanceando a carteira apenas com dinheiro novo, sem pagar impostos desnecessários.
 Mantenha o tom inspirador, bem-humorado, prático e focado na liberdade financeira proporcionada pela renda passiva e pelo Ponto Mágico da bola de neve.`
   },
   {
     title: '🧠 Prompt para ChatGPT / Claude / Gemini (Tutor de Estudos & Quiz)',
     description: 'Cole este prompt no ChatGPT ou Claude junto com o manual para testar seus conhecimentos:',
-    prompt: `Aja como o Professor Norte Invest, um mentor rigoroso e experiente em alocação de ativos e filosofia fundamentalista.
-Com base no manual do Método DAVI & Hydra, faça 5 perguntas práticas e desafiadoras sobre situações reais do mercado (ex: o que fazer quando o Ibovespa cai 15%, como calcular o Magic Number e quando usar a Reserva de Emergência).
+    prompt: `Aja como o Professor MANTFRAI, um mentor rigoroso e experiente em alocação de ativos e filosofia fundamentalista.
+Com base no manual do MANTFRAI (Método Antifrágil de Investimento), faça 5 perguntas práticas e desafiadoras sobre situações reais do mercado (ex: o que fazer quando o Ibovespa cai 15%, como calcular o Magic Number e quando usar a Reserva de Emergência).
 Avalie minhas respostas, aponte onde cometi erros conceituais e me ensine a pensar como um investidor antifrágil.`
   },
   {
@@ -152,7 +152,7 @@ Avalie minhas respostas, aponte onde cometi erros conceituais e me ensine a pens
     prompt: `Analise a estrutura conceitual da metodologia DAVI & Hydra:
 1. Reserva de Emergência de 6 a 12 meses em liquidez diária.
 2. Alocação macro: Ações Brasil (30%), FIIs (30%), Renda Fixa IPCA+ (20%) e Stocks Globais (20%).
-3. Rebalanceamento exclusivo pelo aporte AM2O.
+3. Rebalanceamento exclusivo pelo aporte Motor RDM.
 Diga quais são as três maiores vantagens matemáticas dessa estratégia contra a inflação brasileira e a desvalorização cambial ao longo de 20 anos.`
   }
 ];
@@ -162,7 +162,7 @@ export const GROWTH_TEMPLATES = [
     channel: 'WhatsApp — Amigos e Família',
     badge: 'Indicação Direta',
     tone: 'emerald',
-    text: `Fala amigo! Estava lembrando de você. Comecei a organizar meus investimentos usando um método chamado DAVI & Hydra (da Norte Invest) e achei surreal de bom. 
+    text: `Fala amigo! Estava lembrando de você. Comecei a organizar meus investimentos usando um método chamado DAVI & Hydra (da MANTFRAI) e achei surreal de bom. 
 
 Em vez daquela loucura de ficar tentando adivinhar se a bolsa vai subir ou cair, o sistema aplica a ideia de Michelangelo: elimina empresas ruins e usa um algoritmo que aponta todo mês onde aportar para comprar barato e fazer o dinheiro render juros compostos.
 
@@ -183,7 +183,7 @@ No mercado financeiro, construir patrimônio duradouro não é sobre prever o fu
 ❌ Girar carteira pagando impostos e taxas;
 ❌ Decisões emocionais tomadas no ápice das notícias.
 
-O Método DAVI & Hydra aplica isso na prática com o algoritmo AM2O (Aporte no Mais Distante do Objetivo), rebalanceando o patrimônio apenas com os novos aportes mensais.
+O MANTFRAI (Método Antifrágil de Investimento) aplica isso na prática com o algoritmo Motor RDM (Aporte no Mais Distante do Objetivo), rebalanceando o patrimônio apenas com os novos aportes mensais.
 
 Quem foca em ser sócio de bons negócios dorme em paz e colhe renda passiva crescente. 
 
@@ -201,7 +201,7 @@ Quem foca em ser sócio de bons negócios dorme em paz e colhe renda passiva cre
 A maioria dos investidores perde dinheiro porque tenta adivinhar o futuro. Mas o verdadeiro segredo é a eliminação: retirar empresas ruins, parar de pagar taxas abusivas e parar de vender na baixa."
 
 [SOLUÇÃO - 25 a 45s]:
-"Com o Método DAVI & Hydra, você divide seu dinheiro em tentáculos antifrágeis: Ações, Fundos Imobiliários e Renda Fixa. Todo mês, o sistema te mostra exatamente onde colocar seu aporte para comprar o ativo mais barato com desconto!"
+"Com o MANTFRAI (Método Antifrágil de Investimento), você divide seu dinheiro em tentáculos antifrágeis: Ações, Fundos Imobiliários e Renda Fixa. Todo mês, o sistema te mostra exatamente onde colocar seu aporte para comprar o ativo mais barato com desconto!"
 
 [CHAMADA - 45 a 60s]:
 "Quer aprender como funciona o Ponto Mágico dos dividendos? Acesse o link na bio ou comente 'MÉTODO' que eu te mando o tutorial completo!"`

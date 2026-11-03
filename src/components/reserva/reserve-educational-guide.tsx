@@ -51,7 +51,7 @@ export function ReserveRoadmapCard({
     },
     {
       num: '4',
-      title: 'Avance para o Método DAVI & Onde Aportar',
+      title: 'Avance para o Filtro MFS & Onde Aportar',
       done: isFullyShielded,
       description:
         'Com sua proteção encaminhada, filtre empresas/fundos no Radar DAVI, defina seus Objetivos e simule seus aportes mensais.',
@@ -69,7 +69,7 @@ export function ReserveRoadmapCard({
           </div>
           <div>
             <h2 className="text-base font-extrabold text-white sm:text-lg">
-              Primeiro Passo do Investidor — Seu Caminho na Norte Invest
+              Primeiro Passo do Investidor — Seu Caminho na MANTFRAI
             </h2>
             <p className="text-xs text-slate-200 sm:text-sm">
               Novo por aqui? Siga esta ordem simples para proteger sua família antes de buscar multiplicação na Bolsa:

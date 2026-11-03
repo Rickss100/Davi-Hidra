@@ -58,13 +58,13 @@ O **Dividend Yield** mede a relação entre os proventos pagos nos últimos 12 m
   1. **Venda Pontual de um Imóvel:** O fundo vendeu um prédio e distribuiu o ganho de capital extraordinário no mês (não vai se repetir).
   2. **Risco Excessivo de Crédito (High Yield / Junk):** O fundo de papel investiu em títulos de devedores duvidosos que estão prestes a dar calote. Quando o calote estoura, a cota desaba 50% e os proventos cessam.
 
-> 🛡️ **O Padrão Norte Invest:** Buscamos fundos **High Grade** (alta qualidade de crédito e imóveis impecáveis) com yields sustentáveis e equilibrados (entre 8% a 12% ao ano), com segurança e previsibilidade.
+> 🛡️ **O Padrão MANTFRAI:** Buscamos fundos **High Grade** (alta qualidade de crédito e imóveis impecáveis) com yields sustentáveis e equilibrados (entre 8% a 12% ao ano), com segurança e previsibilidade.
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você tem clareza visual total:
+No **MANTFRAI Enterprise**, você tem clareza visual total:
 1. Abra o **Radar de Ativos** (`/radar`) na aba **FIIs**.
 2. Veja o indicador **P/VP** com destaque de cor: verde para desconto, cinza neutro para preço justo e amarelo/vermelho para ágio excessivo.
 3. Filtre facilmente por categoria (Tijolo Logística, Lajes Corporativas, Shoppings e Papel High Grade).
@@ -97,4 +97,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula técnica e envolvente sobre a anatomia dos Fundos Imobiliários. Expliquem detalhadamente as diferenças entre FIIs de Tijolo e FIIs de Papel, ensinem a fórmula e o limite saudável do P/VP para cada um deles, e alertem os ouvintes com veemência contra a ilusão de comprar fundos apenas pelo maior Dividend Yield. Demonstrem como o Radar do Norte Invest sinaliza o P/VP ideal para compras seguras."*
+> *"Apresentem uma aula técnica e envolvente sobre a anatomia dos Fundos Imobiliários. Expliquem detalhadamente as diferenças entre FIIs de Tijolo e FIIs de Papel, ensinem a fórmula e o limite saudável do P/VP para cada um deles, e alertem os ouvintes com veemência contra a ilusão de comprar fundos apenas pelo maior Dividend Yield. Demonstrem como o Radar do MANTFRAI sinaliza o P/VP ideal para compras seguras."*

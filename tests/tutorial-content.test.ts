@@ -7,10 +7,10 @@ import {
 } from '@/components/tutorial/manual-content';
 
 describe('Tutorial & AI Facilitators Content Verification', () => {
-  it('contains comprehensive manual text covering Michelangelo, Hydra and AM2O', () => {
+  it('contains comprehensive manual text covering Michelangelo, Antifrágil and Motor RDM', () => {
     expect(FULL_MANUAL_TEXT).toContain('Michelangelo');
-    expect(FULL_MANUAL_TEXT).toContain('Mecanismo Hydra');
-    expect(FULL_MANUAL_TEXT).toContain('AM2O');
+    expect(FULL_MANUAL_TEXT).toContain('Carteira Antifrágil');
+    expect(FULL_MANUAL_TEXT).toContain('Motor RDM');
     expect(FULL_MANUAL_TEXT).toContain('Reserva de Emergência');
     expect(FULL_MANUAL_TEXT).toContain('Magic Number');
     expect(FULL_MANUAL_TEXT).toContain('/carteira');
@@ -38,14 +38,14 @@ describe('Tutorial & AI Facilitators Content Verification', () => {
     const notebookPrompt = PROMPTS_IA.find((p) => p.title.includes('NotebookLM'));
     expect(notebookPrompt).toBeDefined();
     expect(notebookPrompt?.prompt).toContain('Michelangelo');
-    expect(notebookPrompt?.prompt).toContain('AM2O');
+    expect(notebookPrompt?.prompt).toContain('Motor RDM');
   });
 
   it('contains viral word-of-mouth growth templates for WhatsApp, LinkedIn and Video', () => {
     expect(GROWTH_TEMPLATES.length).toBeGreaterThanOrEqual(3);
     const whatsappTemplate = GROWTH_TEMPLATES.find((t) => t.channel.includes('WhatsApp'));
     expect(whatsappTemplate).toBeDefined();
-    expect(whatsappTemplate?.text).toContain('DAVI & Hydra');
+    expect(whatsappTemplate?.text).toContain('MANTFRAI');
     expect(whatsappTemplate?.text).toContain('tutorial');
 
     const linkedinTemplate = GROWTH_TEMPLATES.find((t) => t.channel.includes('LinkedIn'));

@@ -1,7 +1,7 @@
 ---
 id: "mod-4-aula-4"
 moduloId: "modulo-4"
-moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Método DAVI"
+moduloTitulo: "Módulo 4: Selecionando as Melhores Ações — O Filtro MFS"
 numeroAula: "4.4"
 titulo: "Fundamentos das Ações III: Setores Perenes (BEST) & Dívida Sob Controle"
 duracaoLeitura: "6 min"
@@ -13,7 +13,7 @@ status: "ready"
 
 Nas aulas anteriores, você dominou os filtros de **Sociedade** (governança, Novo Mercado e Tag Along) e de **Lucro** (consistência de 5 anos, margens saudáveis e ROE).
 
-Agora, chegamos ao terceiro pilar fundamental da análise de ações pelo Método DAVI: **o Modelo de Negócio e o Controle de Risco da Dívida**.
+Agora, chegamos ao terceiro pilar fundamental da análise de ações pelo Filtro MFS: **o Modelo de Negócio e o Controle de Risco da Dívida**.
 
 Não basta a empresa ser lucrativa hoje; precisamos ter a convicção estatística de que o produto ou serviço que ela vende continuará sendo consumido diariamente pela população daqui a 10, 20 ou 50 anos — e que a diretoria não colocou a empresa em risco contraindo dívidas explosivas que devoram o caixa quando a taxa de juros sobe.
 
@@ -23,7 +23,7 @@ Não basta a empresa ser lucrativa hoje; precisamos ter a convicção estatísti
 
 No mercado acionário existem setores altamente cíclicos e voláteis (como companhias aéreas, construtoras residenciais de baixa renda e varejo de moda) que sofrem oscilações violentas a cada mudança econômica.
 
-Por outro lado, existem setores que operam como verdadeiros monopólios e serviços essenciais de utilidade pública. No Norte Invest, memorizamos esses setores através do acrônimo **BEST**:
+Por outro lado, existem setores que operam como verdadeiros monopólios e serviços essenciais de utilidade pública. No MANTFRAI, memorizamos esses setores através do acrônimo **BEST**:
 
 | Letra | Setor Perene | Por que é Antifrágil? | Exemplos Típicos na B3 |
 | :---: | :--- | :--- | :--- |
@@ -54,9 +54,9 @@ $$\text{Dívida Líquida / EBITDA} = \frac{\text{Dívida Total} - \text{Caixa Di
 
 ---
 
-## 📱 3. Aplicação Prática no App Norte Invest
+## 📱 3. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você monitora a saúde das suas empresas sem planilhas:
+No **MANTFRAI Enterprise**, você monitora a saúde das suas empresas sem planilhas:
 1. Abra o **Radar de Ativos** (`/radar`).
 2. Passe o cursor sobre a métrica de **Dívida Líquida / EBITDA** de cada ativo.
 3. Se a alavancagem de uma empresa ultrapassar a faixa de segurança histórica, o sistema alerta o investidor no resumo para reavaliar os aportes.
@@ -67,7 +67,7 @@ No **Norte Invest V2 Enterprise**, você monitora a saúde das suas empresas sem
 
 > 🚫 **O Erro:** Comprar ações de empresas do setor aéreo ou varejo hiperalavancado que devem bilhões na esperança de que um dia a economia decole.
 > 
-> 🛡️ **A Postura Norte Invest:** Nós não apostamos em empresas que precisam de milagres macroeconômicos para não falir. Nós nos tornamos sócios de fortalezas financeiras com baixo endividamento e caixa abundante.
+> 🛡️ **A Postura MANTFRAI:** Nós não apostamos em empresas que precisam de milagres macroeconômicos para não falir. Nós nos tornamos sócios de fortalezas financeiras com baixo endividamento e caixa abundante.
 
 ---
 
@@ -82,7 +82,7 @@ flowchart TD
     S -->|Sim (Previsível)| D{"Dívida Líquida / EBITDA <= 2,5x a 3,0x?"}
     
     D -->|Não (> 3,5x)| Reprova["❌ Eliminada: Risco de Insolvência Financeira"]
-    D -->|Sim| Aprovado["👑 Ativo Elegível para a Lista de Ouro!<br/>(Pronto para o Método DAVI)"]
+    D -->|Sim| Aprovado["👑 Ativo Elegível para a Lista de Ouro!<br/>(Pronto para o Filtro MFS)"]
 ```
 
 ---
@@ -94,4 +94,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam uma aula rica e empolgante explicando o terceiro pilar do Método DAVI: modelo de negócio e gestão da dívida. Detalhem o acrônimo BEST (Bancos, Energia, Saneamento, Telecom/Seguros) e por que esses setores são imunes às crises mais severas. Expliquem com clareza cristalina como interpretar o indicador Dívida Líquida sobre EBITDA e por que empresas com alavancagem controlada garantem a tranquilidade do investidor no Norte Invest."*
+> *"Produzam uma aula rica e empolgante explicando o terceiro pilar do Filtro MFS: modelo de negócio e gestão da dívida. Detalhem o acrônimo BEST (Bancos, Energia, Saneamento, Telecom/Seguros) e por que esses setores são imunes às crises mais severas. Expliquem com clareza cristalina como interpretar o indicador Dívida Líquida sobre EBITDA e por que empresas com alavancagem controlada garantem a tranquilidade do investidor no MANTFRAI."*

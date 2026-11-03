@@ -49,12 +49,12 @@ Você também tem a liberdade de comprar ações de empresas individuais america
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você cadastra e monitora seus investimentos globais:
-1. No **Radar de Ativos** (`/radar`), selecione a aba **Exterior** para visualizar ETFs, Stocks e REITs aprovados pelo Método DAVI.
+No **MANTFRAI Enterprise**, você cadastra e monitora seus investimentos globais:
+1. No **Radar de Ativos** (`/radar`), selecione a aba **Exterior** para visualizar ETFs, Stocks e REITs aprovados pelo Filtro MFS.
 2. Defina os ativos internacionais na sua **Carteira** (`/carteira`).
-3. O algoritmo **AM2O** converte os valores em Reais e Dólares e calcula o momento ideal de aportar no tentáculo internacional sem sofrer com ansiedade cambial.
+3. O algoritmo **Motor RDM** converte os valores em Reais e Dólares e calcula o momento ideal de aportar no tentáculo internacional sem sofrer com ansiedade cambial.
 
 ---
 
@@ -62,7 +62,7 @@ No **Norte Invest V2 Enterprise**, você cadastra e monitora seus investimentos 
 
 > 🚫 **O Erro:** Comprar ETFs setoriais da moda ou de temas hiperespecíficos (ex: ETF de maconha, ETF de metaverso, ETF alavancado 3x).
 > 
-> 🛡️ **A Postura Norte Invest:** Fugimos de modismos passageiros. Nós investimos na economia real global através de índices amplos, consagrados e neutros ponderados por valor de mercado.
+> 🛡️ **A Postura MANTFRAI:** Fugimos de modismos passageiros. Nós investimos na economia real global através de índices amplos, consagrados e neutros ponderados por valor de mercado.
 
 ---
 
@@ -70,7 +70,7 @@ No **Norte Invest V2 Enterprise**, você cadastra e monitora seus investimentos 
 
 ```mermaid
 flowchart TD
-    Investidor["Investidor Norte Invest"] -->|1 Ordem de Compra: VOO / VT| ETF["Cota do ETF Global (Bolsa de NY)"]
+    Investidor["Investidor MANTFRAI"] -->|1 Ordem de Compra: VOO / VT| ETF["Cota do ETF Global (Bolsa de NY)"]
     
     ETF --> C1["EUA: Apple, Microsoft, Amazon, Nvidia (60%)"]
     ETF --> C2["Europa: Nestlé, LVMH, ASML, SAP (16%)"]
@@ -89,4 +89,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam uma aula dinâmica e fascinante sobre a simplicidade e a eficiência dos ETFs globais. Expliquem como uma cota de ETFs como o VOO ou o VT permite a qualquer cidadão comum ser dono das maiores multinacionais do mundo pagando taxas quase nulas de 0,03% ao ano. Comparem a facilidade dos ETFs com a análise de ações individuais e demonstrem como o Norte Invest integra o investimento no exterior de forma descomplicada."*
+> *"Produzam uma aula dinâmica e fascinante sobre a simplicidade e a eficiência dos ETFs globais. Expliquem como uma cota de ETFs como o VOO ou o VT permite a qualquer cidadão comum ser dono das maiores multinacionais do mundo pagando taxas quase nulas de 0,03% ao ano. Comparem a facilidade dos ETFs com a análise de ações individuais e demonstrem como o MANTFRAI integra o investimento no exterior de forma descomplicada."*

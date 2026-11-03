@@ -99,7 +99,7 @@ export function AccessibilityDrawer() {
 
   const handleTestSpeech = () => {
     speakText(
-      'Norte Invest. Método Davi e Mecanismo Hydra. Patrimônio total vinte e nove mil duzentos e sete reais e cinquenta e seis centavos. Rentabilidade mais dezesseis vírgula noventa e quatro por cento.',
+      'MANTFRAI. Método Davi e Carteira Antifrágil. Patrimônio total vinte e nove mil duzentos e sete reais e cinquenta e seis centavos. Rentabilidade mais dezesseis vírgula noventa e quatro por cento.',
       { rate: preferences.speechRate }
     );
   };

@@ -77,7 +77,7 @@ const CORRETORAS: CorretoraData[] = [
         'Digite o valor do aporte da reserva e confirme com a senha de 4 dígitos.'
       ],
       acoesFiis: [
-        'Na aba de Investimentos, toque na lupa (Buscar) e cole o código do ativo copiado do Norte Invest (ex: HGLG11 ou WEGE3).',
+        'Na aba de Investimentos, toque na lupa (Buscar) e cole o código do ativo copiado do MANTFRAI (ex: HGLG11 ou WEGE3).',
         'Toque no ativo ➔ clique em "Comprar".',
         'Digite a quantidade de cotas. No Nubank, você pode comprar de 1 em 1 ação normalmente (o app gerencia o fracionário nos bastidores).',
         'Confira o resumo e clique em "Confirmar compra" digitando sua senha de 4 dígitos.'
@@ -88,7 +88,7 @@ const CORRETORAS: CorretoraData[] = [
       ]
     },
     dicaOuro: 'A antiga NuInvest não existe mais como aplicativo separado. Toda a custódia e novas compras são feitas 100% dentro do app roxinho oficial do Nubank.',
-    promptNotebookLM: 'Crie um episódio de áudio de 3 minutos, descontraído e extremamente prático, entre dois especialistas da Norte Invest ensinando um investidor iniciante a fazer sua primeira compra no app do Nubank. Expliquem onde fica a aba de investimentos, como comprar Tesouro Selic para a reserva, como pesquisar um FII ou Ação e enfatizem que o aplicativo já cuida do fracionário sem precisar se preocupar com a letra F.'
+    promptNotebookLM: 'Crie um episódio de áudio de 3 minutos, descontraído e extremamente prático, entre dois especialistas da MANTFRAI ensinando um investidor iniciante a fazer sua primeira compra no app do Nubank. Expliquem onde fica a aba de investimentos, como comprar Tesouro Selic para a reserva, como pesquisar um FII ou Ação e enfatizem que o aplicativo já cuida do fracionário sem precisar se preocupar com a letra F.'
   },
   {
     id: 'rico',
@@ -125,7 +125,7 @@ const CORRETORAS: CorretoraData[] = [
       ],
       importadorB3: [
         'No portal web da Rico (computador), acesse "Minha Conta" ➔ "Documentos" ➔ "Notas de Negociação".',
-        'Selecione o mês desejado e faça o download das notas em PDF, ou baixe a planilha da Área do Investidor B3 para subir no Norte Invest.'
+        'Selecione o mês desejado e faça o download das notas em PDF, ou baixe a planilha da Área do Investidor B3 para subir no MANTFRAI.'
       ]
     },
     dicaOuro: 'Se a corretora der erro de "lote inválido" ao tentar comprar poucas ações, lembre-se da regra de ouro: adicione o "F" no final do código (ex: WEGE3 ➔ WEGE3F).',
@@ -164,7 +164,7 @@ const CORRETORAS: CorretoraData[] = [
         'Insira a quantidade, escolha ordem limitada no preço atual e clique em "Comprar" autenticando com o i-Safe.'
       ],
       importadorB3: [
-        'No app ou no Internet Banking, vá em "Investimentos" ➔ "Relatórios" ➔ "Notas de Corretagem" e baixe o arquivo para sincronizar no Norte Invest.'
+        'No app ou no Internet Banking, vá em "Investimentos" ➔ "Relatórios" ➔ "Notas de Corretagem" e baixe o arquivo para sincronizar no MANTFRAI.'
       ]
     },
     dicaOuro: 'Com o Inter, você cumpre o tentáculo de Renda Fixa, Ações Brasil, FIIs e o tentáculo Internacional (S&P 500 / Global Account) sem precisar abrir conta em duas instituições.',
@@ -197,7 +197,7 @@ const CORRETORAS: CorretoraData[] = [
       ],
       acoesFiis: [
         'Menu "Renda Variável" ➔ "Operar".',
-        'Busque pelo ticker copiado do Norte Invest.',
+        'Busque pelo ticker copiado do MANTFRAI.',
         'Preencha quantidade, preço de mercado e confirme a ordem com o token.'
       ],
       importadorB3: [
@@ -275,7 +275,7 @@ export function TutorialCorretorasTab() {
               Como Comprar Ativos na sua Corretora & Desmistificando a B3
             </h2>
             <p className="text-xs leading-relaxed text-slate-300 sm:text-sm">
-              Você <strong>não precisa estudar todas as corretoras</strong>. Escolha apenas a plataforma que você já utiliza (ou quer abrir) e siga o passo a passo prático para colocar seu aporte do Método DAVI na tela.
+              Você <strong>não precisa estudar todas as corretoras</strong>. Escolha apenas a plataforma que você já utiliza (ou quer abrir) e siga o passo a passo prático para colocar seu aporte do Filtro MFS na tela.
             </p>
           </div>
 
@@ -417,7 +417,7 @@ export function TutorialCorretorasTab() {
 
         {/* Quadro Informativo */}
         <div className="rounded-xl border border-emerald-500/30 bg-[#081a14] p-4 text-xs text-emerald-200 leading-relaxed">
-          <strong className="block mb-1 text-emerald-300 font-bold">Por que esta plataforma é recomendada na Norte Invest:</strong>
+          <strong className="block mb-1 text-emerald-300 font-bold">Por que esta plataforma é recomendada na MANTFRAI:</strong>
           {selected.destaque}
         </div>
 
@@ -471,7 +471,7 @@ export function TutorialCorretorasTab() {
             <div className="rounded-xl border border-slate-800 bg-[#0d1527] p-4 space-y-2">
               <div className="flex items-center gap-2 text-xs font-extrabold text-purple-400">
                 <span className="flex h-5 w-5 items-center justify-center rounded-full bg-purple-500/20 text-[11px]">4</span>
-                Comprando Ações e FIIs do Método DAVI
+                Comprando Ações e FIIs do Filtro MFS
               </div>
               <ul className="space-y-1.5 text-xs text-slate-300 list-disc list-inside">
                 {selected.passos.acoesFiis.map((p, i) => (
@@ -485,7 +485,7 @@ export function TutorialCorretorasTab() {
           <div className="rounded-xl border border-slate-800 bg-[#0d1527] p-4 space-y-2">
             <div className="flex items-center gap-2 text-xs font-extrabold text-emerald-400">
               <FileSpreadsheet className="h-4 w-4" />
-              <span>5. Como Sincronizar com o Importador B3 da Norte Invest:</span>
+              <span>5. Como Sincronizar com o Importador B3 da MANTFRAI:</span>
             </div>
             <ul className="space-y-1.5 text-xs text-slate-300 list-disc list-inside">
               {selected.passos.importadorB3.map((p, i) => (
@@ -541,7 +541,7 @@ export function TutorialCorretorasTab() {
         <div className="grid gap-2.5 sm:grid-cols-5 text-xs">
           <div className="rounded-xl border border-slate-800/80 bg-[#111c34] p-3">
             <strong className="block text-emerald-400 font-bold mb-1">1º Minuto</strong>
-            <p className="text-slate-200">Abra o Norte Invest em <strong>/onde-aportar</strong> e gere sua sugestão.</p>
+            <p className="text-slate-200">Abra o MANTFRAI em <strong>/onde-aportar</strong> e gere sua sugestão.</p>
           </div>
           <div className="rounded-xl border border-slate-800/80 bg-[#111c34] p-3">
             <strong className="block text-emerald-400 font-bold mb-1">2º Minuto</strong>

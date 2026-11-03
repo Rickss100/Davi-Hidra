@@ -26,7 +26,7 @@ A primeira regra eliminatória na análise de qualquer fundo imobiliário é a s
 
 - ❌ **Fundo Monoativo / Monoinquilino (Proibido):** O fundo possui apenas **um único imóvel**, alugado para **uma única empresa** (por exemplo, um prédio alugado exclusivamente para uma agência bancária ou um hospital específico). 
   - **O Risco:** Se o contrato vencer e o inquilino decidir mudar de endereço, **100% da renda do fundo desaparece de um dia para o outro**. A vacância pula para 100%, o aluguel mensal zera e você ainda terá que pagar o condomínio e o IPTU do imóvel vazio.
-- ✅ **Fundo Multiativo e Multilocatário (Padrão Norte Invest):** O fundo possui **15, 20 ou 30 galpões logísticos ou shoppings**, espalhados por diferentes regiões e alugados para **mais de 50 empresas multinacionais e gigantes do varejo**.
+- ✅ **Fundo Multiativo e Multilocatário (Padrão MANTFRAI):** O fundo possui **15, 20 ou 30 galpões logísticos ou shoppings**, espalhados por diferentes regiões e alugados para **mais de 50 empresas multinacionais e gigantes do varejo**.
   - **A Segurança:** Se uma empresa devolver 3 galpões, as outras 47 continuam pagando o aluguel normalmente. O impacto na sua renda mensal é imperceptível.
 
 ---
@@ -49,7 +49,7 @@ Ao ler os relatórios gerenciais mensais disponibilizados pelos fundos, você en
 2. **Vacância Financeira:** É a porcentagem da renda potencial de aluguel que não está sendo arrecadada.  
    *Geralmente anda próxima da física, mas pode variar se o fundo conceder meses de carência para novos locatários.*
 
-> 🛡️ **O Crivo Norte Invest:** Priorizamos fundos com **vacância física historicamente inferior a 8% a 10%**, demonstrando alta atratividade comercial dos imóveis.
+> 🛡️ **O Crivo MANTFRAI:** Priorizamos fundos com **vacância física historicamente inferior a 8% a 10%**, demonstrando alta atratividade comercial dos imóveis.
 
 ---
 
@@ -64,9 +64,9 @@ A natureza jurídica dos contratos de aluguel define a previsibilidade dos seus 
 
 ---
 
-## 📱 5. Aplicação Prática no App Norte Invest
+## 📱 5. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você audita a carteira de imóveis sem ler relatórios de 50 páginas:
+No **MANTFRAI Enterprise**, você audita a carteira de imóveis sem ler relatórios de 50 páginas:
 1. Abra o **Radar de Ativos** (`/radar`) na aba **FIIs**.
 2. Veja o número de imóveis, estados de atuação, percentual de vacância e tipo predominante de contrato destacados no card.
 3. Se um fundo for monoativo ou tiver vacância perigosa, o sistema exibe um aviso preventivo.
@@ -83,7 +83,7 @@ flowchart TD
         F3 --> F4["Queda Abrupta de Renda na Primeira Crise ⚠️"]
     end
 
-    subgraph Aprovado["🛡️ Fundo Resiliente (Padrão Norte Invest)"]
+    subgraph Aprovado["🛡️ Fundo Resiliente (Padrão MANTFRAI)"]
         A1["Multiativo (10+ Imóveis) & Multilocatário"] --> A2["Localização Premium (Raio 30km SP / Faria Lima)"]
         A2 --> A3["Vacância Baixa (< 5%) & Contratos Longos"]
         A3 --> A4["Aluguéis Mensais Previsíveis e Crescentes 👑"]
@@ -99,4 +99,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula muito interessante e prática sobre como analisar os imóveis de um Fundo Imobiliário. Detalhem por que os fundos monoativos são uma verdadeira armadilha para o investidor, expliquem a importância estratégica da localização primária nos galpões logísticos e lajes corporativas, e contrastem os contratos típicos com a segurança absoluta dos contratos atípicos Built to Suit. Demonstrem como o Norte Invest resume esses dados para poupar tempo do investidor."*
+> *"Apresentem uma aula muito interessante e prática sobre como analisar os imóveis de um Fundo Imobiliário. Detalhem por que os fundos monoativos são uma verdadeira armadilha para o investidor, expliquem a importância estratégica da localização primária nos galpões logísticos e lajes corporativas, e contrastem os contratos típicos com a segurança absoluta dos contratos atípicos Built to Suit. Demonstrem como o MANTFRAI resume esses dados para poupar tempo do investidor."*

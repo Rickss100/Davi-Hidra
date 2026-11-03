@@ -60,7 +60,7 @@ export function TutorialNotebookLMTab({ onFeedback }: TutorialNotebookLMTabProps
             </div>
             <h3 className="mb-1 text-sm font-bold text-white">Copie o Manual Oficial</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              O manual completo contém todas as regras, a matemática do AM2O e a filosofia de Michelangelo.
+              O manual completo contém todas as regras, a matemática do Motor RDM e a filosofia de Michelangelo.
             </p>
           </div>
           <button

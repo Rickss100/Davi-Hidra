@@ -17,7 +17,7 @@ export function PrivateAiDrawer() {
     {
       role: 'assistant',
       content:
-        'Olá! Sou a Norte Invest AI, especialista no Método DAVI & Hydra. Posso analisar sua alocação estratégica, proventos, Yield on Cost ou Reserva de Emergência.'
+        'Olá! Sou a MANTFRAI AI, especialista no MANTFRAI (Método Antifrágil de Investimento). Posso analisar sua alocação estratégica, proventos, Yield on Cost ou Reserva de Emergência.'
     }
   ]);
 
@@ -58,7 +58,7 @@ export function PrivateAiDrawer() {
     <>
       <button
         type="button"
-        aria-label="Abrir Norte Invest AI"
+        aria-label="Abrir MANTFRAI AI"
         onClick={() => setOpen((v) => !v)}
         className="fixed bottom-20 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-gold-500 to-gold-600 text-obsidian-950 shadow-gold transition-transform hover:scale-105 md:bottom-6"
       >
@@ -70,7 +70,7 @@ export function PrivateAiDrawer() {
           <div className="flex items-center justify-between border-b border-slate-800 bg-obsidian-950 px-4 py-3">
             <div className="flex items-center gap-2">
               <Bot className="h-4 w-4 text-gold-400" />
-              <span className="text-sm font-bold text-white">Norte Invest AI</span>
+              <span className="text-sm font-bold text-white">MANTFRAI AI</span>
             </div>
             <button
               type="button"
@@ -97,20 +97,20 @@ export function PrivateAiDrawer() {
             ))}
             {loading && (
               <div className="mr-6 rounded-xl border border-slate-800 bg-obsidian-950 p-3 text-slate-400">
-                Norte Invest AI está analisando os indicadores da sua carteira...
+                MANTFRAI AI está analisando os indicadores da sua carteira...
               </div>
             )}
           </div>
 
           <form onSubmit={handleSend} className="flex gap-2 border-t border-slate-800 bg-obsidian-950 p-3">
             <label htmlFor="private-ai-input" className="sr-only">
-              Pergunte à Norte Invest AI
+              Pergunte à MANTFRAI AI
             </label>
             <Input
               id="private-ai-input"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Pergunte à Norte Invest AI..."
+              placeholder="Pergunte à MANTFRAI AI..."
               className="h-9 text-xs"
             />
             <Button type="submit" size="sm" variant="gold" disabled={loading} aria-label="Enviar pergunta">

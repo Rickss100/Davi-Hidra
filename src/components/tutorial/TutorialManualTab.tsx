@@ -62,7 +62,7 @@ const APP_MODULES = [
     path: '/radar',
     tone: 'sky',
     desc: 'Uma central fundamentalista com centenas de empresas e FIIs. Filtre por múltiplos de valorização e saúde financeira como P/L, Dividend Yield, P/VP, ROE e Dívida para selecionar os melhores ativos.',
-    tip: 'Dica: Use os presets Conservador, Moderado e Agressivo do Método DAVI para filtrar em um clique.'
+    tip: 'Dica: Use os presets Conservador, Moderado e Agressivo do Filtro MFS para filtrar em um clique.'
   },
   {
     icon: History,

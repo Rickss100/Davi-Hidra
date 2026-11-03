@@ -11,7 +11,7 @@ status: "ready"
 
 # Aula 3.3 — Faxina Financeira: O que Fazer com Investimentos Ruins
 
-Quase todo mundo que chega ao Norte Invest não começa com uma folha em branco. É extremamente comum carregar na bagagem investimentos antigos contratados por impulso ou por recomendação enviesada de gerentes de banco:
+Quase todo mundo que chega ao MANTFRAI não começa com uma folha em branco. É extremamente comum carregar na bagagem investimentos antigos contratados por impulso ou por recomendação enviesada de gerentes de banco:
 - Títulos de capitalização disfarçados de investimento.
 - Planos de previdência privada (PGBL/VGBL) com taxas de carregamento abusivas e fundos medíocres que perdem do CDI.
 - COEs (*Certificados de Operações Estruturadas*) com capital protegido, mas retorno financeiro pífio.
@@ -53,7 +53,7 @@ Para saber se você deve manter ou encerrar qualquer investimento do seu passado
 Antes de sair clicando no botão de resgate em tudo, execute a sua faxina seguindo este roteiro ordenado:
 
 ### Regra 1: Classifique os Ativos Ruins por Liquidez
-- **Ativos de Liquidez Imediata (Fundos ruins, CDBs vencidos, ações sem fundamentos):** Resgate imediatamente e direcione o capital para a sua Reserva de Emergência ou para o algoritmo AM2O.
+- **Ativos de Liquidez Imediata (Fundos ruins, CDBs vencidos, ações sem fundamentos):** Resgate imediatamente e direcione o capital para a sua Reserva de Emergência ou para o algoritmo Motor RDM.
 - **Ativos Travados com Prazo (CDBs longos sem liquidez, LCIs):** Se houver penalidade severa para resgate antecipado, aguarde a data de vencimento natural. Assim que o dinheiro cair na conta, migre para ativos da metodologia.
 
 ### Regra 2: Portabilidade de Previdência Privada
@@ -65,11 +65,11 @@ Se você vendeu ações com prejuízo na Bolsa, guarde esse valor! Pela legisla�
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você limpa a sua carteira em poucos passos:
+No **MANTFRAI Enterprise**, você limpa a sua carteira em poucos passos:
 1. Acesse o menu **Carteira** (`/carteira`).
-2. Identifique os ativos que não atendem mais aos critérios do Método DAVI.
+2. Identifique os ativos que não atendem mais aos critérios do Filtro MFS.
 3. Lance as vendas no botão `+ Nova Transação` no `/historico`.
 4. Ao receber o valor líquido, abra a tela **Onde Aportar** (`/onde-aportar`) e permita que o algoritmo redistribua o capital nos ativos saudáveis que estão mais descontados no momento.
 
@@ -79,7 +79,7 @@ No **Norte Invest V2 Enterprise**, você limpa a sua carteira em poucos passos:
 
 > 🚫 **O Erro:** Ter vergonha de reconhecer um erro do passado e esconder investimentos ruins embaixo do tapete para fingir que não perdeu dinheiro.
 > 
-> 🛡️ **A Postura Norte Invest:** Todo investidor experiente já comprou um ativo errado na vida. A diferença é que o investidor inteligente corrige o curso rápido, estanca a sangria e põe o dinheiro para trabalhar onde há futuro e lucros reais.
+> 🛡️ **A Postura MANTFRAI:** Todo investidor experiente já comprou um ativo errado na vida. A diferença é que o investidor inteligente corrige o curso rápido, estanca a sangria e põe o dinheiro para trabalhar onde há futuro e lucros reais.
 
 ---
 
@@ -97,7 +97,7 @@ flowchart TD
     AvaliarPrazo -->|Sim| AguardarVencimento["⏳ Aguardar Vencimento / Fazer Portabilidade"]
     AvaliarPrazo -->|Não| ResgatarImediato["🛑 Resgatar Imediatamente"]
     
-    AguardarVencimento & ResgatarImediato --> Realocar["🎯 Realocação no Norte Invest<br/>(Reserva de Emergência ou AM2O)"]
+    AguardarVencimento & ResgatarImediato --> Realocar["🎯 Realocação no MANTFRAI<br/>(Reserva de Emergência ou Motor RDM)"]
 ```
 
 ---
@@ -109,4 +109,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula libertadora e prática sobre como fazer uma verdadeira faxina financeira na carteira de investimentos. Expliquem a falácia psicológica do custo afundado com a metáfora brilhante do cinema, ensinem o Teste de Ouro para decidir se vale a pena vender com prejuízo, e passem o plano passo a passo para se livrar de previdências ruins, títulos de capitalização e ações podres, realocando o capital nos motores de dividendos do Norte Invest."*
+> *"Apresentem uma aula libertadora e prática sobre como fazer uma verdadeira faxina financeira na carteira de investimentos. Expliquem a falácia psicológica do custo afundado com a metáfora brilhante do cinema, ensinem o Teste de Ouro para decidir se vale a pena vender com prejuízo, e passem o plano passo a passo para se livrar de previdências ruins, títulos de capitalização e ações podres, realocando o capital nos motores de dividendos do MANTFRAI."*

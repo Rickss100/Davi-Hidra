@@ -11,7 +11,7 @@ status: "ready"
 
 # Aula 1.1 — O que é Investimento Real: O Tripé Patrimonial & A Geração de Renda
 
-Bem-vindo ao início da sua jornada na **Academia Norte Invest**.
+Bem-vindo ao início da sua jornada na **Academia MANTFRAI**.
 
 Antes de abrir planilhas, olhar gráficos ou comprar a primeira cota na Bolsa de Valores, é fundamental construir um alicerce inabalável. Mais de 90% das pessoas que perdem dinheiro no mercado financeiro fracassam não por falta de inteligência matemática, mas por começarem com premissas erradas: confundem investimento com aposta, buscam enriquecimento da noite para o dia e tomam decisões no calor das emoções.
 
@@ -25,7 +25,7 @@ No cotidiano profissional, a maioria das pessoas troca **tempo por dinheiro**: v
 
 **Investir é exatamente o processo inverso:** é pegar uma parte do fruto do seu trabalho e alocar em um **Ativo de Valor**.
 
-> 💎 **Definição Norte Invest:** Um ativo de valor é um bem produtivo (uma fração de uma empresa lucrativa, um imóvel comercial alugado ou um título de dívida soberana) que trabalha 24 horas por dia para gerar retorno financeiro **sem exigir o seu tempo ou esforço físico**.
+> 💎 **Definição MANTFRAI:** Um ativo de valor é um bem produtivo (uma fração de uma empresa lucrativa, um imóvel comercial alugado ou um título de dívida soberana) que trabalha 24 horas por dia para gerar retorno financeiro **sem exigir o seu tempo ou esforço físico**.
 
 Todo investimento sólido se apoia sobre o **Tripé da Riqueza**:
 1. **O Aporte:** O capital que você poupa mensalmente da sua renda ativa.
@@ -56,13 +56,13 @@ Porém, quando você **reinveste 100% dos proventos recebidos**, aciona o efeito
 - No segundo mês, os rendimentos dessas 10 cotas compram mais 1 cota. Agora você tem 11 cotas gerando renda.
 - No terceiro mês, são 11 cotas gerando proventos ainda maiores, permitindo comprar 2 novas cotas sem tirar nada do bolso.
 
-Esse ciclo acelera de forma exponencial até atingir o que chamamos no Método DAVI de **Ponto Mágico (Magic Number)**: o dia em que os proventos mensais pagam todas as contas da sua família, tornando o trabalho uma escolha de realização pessoal, e não uma obrigação de sobrevivência.
+Esse ciclo acelera de forma exponencial até atingir o que chamamos no Filtro MFS de **Ponto Mágico (Magic Number)**: o dia em que os proventos mensais pagam todas as contas da sua família, tornando o trabalho uma escolha de realização pessoal, e não uma obrigação de sobrevivência.
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você não precisa calcular o efeito bola de neve na mão:
+No **MANTFRAI Enterprise**, você não precisa calcular o efeito bola de neve na mão:
 1. Acesse o menu **Renda Passiva** (`/renda-passiva`).
 2. Observe o card **Renda Média Mensal** e o gráfico de evolução histórica dos seus dividendos.
 3. Utilize o **Simulador de Futuro** no final da tela para projetar o impacto do reinvestimento dos seus dividendos daqui a 5, 10 e 20 anos.
@@ -73,7 +73,7 @@ No **Norte Invest V2 Enterprise**, você não precisa calcular o efeito bola de 
 
 > 🚫 **O Erro:** Tratar ações e FIIs como "bilhetes de loteria" ou fichas de cassino, comprando na empolgação das notícias e vendendo no desespero quando a cotação cai temporariamente.
 > 
-> 🛡️ **A Postura Norte Invest:** Quem investe pelo Método DAVI não compra códigos na tela para revender amanhã. Compramos **participações em negócios reais**. Se os fundamentos continuam sólidos e a empresa lucra, a queda de preço é apenas uma oportunidade de comprar mais barato pelo algoritmo Hydra.
+> 🛡️ **A Postura MANTFRAI:** Quem investe pelo Filtro MFS não compra códigos na tela para revender amanhã. Compramos **participações em negócios reais**. Se os fundamentos continuam sólidos e a empresa lucra, a queda de preço é apenas uma oportunidade de comprar mais barato pelo motor RDM.
 
 ---
 
@@ -97,7 +97,7 @@ flowchart LR
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Crie um episódio de podcast leve e instigante entre dois apresentadores especialistas explicando a diferença entre trocar tempo por dinheiro e construir um império de ativos com o Norte Invest. Enfatize a analogia da bola de neve e o conceito do Ponto Mágico, onde cada cota comprada vira um funcionário trabalhando 24 horas por dia para gerar renda passiva."*
+> *"Crie um episódio de podcast leve e instigante entre dois apresentadores especialistas explicando a diferença entre trocar tempo por dinheiro e construir um império de ativos com o MANTFRAI. Enfatize a analogia da bola de neve e o conceito do Ponto Mágico, onde cada cota comprada vira um funcionário trabalhando 24 horas por dia para gerar renda passiva."*
 
 ---
 

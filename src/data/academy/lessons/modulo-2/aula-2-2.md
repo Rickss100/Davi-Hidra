@@ -45,9 +45,9 @@ Investir com sabedoria não é adivinhar o futuro; é **associar-se a negócios 
 
 ---
 
-## 🧩 3. As 4 Classes de Ativos Antifrágeis do Norte Invest
+## 🧩 3. As 4 Classes de Ativos Antifrágeis do MANTFRAI
 
-Para que o Efeito Lindy trabalhe a seu favor, o Norte Invest estrutura o seu império financeiro sobre quatro pilares comprovados:
+Para que o Efeito Lindy trabalhe a seu favor, o MANTFRAI estrutura o seu império financeiro sobre quatro pilares comprovados:
 
 1. **Ações Brasileiras de Valor:** Participação em empresas líderes de setores perenes da economia (energia elétrica, bancos, saneamento, seguros e indústria de base).
 2. **Fundos de Investimento Imobiliário (FIIs):** Propriedade compartilhada dos melhores imóveis físicos do país (galpões logísticos de alto padrão, lajes corporativas classe A e shoppings consolidados) gerando aluguéis mensais isentos de IR.
@@ -56,9 +56,9 @@ Para que o Efeito Lindy trabalhe a seu favor, o Norte Invest estrutura o seu imp
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-O **Norte Invest V2 Enterprise** já incorpora o Efeito Lindy de fábrica:
+O **MANTFRAI Enterprise** já incorpora o Efeito Lindy de fábrica:
 1. **Radar de Ativos (`/radar`):** Filtra automaticamente o histórico dos ativos, exigindo histórico mínimo de lucratividade e governança corporativa no Novo Mercado.
 2. **Definir Objetivos (`/definir-objetivos`):** Permite distribuir as porcentagens ideais entre Ações, FIIs, Renda Fixa e Exterior com base na solidez de cada classe.
 3. **Onde Aportar (`/onde-aportar`):** Prioriza os ativos aprovados no radar que estão com as melhores oportunidades de preço no mês.
@@ -69,7 +69,7 @@ O **Norte Invest V2 Enterprise** já incorpora o Efeito Lindy de fábrica:
 
 > 🚫 **O Erro:** Sofrer de FOMO (*Fear of Missing Out* / Medo de Ficar de Fora) e comprar ações especulativas de empresas deficitárias só porque o amigo do trabalho ou um influenciador do YouTube disse que *"vai subir 1000%"*.
 > 
-> 🛡️ **A Postura Norte Invest:** Ignoramos promessas e ruídos vazios. Nós só colocamos nosso dinheiro suado onde há lucros consistentes, balanços auditados e resiliência provada no teste do tempo.
+> 🛡️ **A Postura MANTFRAI:** Ignoramos promessas e ruídos vazios. Nós só colocamos nosso dinheiro suado onde há lucros consistentes, balanços auditados e resiliência provada no teste do tempo.
 
 ---
 
@@ -82,7 +82,7 @@ flowchart TD
         P2 --> P3["Queima de Caixa & Queda Livre 💥<br/>(Destruição do Investidor)"]
     end
 
-    subgraph Solidez["🛡️ O Efeito Lindy (Norte Invest)"]
+    subgraph Solidez["🛡️ O Efeito Lindy (MANTFRAI)"]
         L1["Empresas Centenárias & Imóveis Reais<br/>(Décadas de Lucro & Sobrevivência)"] --> L2["Enfrentam Crises & Inflação"]
         L2 --> L3["Aumentam Eficiência & Lucros 📈"]
         L3 --> L4["Fluxo Ininterrupto de Proventos 👑"]
@@ -98,4 +98,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Gravem um diálogo fascinante e instrutivo sobre o Efeito Lindy no mercado financeiro. Usem a história curiosa da delicatessen de Nova York e contrastem a fragilidade de empresas 'da moda' sem lucro com a robustez de companhias históricas que pagam dividendos há décadas no Brasil. Concluam demonstrando como as 4 classes de ativos do Norte Invest blindam o investidor contra modismos passageiros."*
+> *"Gravem um diálogo fascinante e instrutivo sobre o Efeito Lindy no mercado financeiro. Usem a história curiosa da delicatessen de Nova York e contrastem a fragilidade de empresas 'da moda' sem lucro com a robustez de companhias históricas que pagam dividendos há décadas no Brasil. Concluam demonstrando como as 4 classes de ativos do MANTFRAI blindam o investidor contra modismos passageiros."*

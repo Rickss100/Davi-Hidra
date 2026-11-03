@@ -6,7 +6,7 @@ import {
   getModuleById,
 } from '../src/data/academy/curriculum';
 
-describe('Academia Norte Invest — Currículo & Aulas do Método DAVI & Hydra', () => {
+describe('Academia MANTFRAI — Currículo & Aulas do Método Antifrágil de Investimento', () => {
   it('deve conter exatamente 8 módulos estruturados', () => {
     expect(ACADEMY_CURRICULUM).toHaveLength(8);
   });
@@ -53,7 +53,7 @@ describe('Academia Norte Invest — Currículo & Aulas do Método DAVI & Hydra',
   it('deve buscar corretamente um módulo por ID', () => {
     const mod4 = getModuleById('modulo-4');
     expect(mod4).toBeDefined();
-    expect(mod4?.titulo).toContain('Método DAVI');
+    expect(mod4?.titulo).toContain('Filtro MFS');
     expect(mod4?.aulas).toHaveLength(6);
   });
 });

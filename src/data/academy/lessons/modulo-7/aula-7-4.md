@@ -1,7 +1,7 @@
 ---
 id: "mod-7-aula-4"
 moduloId: "modulo-7"
-moduloTitulo: "Módulo 7: A Carteira Hydra & O Algoritmo AM2O"
+moduloTitulo: "Módulo 7: A Carteira Antifrágil & O Algoritmo Motor RDM"
 numeroAula: "7.4"
 titulo: "Acompanhamento de Proventos: O Efeito Bola de Neve & A Chegada ao Ponto Mágico"
 duracaoLeitura: "6 min"
@@ -13,9 +13,9 @@ status: "ready"
 
 Existe um instante mágico na vida de todo investidor paciente. É o dia em que você abre o extrato da sua conta e percebe que o dinheiro gerado pelos seus investimentos começou a trabalhar com mais força e intensidade do que o próprio suor do seu trabalho.
 
-Esse fenômeno não é fruto da sorte ou da especulação; é a consequência matemática inevitável da fórmula dos juros compostos aplicada com disciplina através do Método DAVI.
+Esse fenômeno não é fruto da sorte ou da especulação; é a consequência matemática inevitável da fórmula dos juros compostos aplicada com disciplina através do Filtro MFS.
 
-Nesta aula de coroação do Módulo 7, você aprenderá o conceito do **Ponto Mágico (Magic Number)**, como calcular o momento exato em que seus ativos se tornam autossuficientes e como acompanhar essa engrenagem no painel do Norte Invest.
+Nesta aula de coroação do Módulo 7, você aprenderá o conceito do **Ponto Mágico (Magic Number)**, como calcular o momento exato em que seus ativos se tornam autossuficientes e como acompanhar essa engrenagem no painel do MANTFRAI.
 
 ---
 
@@ -44,7 +44,7 @@ $$\text{Número de Cotas do Ponto Mágico} = \frac{\text{Preço de Mercado da Co
 
 Se o Ponto Mágico individual é o combustível dos seus ativos, o **Grande Ponto Mágico Patrimonial** é o destino final de toda a sua jornada financeira:
 
-> 🌟 **A Independência Financeira:** Ocorre no dia em que **a renda média mensal de proventos da sua Carteira Hydra ultrapassa o seu Custo de Vida Básico Mensal**.
+> 🌟 **A Independência Financeira:** Ocorre no dia em que **a renda média mensal de proventos da sua Carteira Antifrágil ultrapassa o seu Custo de Vida Básico Mensal**.
 
 A partir desse momento crucial:
 - Trabalhar deixa de ser uma obrigação de sobrevivência para se tornar uma escolha de realização pessoal.
@@ -53,12 +53,12 @@ A partir desse momento crucial:
 
 ---
 
-## 📱 3. Aplicação Prática no App Norte Invest
+## 📱 3. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você acompanha a contagem regressiva para a sua liberdade:
+No **MANTFRAI Enterprise**, você acompanha a contagem regressiva para a sua liberdade:
 1. Acesse o menu **Renda Passiva** (`/renda-passiva`).
 2. Observe o velocímetro de **Cobertura do Custo de Vida**: ele mostra graficamente a porcentagem exata das suas despesas mensais que já estão sendo pagas exclusivamente pelos seus dividendos (ex: `42% das contas pagas pelos ativos`).
-3. No gráfico de barras anual, veja a clássica "escadinha dos dividendos" subindo ano após ano, comprovando a força exponencial da sua Carteira Hydra.
+3. No gráfico de barras anual, veja a clássica "escadinha dos dividendos" subindo ano após ano, comprovando a força exponencial da sua Carteira Antifrágil.
 
 ---
 
@@ -66,7 +66,7 @@ No **Norte Invest V2 Enterprise**, você acompanha a contagem regressiva para a 
 
 > 🚫 **O Erro:** Desanimar nos primeiros meses porque os proventos são de alguns reais (ex: "só recebi R$ 15,00 este mês").
 > 
-> 🛡️ **A Postura Norte Invest:** Todo carvalho gigante um dia foi uma pequena semente na terra. Aquele que despreza os R$ 15,00 de hoje nunca terá a disciplina para administrar os R$ 15.000,00 de amanhã. Celebre cada dividendo recebido, reinvesta cada centavo pelo AM2O e veja a matemática transformar a semente em um império inabalável.
+> 🛡️ **A Postura MANTFRAI:** Todo carvalho gigante um dia foi uma pequena semente na terra. Aquele que despreza os R$ 15,00 de hoje nunca terá a disciplina para administrar os R$ 15.000,00 de amanhã. Celebre cada dividendo recebido, reinvesta cada centavo pelo Motor RDM e veja a matemática transformar a semente em um império inabalável.
 
 ---
 
@@ -88,4 +88,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Apresentem uma aula triunfante, inspiradora e cientificamente embasada sobre a chegada ao Ponto Mágico no Norte Invest. Expliquem detalhadamente a fórmula do Magic Number em FIIs e ações, a emoção de ver a primeira cota 'dar à luz' a novas cotas sem tirar nada do bolso, e a consagração da Liberdade Financeira quando os dividendos cobrem todas as contas da família. Concluam demonstrando como o painel de Renda Passiva do Norte Invest traça esse caminho com clareza cristalina."*
+> *"Apresentem uma aula triunfante, inspiradora e cientificamente embasada sobre a chegada ao Ponto Mágico no MANTFRAI. Expliquem detalhadamente a fórmula do Magic Number em FIIs e ações, a emoção de ver a primeira cota 'dar à luz' a novas cotas sem tirar nada do bolso, e a consagração da Liberdade Financeira quando os dividendos cobrem todas as contas da família. Concluam demonstrando como o painel de Renda Passiva do MANTFRAI traça esse caminho com clareza cristalina."*

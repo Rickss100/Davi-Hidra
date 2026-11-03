@@ -43,20 +43,20 @@ Ao investir no exterior, você deixa de ser sócio apenas de empresas que depend
 
 ---
 
-## 🐉 3. O Quarto Tentáculo da Carteira Hydra
+## 🐉 3. O Quarto Tentáculo da Carteira Antifrágil
 
 Lembre-se da lição do Módulo 2 sobre a descorrelação de forças:
 - Quando o Brasil passa por uma crise política ou incerteza fiscal e a Bolsa brasileira cai, **o Dólar quase sempre dispara em relação ao Real**.
-- Na sua Carteira Hydra, o seu patrimônio internacional em Dólar valoriza instantaneamente em Reais, amortecendo qualquer queda e mantendo seu patrimônio total equilibrado e sereno.
+- Na sua Carteira Antifrágil, o seu patrimônio internacional em Dólar valoriza instantaneamente em Reais, amortecendo qualquer queda e mantendo seu patrimônio total equilibrado e sereno.
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você acompanha sua exposição internacional em tempo real:
+No **MANTFRAI Enterprise**, você acompanha sua exposição internacional em tempo real:
 1. Acesse **Definir Objetivos** (`/definir-objetivos`) e configure a fatia da sua carteira destinada a **Ativos Internacionais** (recomendado entre 10% e 25%).
 2. No menu **Carteira** (`/carteira`), visualize sua alocação dividida entre ativos locais e dolarizados.
-3. O algoritmo **AM2O** monitora as oscilações cambiais e sinaliza o momento exato de aportar lá fora quando a cotação internacional estiver mais favorável.
+3. O algoritmo **Motor RDM** monitora as oscilações cambiais e sinaliza o momento exato de aportar lá fora quando a cotação internacional estiver mais favorável.
 
 ---
 
@@ -64,7 +64,7 @@ No **Norte Invest V2 Enterprise**, você acompanha sua exposição internacional
 
 > 🚫 **O Erro:** Ficar tentando adivinhar se o Dólar vai cair para R$ 4,80 ou subir para R$ 6,20 para "fazer câmbio na hora certa".
 > 
-> 🛡️ **A Postura Norte Invest:** Câmbio não se adivinha; câmbio se **faz com disciplina mensal**. O objetivo não é acertar a cotação da semana, mas acumular patrimônio na moeda mais líquida, confiável e aceita do planeta Terra.
+> 🛡️ **A Postura MANTFRAI:** Câmbio não se adivinha; câmbio se **faz com disciplina mensal**. O objetivo não é acertar a cotação da semana, mas acumular patrimônio na moeda mais líquida, confiável e aceita do planeta Terra.
 
 ---
 
@@ -79,7 +79,7 @@ flowchart TD
     
     RealCai --> DolarSobe["Ativos em Dólar Disparam em Reais 🚀<br/>(Stocks, REITs e ETFs Globais)"]
     
-    BolsaLocal & DolarSobe --> Equilibrio["🛡️ Carteira Hydra Protegida e Estável!<br/>(Poder de Compra Preservado)"]
+    BolsaLocal & DolarSobe --> Equilibrio["🛡️ Carteira Antifrágil Protegida e Estável!<br/>(Poder de Compra Preservado)"]
 ```
 
 ---
@@ -91,4 +91,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam uma aula reveladora e provocativa sobre a necessidade urgente de internacionalizar o patrimônio. Expliquem como o Brasil representa menos de 2% do mercado global e mostrem a perda histórica de 85% do poder de compra do Real desde 1994. Demonstrem como o pãozinho da padaria e o celular dependem do dólar e expliquem por que a parcela internacional da Carteira Hydra do Norte Invest salva o investidor das crises locais."*
+> *"Produzam uma aula reveladora e provocativa sobre a necessidade urgente de internacionalizar o patrimônio. Expliquem como o Brasil representa menos de 2% do mercado global e mostrem a perda histórica de 85% do poder de compra do Real desde 1994. Demonstrem como o pãozinho da padaria e o celular dependem do dólar e expliquem por que a parcela internacional da Carteira Antifrágil do MANTFRAI salva o investidor das crises locais."*

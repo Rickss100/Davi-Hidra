@@ -31,7 +31,7 @@ No ecossistema de um FII existem dois agentes centrais:
 
 ## 🔍 2. O Teste de Integridade: Como Avaliar uma Gestora?
 
-Para que um FII entre no radar do Método DAVI, a gestora deve ser aprovada em três critérios essenciais:
+Para que um FII entre no radar do Filtro MFS, a gestora deve ser aprovada em três critérios essenciais:
 
 ### 1. Tempo de Estrada (Mínimo de 5 Anos de Histórico)
 O mercado imobiliário é cíclico: tem anos de euforia e anos de recessão profunda. Queremos gestoras que já enfrentaram crises de vacância, repactuações difíceis de aluguéis e períodos de juros altos, provando sua capacidade de defender a renda dos cotistas.
@@ -56,11 +56,11 @@ No mercado de capitais brasileiro, algumas casas de gestão construíram um hist
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você consulta o selo da gestora de forma transparente:
+No **MANTFRAI Enterprise**, você consulta o selo da gestora de forma transparente:
 1. No **Radar de Ativos** (`/radar`), cada FII exibe a gestora responsável e o tempo de atuação da equipe.
-2. Fundos com histórico de conflito societário ou emissões predatórias são descartados automaticamente pelo filtro do Método DAVI.
+2. Fundos com histórico de conflito societário ou emissões predatórias são descartados automaticamente pelo filtro do Filtro MFS.
 
 ---
 
@@ -68,7 +68,7 @@ No **Norte Invest V2 Enterprise**, você consulta o selo da gestora de forma tra
 
 > 🚫 **O Erro:** Comprar cotas de um fundo imobiliário pequeno, gerido por uma gestora desconhecida sem histórico, apenas porque a taxa de administração parecia 0,1% mais barata.
 > 
-> 🛡️ **A Postura Norte Invest:** Gestão de patrimônio imobiliário de grande porte exige musculatura institucional, poder de barganha com inquilinos gigantes e reputação impecável. A segurança do seu aluguel mensal depende diretamente do calibre de quem gerencia o ativo.
+> 🛡️ **A Postura MANTFRAI:** Gestão de patrimônio imobiliário de grande porte exige musculatura institucional, poder de barganha com inquilinos gigantes e reputação impecável. A segurança do seu aluguel mensal depende diretamente do calibre de quem gerencia o ativo.
 
 ---
 
@@ -98,4 +98,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam uma aula franca e instigante sobre o papel crucial da gestora em um Fundo Imobiliário. Expliquem como a gestão pode ser o maior trunfo ou o maior veneno de um fundo, detalhem o perigo das emissões predatórias de cotas que diluem os investidores, citem os nomes das gestoras mais consolidadas e respeitadas do Brasil e mostrem como o Norte Invest monitora a reputação institucional de cada administradora."*
+> *"Produzam uma aula franca e instigante sobre o papel crucial da gestora em um Fundo Imobiliário. Expliquem como a gestão pode ser o maior trunfo ou o maior veneno de um fundo, detalhem o perigo das emissões predatórias de cotas que diluem os investidores, citem os nomes das gestoras mais consolidadas e respeitadas do Brasil e mostrem como o MANTFRAI monitora a reputação institucional de cada administradora."*

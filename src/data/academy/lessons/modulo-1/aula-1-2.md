@@ -30,7 +30,7 @@ A cada mês, sempre que a empresa distribuía dividendos e JCP, Carlos transferi
 - **Resultado após 20 anos:** R$ 995.197,00 (cerca de R$ 1 milhão acumulado). Um ótimo resultado, impulsionado pela valorização da empresa.
 
 ### Cenário 2: Eduardo (Reinvestiu 100% dos Dividendos)
-Eduardo seguiu o **Método DAVI**. Cada centavo de dividendo que entrava na conta era somado ao aporte mensal de R$ 500 para comprar mais ações da companhia.
+Eduardo seguiu o **Filtro MFS**. Cada centavo de dividendo que entrava na conta era somado ao aporte mensal de R$ 500 para comprar mais ações da companhia.
 - **Resultado após 20 anos:** **R$ 1.937.277,00**!
 
 > 💥 **A Revelação Matemática:** Reinvestir os proventos gerou quase **R$ 1 milhão a mais** para Eduardo com exatamente o mesmo esforço de trabalho que Carlos!
@@ -59,9 +59,9 @@ Assim como um banco de três pernas não fica de pé se uma delas for retirada, 
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você acompanha a saúde do seu tripé em tempo real:
+No **MANTFRAI Enterprise**, você acompanha a saúde do seu tripé em tempo real:
 1. Abra o **Resumo da Carteira** (`/resumo`).
 2. Veja o gráfico **Evolução do Capital Aplicado × Patrimônio Consolidado**.
 3. Repare na separação nítida entre a linha azul (**Capital que saiu do seu bolso**) e a linha verde (**Patrimônio Real a Mercado impulsionado pelos proventos**). O objetivo da metodologia é fazer a linha verde se distanciar cada vez mais para cima!
@@ -72,7 +72,7 @@ No **Norte Invest V2 Enterprise**, você acompanha a saúde do seu tripé em tem
 
 > 🚫 **O Erro:** Usar os dividendos recebidos no início da jornada para pagar pequenos luxos cotidianos (comer fora, comprar roupas), matando a bola de neve ainda filhote.
 > 
-> 🛡️ **A Postura Norte Invest:** Nos primeiros anos da formação patrimonial, **100% dos dividendos devem ser reinvestidos**. Você só começa a usufruir da renda passiva quando atinge o seu objetivo de independência financeira ou quando a renda cobre com folga o seu custo de vida.
+> 🛡️ **A Postura MANTFRAI:** Nos primeiros anos da formação patrimonial, **100% dos dividendos devem ser reinvestidos**. Você só começa a usufruir da renda passiva quando atinge o seu objetivo de independência financeira ou quando a renda cobre com folga o seu custo de vida.
 
 ---
 

@@ -15,7 +15,7 @@ O medo do "Leão da Receita Federal" é um dos maiores fantasmas psicológicos q
 
 Muitos acreditam que ao comprar a primeira cota de ação ou fundo imobiliário na Bolsa de Valores, serão imediatamente perseguidos pelo fisco ou terão que preencher guias DARF todos os meses.
 
-A realidade é infinitamente mais simples e tranquila. Nesta aula, você descobrirá a diferença crucial entre **Declarar** e **Pagar**, quais são os critérios reais de obrigatoriedade e por que quem investe pelo Método DAVI raramente precisa pagar imposto sobre seus investimentos na fase de acumulação.
+A realidade é infinitamente mais simples e tranquila. Nesta aula, você descobrirá a diferença crucial entre **Declarar** e **Pagar**, quais são os critérios reais de obrigatoriedade e por que quem investe pelo Filtro MFS raramente precisa pagar imposto sobre seus investimentos na fase de acumulação.
 
 ---
 
@@ -26,7 +26,7 @@ O primeiro passo para perder o medo é separar dois conceitos totalmente distint
 - **Declarar:** É simplesmente informar à Receita Federal na Declaração Anual de Ajuste (entre março e maio) quais ativos você possui na sua carteira, para comprovar a origem lícita do crescimento do seu patrimônio.
 - **Pagar Imposto:** Só acontece quando você realiza uma **operação de venda com lucro tributável**. Se você apenas comprou ativos e recebeu dividendos, **você não deve um único centavo de imposto adicional**.
 
-> 💎 **A Vantagem do Método DAVI:** Como nossa estratégia é de acumulação paciente de longo prazo (*Buy and Hold* de Valor) e nosso rebalanceamento é feito exclusivamente pelo algoritmo AM2O através de novos aportes, **nós praticamente não vendemos ativos**. Portanto, durante toda a sua fase de construção de riqueza, você não precisará gerar guias de DARF de venda!
+> 💎 **A Vantagem do Filtro MFS:** Como nossa estratégia é de acumulação paciente de longo prazo (*Buy and Hold* de Valor) e nosso rebalanceamento é feito exclusivamente pelo algoritmo Motor RDM através de novos aportes, **nós praticamente não vendemos ativos**. Portanto, durante toda a sua fase de construção de riqueza, você não precisará gerar guias de DARF de venda!
 
 ---
 
@@ -52,9 +52,9 @@ Para o mercado de ações, a legislação brasileira oferece uma das maiores van
 
 ---
 
-## 📱 4. Aplicação Prática no App Norte Invest
+## 📱 4. Aplicação Prática no App MANTFRAI
 
-No **Norte Invest V2 Enterprise**, você tem controle patrimonial rigoroso:
+No **MANTFRAI Enterprise**, você tem controle patrimonial rigoroso:
 1. Acesse o menu **Histórico** (`/historico`) para auditar todas as suas compras, datas e preços unitários.
 2. Na tela de **Carteira** (`/carteira`), consulte o **Preço Médio de Aquisição** de cada ativo, que é a informação oficial exigida pelo programa gerador da declaração do IRPF.
 
@@ -64,7 +64,7 @@ No **Norte Invest V2 Enterprise**, você tem controle patrimonial rigoroso:
 
 > 🚫 **O Erro:** Declarar o saldo das suas ações pelo preço da cotação de mercado em 31 de dezembro.
 > 
-> 🛡️ **A Postura Norte Invest:** A Receita Federal exige a declaração pelo **Custo Histórico de Aquisição** (quanto você efetivamente pagou pelas cotas somando as taxas). As oscilações diárias de mercado não alteram o valor do seu bem na declaração de bens e direitos.
+> 🛡️ **A Postura MANTFRAI:** A Receita Federal exige a declaração pelo **Custo Histórico de Aquisição** (quanto você efetivamente pagou pelas cotas somando as taxas). As oscilações diárias de mercado não alteram o valor do seu bem na declaração de bens e direitos.
 
 ---
 
@@ -92,4 +92,4 @@ flowchart TD
 > 2. Cole como nova fonte em [notebooklm.google.com](https://notebooklm.google.com/).
 > 3. No campo de personalização do *Audio Overview*, cole a instrução abaixo e clique em **Generate**:
 > 
-> *"Produzam um episódio tranquilizador e muito prático desmistificando o Imposto de Renda para investidores da Bolsa. Expliquem com clareza a diferença vital entre declarar e pagar imposto, destrinchem as regras atuais de obrigatoriedade da Instrução Normativa da Receita Federal e expliquem por que quem investe para o longo prazo com o Método DAVI não precisa se preocupar com DARF mensal na fase de acumulação."*
+> *"Produzam um episódio tranquilizador e muito prático desmistificando o Imposto de Renda para investidores da Bolsa. Expliquem com clareza a diferença vital entre declarar e pagar imposto, destrinchem as regras atuais de obrigatoriedade da Instrução Normativa da Receita Federal e expliquem por que quem investe para o longo prazo com o Filtro MFS não precisa se preocupar com DARF mensal na fase de acumulação."*

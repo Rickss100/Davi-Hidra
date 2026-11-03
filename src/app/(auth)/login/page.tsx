@@ -30,6 +30,13 @@ export default function LoginPage() {
   const [inactiveNotice, setInactiveNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [expiredNotice, setExpiredNotice] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
+      setExpiredNotice(true);
+    }
+  }, []);
 
   const handleLoginOrRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,10 +86,11 @@ export default function LoginPage() {
         return;
       }
 
-      const targetRoute =
-        data.user?.role === 'admin' || data.user?.role === 'collaborator' ? '/admin' : '/';
-      router.replace(targetRoute);
-      router.refresh();
+      // Hard Navigation: garante envio de cookies HttpOnly no cabeçalho HTTP e montagem completa do layout
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const redirectParam = params?.get('redirect');
+      const targetRoute = redirectParam && redirectParam.startsWith('/') ? redirectParam : '/';
+      window.location.href = targetRoute;
     } catch {
       setError('Falha de comunicação segura com o servidor.');
     } finally {
@@ -108,10 +116,10 @@ export default function LoginPage() {
         return;
       }
 
-      const targetRoute =
-        data.user?.role === 'admin' || data.user?.role === 'collaborator' ? '/admin' : '/';
-      router.replace(targetRoute);
-      router.refresh();
+      const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+      const redirectParam = params?.get('redirect');
+      const targetRoute = redirectParam && redirectParam.startsWith('/') ? redirectParam : '/';
+      window.location.href = targetRoute;
     } catch {
       setError('Erro ao verificar código 2FA.');
     } finally {
@@ -220,6 +228,12 @@ export default function LoginPage() {
                   : 'Acesso seguro à sua carteira, metas e estratégias de alocação'}
               </p>
             </div>
+
+            {expiredNotice && (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-center text-xs text-amber-300">
+                🔒 Sua sessão anterior encerrou. Digite suas credenciais para continuar.
+              </div>
+            )}
 
             <div className="grid grid-cols-2 rounded-xl border border-slate-800 bg-obsidian-950 p-1">
               <button

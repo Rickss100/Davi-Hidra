@@ -515,7 +515,7 @@ export function suggestInvestments(params: {
     return [reserveSuggestion, ...restSuggestions];
   }
 
-  // 2. Distância AM2O (Always Move To Objective — Método DAVI & Hydra)
+  // 2. Distância RDM (Rebalanceamento por Distância da Meta — MANTFRAI)
   const totalPortfolioDec = (Object.keys(params.holdings) as PortfolioCategoryKey[]).reduce(
     (sum, cat) =>
       sum.plus(

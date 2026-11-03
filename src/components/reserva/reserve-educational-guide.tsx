@@ -54,9 +54,9 @@ export function ReserveRoadmapCard({
       title: 'Avance para o Filtro MFS & Onde Aportar',
       done: isFullyShielded,
       description:
-        'Com sua proteção encaminhada, filtre empresas/fundos no Radar DAVI, defina seus Objetivos e simule seus aportes mensais.',
+        'Com sua proteção encaminhada, filtre empresas/fundos no Radar MFS, defina seus Objetivos e simule seus aportes mensais.',
       href: '/radar',
-      linkLabel: 'Ir ao Radar DAVI'
+      linkLabel: 'Ir ao Radar MFS'
     }
   ];
 

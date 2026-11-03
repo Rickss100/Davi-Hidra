@@ -33,9 +33,9 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
   ],
   tags: [
     { name: 'Autenticação & Sessão', description: 'Login, logout, 2FA e renovação de credenciais' },
-    { name: 'Radar de Ativos (Método DAVI)', description: 'Filtros fundamentalistas, cotações e curadoria' },
-    { name: 'Mecanismo Onde Aportar (AM2O)', description: 'Algoritmo de rebalanceamento por novos aportes e Ponto Mágico' },
-    { name: 'Definir Objetivos & Reserva', description: 'Metas patrimoniais, carteira Hydra e Reserva de Emergência' },
+    { name: 'Radar de Ativos (Filtro MFS)', description: 'Filtros fundamentalistas, cotações e curadoria' },
+    { name: 'Mecanismo Onde Aportar (Motor RDM)', description: 'Algoritmo de rebalanceamento por novos aportes e Ponto Mágico' },
+    { name: 'Definir Objetivos & Reserva', description: 'Metas patrimoniais, Carteira Antifrágil e Reserva de Emergência' },
     { name: 'Gestão & TI (Administração)', description: 'Governança, controle de investidores e trilha de auditoria' }
   ],
   paths: {
@@ -162,8 +162,8 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
     },
     '/api/portfolio/suggestions': {
       post: {
-        tags: ['Mecanismo Onde Aportar (AM2O)'],
-        summary: 'Calcular sugestões de novos aportes pelo algoritmo AM2O',
+        tags: ['Mecanismo Onde Aportar (Motor RDM)'],
+        summary: 'Calcular sugestões de novos aportes pelo algoritmo RDM',
         description: 'Cruza a custódia atual do investidor com suas metas e com a Reserva de Emergência, calculando distâncias sem vendas e o impacto no Ponto Mágico.',
         requestBody: {
           required: true,

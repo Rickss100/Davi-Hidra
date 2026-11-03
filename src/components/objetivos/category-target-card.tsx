@@ -124,7 +124,7 @@ export function CategoryTargetCard({
               className="inline-flex items-center gap-1 font-bold text-gold-300 underline-offset-4 hover:underline"
             >
               <Compass className="h-3.5 w-3.5" />
-              Radar DAVI ({title})
+              Radar MFS ({title})
             </Link>
             .
           </p>

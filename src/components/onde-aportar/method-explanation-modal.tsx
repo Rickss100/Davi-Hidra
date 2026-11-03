@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Compass, ShieldCheck, Scale, Sparkles, X } from 'lucide-react';
 import { Button, Card } from '@/components/ui/primitives';
 
-export const HIDE_METHOD_MODAL_KEY = 'norte_v2_hide_am2o_modal';
+export const HIDE_METHOD_MODAL_KEY = 'mantfrai_hide_rdm_modal';
 
 interface MethodExplanationModalProps {
   open: boolean;
@@ -76,7 +76,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
         {/* Corpo com Tipografia Ampla e Alto Contraste */}
         <div className="space-y-4 px-6 py-6 text-base leading-relaxed text-slate-100 sm:px-8">
           <p>
-            No modelo <strong className="text-white">Motor RDM*</strong> (<em>Always Move To Objective</em>),
+            No modelo <strong className="text-white">Motor RDM*</strong> (<em>Rebalanceamento por Distância da Meta</em>),
             sempre direcionamos o novo aporte para as classes e ativos da sua carteira que estão{' '}
             <strong className="text-gold-300">mais distantes abaixo do seu objetivo percentual</strong>.
           </p>
@@ -89,7 +89,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
               </div>
               <div>
                 <h3 className="text-base font-bold text-emerald-300">
-                  1. Blindagem Hydra (Reserva de Emergência)
+                  1. Blindagem Antifrágil (Reserva de Emergência)
                 </h3>
                 <p className="mt-0.5 text-sm leading-relaxed text-slate-200">
                   Prioriza sua liquidez imediata (100% Reserva ou Híbrido 70%/30%) até que sua reserva
@@ -119,7 +119,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
               </div>
               <div>
                 <h3 className="text-base font-bold text-sky-300">
-                  3. Filtro Fundamentalista DAVI
+                  3. Filtro Fundamentalista MFS (Máxima Filtragem por Subtração)
                 </h3>
                 <p className="mt-0.5 text-sm leading-relaxed text-slate-200">
                   Verifica indicadores de qualidade (ROE, distribuição de proventos e teto de P/VP)
@@ -143,7 +143,7 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
           </div>
 
           <p className="text-sm font-medium text-slate-300">
-            * Ferramenta oficial da Metodologia MANTFRAI (DAVI & Hydra).
+            * Ferramenta oficial da Metodologia MANTFRAI (Método Antifrágil de Investimento).
           </p>
         </div>
 
@@ -151,14 +151,14 @@ export function MethodExplanationModal({ open, onClose }: MethodExplanationModal
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-slate-800 bg-obsidian-950/80 px-6 py-4 sm:px-8">
           <div className="flex items-center gap-2.5">
             <input
-              id="dont-show-am2o"
+              id="dont-show-rdm"
               type="checkbox"
               checked={dontShowAgain}
               onChange={(e) => handleToggleDontShow(e.target.checked)}
               className="h-5 w-5 cursor-pointer rounded border-slate-600 bg-obsidian-950 accent-gold-500"
             />
             <label
-              htmlFor="dont-show-am2o"
+              htmlFor="dont-show-rdm"
               className="cursor-pointer text-sm font-medium text-slate-200"
             >
               Não mostrar esta mensagem novamente ao abrir

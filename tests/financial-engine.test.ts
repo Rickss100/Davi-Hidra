@@ -208,7 +208,7 @@ describe('Motor Proprietário Método DAVI & Hydra (Server-Side)', () => {
     expect(magic[0]?.progressPercent).toBe(25);
   });
 
-  it('calcula distâncias individuais por ativo (AM2O) e sinaliza ativos fora da meta', () => {
+  it('calcula distâncias individuais por ativo (RDM) e sinaliza ativos fora da meta', () => {
     const holdings = emptyHoldings();
     // Carteira total R$ 10.000: WEGE3 tem R$ 1.000 (10%) e MGLU3 (fora da meta) tem R$ 500 (5%)
     holdings.acoes.push(makeHolding({ code: 'WEGE3', category: 'acoes', currentValueBrl: 1000 }));

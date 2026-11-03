@@ -29,7 +29,7 @@ describe('Documentação de APIs Swagger / OpenAPI 3.0.3 & Segurança DevSecOps'
 
     // Valida se o motor Onde Aportar tem parâmetros de aporte documentados
     const suggestionsOp = NORTE_INVEST_OPENAPI_SPEC.paths['/api/portfolio/suggestions'].post;
-    expect(suggestionsOp.summary).toContain('AM2O');
+    expect(suggestionsOp.summary).toContain('RDM');
     const reqBodyProps = (suggestionsOp.requestBody.content['application/json'].schema as any).properties;
     expect(reqBodyProps.availableAmountBrl).toBeDefined();
     expect(reqBodyProps.reserveStrategy).toBeDefined();

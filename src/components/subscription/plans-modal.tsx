@@ -68,8 +68,8 @@ const PLANS: PlanOption[] = [
     ctaText: 'Escolher Semestral',
     whatsappMessage: 'Olá! Gostaria de contratar o Plano Semestral da MANTFRAI (R$ 149,40). Como posso efetuar o pagamento?',
     features: [
-      'Acesso completo ao Motor AM2O',
-      'Radar de Ativos Fundamentalista DAVI',
+      'Acesso completo ao Motor RDM',
+      'Radar de Ativos Fundamentalista MFS',
       'Mapa Anual de Proventos',
       'Academia com 30 Aulas e Simulador'
     ]

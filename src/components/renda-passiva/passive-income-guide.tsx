@@ -33,7 +33,7 @@ export function PassiveIncomeGuide({ hasHoldings }: { hasHoldings: boolean }) {
 
       <p className="text-sm leading-relaxed text-slate-200 sm:text-base">
         Renda passiva é o dinheiro que seus investimentos pagam <strong>sem você vender nada</strong>: dividendos
-        e JCP das ações, rendimentos mensais dos FIIs e proventos de Stocks/REITs. O objetivo do Método DAVI é
+        e JCP das ações, rendimentos mensais dos FIIs e proventos de Stocks/REITs. O objetivo da Metodologia MANTFRAI é
         fazer esses pagamentos cobrirem seu custo de vida.
       </p>
 
@@ -52,7 +52,7 @@ export function PassiveIncomeGuide({ hasHoldings }: { hasHoldings: boolean }) {
       {!hasHoldings && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-gold-500/40 bg-gold-500/10 p-4 text-sm text-slate-100 sm:text-base">
           <span className="flex-1">
-            Você ainda não tem ativos pagadores. Escolha seus ativos pelo Radar DAVI e registre seu primeiro
+            Você ainda não tem ativos pagadores. Escolha seus ativos pelo Radar MFS e registre seu primeiro
             aporte na Carteira.
           </span>
           <Link href="/radar" className="inline-flex items-center gap-1.5 font-bold text-gold-300 hover:underline">

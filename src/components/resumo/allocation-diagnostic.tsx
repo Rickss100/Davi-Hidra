@@ -16,7 +16,7 @@ export function AllocationDiagnostic({ distances }: { distances: CategoryDistanc
         <div>
           <h2 className="flex items-center gap-2.5 text-lg font-extrabold text-white sm:text-xl">
             <Target className="h-6 w-6 text-gold-400" aria-hidden="true" />
-            Diagnóstico de alocação — régua DAVI &amp; Hydra
+            Diagnóstico de alocação — Régua Antifrágil (RDM)
           </h2>
           <p className="mt-1 text-sm text-slate-200 sm:text-base">
             Peso real de cada classe hoje comparado à meta que você definiu. A marca dourada indica a meta.

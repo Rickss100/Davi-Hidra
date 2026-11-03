@@ -289,7 +289,7 @@ export default function OndeAportarPage() {
           <Sparkles className="mt-0.5 h-5 w-5 shrink-0 text-sky-400" />
           <div>
             <strong className="block text-sm font-extrabold text-white sm:text-base">
-              3. Guardião de Qualidade DAVI
+              3. Guardião de Qualidade MFS
             </strong>
             <p className="mt-1 text-sm leading-relaxed text-slate-200">
               Audita ROE, dividendos e teto de P/VP no servidor antes de sugerir.

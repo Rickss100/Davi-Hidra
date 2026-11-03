@@ -120,7 +120,7 @@ export function CreateUserModal({
             <input
               type="text"
               required
-              placeholder="Ex: carlos@davi.com ou carlos123"
+              placeholder="Ex: carlos@mantfrai.com.br ou carlos123"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full rounded-xl border border-slate-700/60 bg-[#111c34] px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 transition-colors"

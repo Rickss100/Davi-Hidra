@@ -149,7 +149,7 @@ Avalie minhas respostas, aponte onde cometi erros conceituais e me ensine a pens
   {
     title: '📊 Prompt para IA Analisar sua Carteira Atual',
     description: 'Use para pedir que a IA revise a coerência dos seus percentuais de objetivos:',
-    prompt: `Analise a estrutura conceitual da metodologia DAVI & Hydra:
+    prompt: `Analise a estrutura conceitual da metodologia MANTFRAI:
 1. Reserva de Emergência de 6 a 12 meses em liquidez diária.
 2. Alocação macro: Ações Brasil (30%), FIIs (30%), Renda Fixa IPCA+ (20%) e Stocks Globais (20%).
 3. Rebalanceamento exclusivo pelo aporte Motor RDM.
@@ -162,7 +162,7 @@ export const GROWTH_TEMPLATES = [
     channel: 'WhatsApp — Amigos e Família',
     badge: 'Indicação Direta',
     tone: 'emerald',
-    text: `Fala amigo! Estava lembrando de você. Comecei a organizar meus investimentos usando um método chamado DAVI & Hydra (da MANTFRAI) e achei surreal de bom. 
+    text: `Fala amigo! Estava lembrando de você. Comecei a organizar meus investimentos usando um método chamado MANTFRAI (Método Antifrágil de Investimento) e achei surreal de bom. 
 
 Em vez daquela loucura de ficar tentando adivinhar se a bolsa vai subir ou cair, o sistema aplica a ideia de Michelangelo: elimina empresas ruins e usa um algoritmo que aponta todo mês onde aportar para comprar barato e fazer o dinheiro render juros compostos.
 

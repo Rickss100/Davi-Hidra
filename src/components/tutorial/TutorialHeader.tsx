@@ -22,11 +22,11 @@ export function TutorialHeader({ onFeedback }: TutorialHeaderProps) {
     const element = document.createElement('a');
     const file = new Blob([FULL_MANUAL_TEXT], { type: 'text/markdown;charset=utf-8' });
     element.href = URL.createObjectURL(file);
-    element.download = 'MANUAL_NORTE_INVEST_DAVI_HYDRA.md';
+    element.download = 'MANUAL_MANTFRAI_METODO_ANTIFRAGIL.md';
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
-    onFeedback('✓ Download do arquivo MANUAL_NORTE_INVEST_DAVI_HYDRA.md concluído!');
+    onFeedback('✓ Download do arquivo MANUAL_MANTFRAI_METODO_ANTIFRAGIL.md concluído!');
   };
 
   const handleShareWhatsApp = () => {

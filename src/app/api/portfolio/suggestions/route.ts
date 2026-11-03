@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     usdRate: snapshot.usdToBrl
   });
 
-  // Auditoria Fundamentalista DAVI 100% no Servidor
+  // Auditoria Fundamentalista MFS 100% no Servidor
   const suggestions = rawSuggestions.map((s) => {
     const upper = s.ticker.trim().toUpperCase();
     const assetName = resolveAssetDisplayName(s.ticker, null);
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
       } else if (dy !== null && dy === 0 && (s.categoria === 'acoes' || s.categoria === 'fiis')) {
         daviWarning = `${s.ticker} está sem distribuição recente de proventos (DY 0%). Revise sua tese antes do aporte.`;
       } else if (s.categoria === 'fiis' && pvp !== null && pvp > 1.15) {
-        daviWarning = `${s.ticker} negocia com P/VP de ${pvp.toFixed(2)}x (acima do teto DAVI de 1,15x para FIIs).`;
+        daviWarning = `${s.ticker} negocia com P/VP de ${pvp.toFixed(2)}x (acima do teto MFS de 1,15x para FIIs).`;
       }
     }
 

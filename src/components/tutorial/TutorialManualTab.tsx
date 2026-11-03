@@ -89,7 +89,7 @@ export function TutorialManualTab() {
       <div className="flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-slate-800 bg-gradient-to-r from-[#0d1527] to-[#131f3b] p-6 shadow-xl">
         <div className="max-w-2xl space-y-2">
           <h2 className="text-xl font-extrabold text-white">
-            Guia Passo a Passo: Dominando as Telas do DAVI & HYDRA
+            Guia Passo a Passo: Dominando as Telas da MANTFRAI
           </h2>
           <p className="text-xs leading-relaxed text-slate-300">
             Veja abaixo exatamente como utilizar cada funcionalidade do sistema no seu dia a dia de investidor, com atalhos de acesso direto.

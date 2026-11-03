@@ -416,7 +416,7 @@ export default function ReservaEmergenciaPage() {
             </>
           ) : (
             <>
-              ⚠️ <strong className="text-amber-300">Orientação Método DAVI & Hydra:</strong> Você
+              ⚠️ <strong className="text-amber-300">Orientação Antifrágil MANTFRAI:</strong> Você
               possui atualmente <strong className="text-white">{monthsCovered.toFixed(1)} meses</strong>{' '}
               de despesas cobertas. O sistema está configurado para priorizar{' '}
               <strong className="text-emerald-300">{strategyLabel}</strong> até atingir sua meta de{' '}

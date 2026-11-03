@@ -127,7 +127,7 @@ export default function RadarAtivosPage() {
     return set;
   }, [portfolioData]);
 
-  // Aplicação estrita dos filtros do Método DAVI
+  // Aplicação estrita dos filtros do Filtro MFS
   const filteredItems = useMemo(() => {
     const list = data?.items || [];
     return list.filter((item) => matchesDaviFilterMap(item, daviFilters));
@@ -366,7 +366,7 @@ export default function RadarAtivosPage() {
           <button
             type="button"
             onClick={() => setIsMobileFiltersOpen(true)}
-            aria-label="Abrir filtros do Método DAVI"
+            aria-label="Abrir filtros do Radar MFS"
             className="flex h-10 items-center gap-1.5 rounded-xl border border-emerald-500/50 bg-emerald-500/15 px-3 text-xs font-extrabold text-emerald-300 lg:hidden"
           >
             <Filter className="h-4 w-4" />
@@ -392,7 +392,7 @@ export default function RadarAtivosPage() {
           ))}
         </div>
 
-        {/* Chips de Atalhos Rápidos do Método DAVI */}
+        {/* Chips de Atalhos Rápidos do Radar MFS */}
         <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
           <span className="text-xs font-bold text-slate-400 mr-1 flex items-center gap-1">
             <Target className="h-3.5 w-3.5 text-gold-400" />
@@ -519,7 +519,7 @@ export default function RadarAtivosPage() {
         </div>
       )}
 
-      {/* Layout Principal: Sidebar Método DAVI à Esquerda + Tabela Totalmente Expandida à Direita */}
+      {/* Layout Principal: Sidebar Filtro MFS à Esquerda + Tabela Totalmente Expandida à Direita */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start w-full">
         {/* Sidebar Desktop */}
         <div className="hidden shrink-0 lg:block">

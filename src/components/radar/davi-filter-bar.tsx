@@ -156,7 +156,7 @@ export function DaviFilterBar({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-base font-extrabold text-white sm:text-lg">
-            Filtros Fundamentalistas — Método DAVI
+            Filtros Fundamentalistas — Filtro MFS
           </h2>
           <p className="text-sm text-slate-200">
             Peneire empresas e fundos pelos fundamentos, avalie com estrelas (★) e envie suas

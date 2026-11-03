@@ -133,7 +133,7 @@ export default function AdminSwaggerDocsPage() {
             Documentação Interativa de APIs (Swagger)
           </h1>
           <p className="text-xs sm:text-sm text-slate-300">
-            Contrato oficial OpenAPI 3.0.3 para testes em tempo real dos motores DAVI & Hydra, autenticação e rotas corporativas.
+            Contrato oficial OpenAPI 3.0.3 para testes em tempo real dos motores MFS & RDM, autenticação e rotas corporativas.
           </p>
         </div>
 

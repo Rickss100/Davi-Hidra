@@ -161,7 +161,7 @@ export default function DefinirObjetivosPage() {
 
       if (favs.length === 0) {
         notify(
-          'Você ainda não avaliou ativos com 4★ ou 5★ no Radar DAVI. Abra o Radar Fundamentalista para avaliar suas escolhas!'
+          'Você ainda não avaliou ativos com 4★ ou 5★ no Radar MFS. Abra o Radar Fundamentalista para avaliar suas escolhas!'
         );
         return;
       }
@@ -187,8 +187,8 @@ export default function DefinirObjetivosPage() {
       await handleSaveCustom(nextTargets);
       notify(
         addedCount > 0
-          ? `✓ ${addedCount} favorito(s) avaliados no Radar DAVI importados para sua meta!`
-          : 'Seus favoritos 4★/5★ do Radar DAVI já estão na sua régua.'
+          ? `✓ ${addedCount} favorito(s) avaliados no Radar MFS importados para sua meta!`
+          : 'Seus favoritos 4★/5★ do Radar MFS já estão na sua régua.'
       );
     } finally {
       setSaving(false);
@@ -208,7 +208,7 @@ export default function DefinirObjetivosPage() {
         setConfirmClear(false);
         await refetch();
         notify(
-          '✓ Lista de ativos limpa! Agora você pode escolher seus próprios ativos pelo Radar DAVI ou importar da sua carteira.'
+          '✓ Lista de ativos limpa! Agora você pode escolher seus próprios ativos pelo Radar MFS ou importar da sua carteira.'
         );
       }
     } finally {
@@ -230,7 +230,7 @@ export default function DefinirObjetivosPage() {
           </h1>
           <p className="mt-1 text-sm text-slate-200 sm:text-base">
             1º Defina a divisão percentual entre classes e 2º escolha os seus ativos com apoio do
-            Método DAVI.
+            Metodologia MANTFRAI.
           </p>
         </div>
 
@@ -389,12 +389,12 @@ export default function DefinirObjetivosPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="max-w-3xl">
             <h2 className="text-lg font-extrabold text-white sm:text-xl">
-              2. Escolha dos Seus Ativos (Autonomia Método DAVI)
+              2. Escolha dos Seus Ativos (Autonomia MANTFRAI)
             </h2>
             <p className="mt-1 text-sm leading-relaxed text-slate-100">
               Aqui <strong className="text-emerald-300">nenhum ativo é imposto automaticamente</strong>.
               Filtre empresas e fundos sólidos no{' '}
-              <strong className="text-gold-300">Radar Fundamentalista (Método DAVI)</strong>, importe
+              <strong className="text-gold-300">Radar Fundamentalista (Filtro MFS)</strong>, importe
               seus favoritos (4★/5★) ou traga os ativos que você já possui em custódia:
             </p>
           </div>
@@ -406,7 +406,7 @@ export default function DefinirObjetivosPage() {
             className="inline-flex h-10 items-center gap-2 rounded-xl bg-emerald-500 px-4 text-sm font-extrabold text-obsidian-950 transition hover:bg-emerald-400"
           >
             <Compass className="h-4 w-4" />
-            Escolher no Radar DAVI
+            Escolher no Radar MFS
           </Link>
 
           <Button

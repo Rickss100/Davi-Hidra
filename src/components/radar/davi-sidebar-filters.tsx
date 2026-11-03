@@ -145,7 +145,7 @@ export const PRESETS: Record<
 
 export const FILTER_GROUPS: Record<string, Record<string, FilterDefinition[]>> = {
   acoes: {
-    '🏛️ Governança & Setor (Método DAVI)': [
+    '🏛️ Governança & Setor (Filtro MFS)': [
       { key: 'only_novo_mercado', label: '🛡️ Novo Mercado / Tag Along 100%', type: 'boolean' },
       { key: 'only_best_sectors', label: '⚡ Setores Perenes (BEST)', type: 'boolean' }
     ],
@@ -462,7 +462,7 @@ export function DaviSidebarFilters({
 
   return (
     <aside
-      aria-label="Painel de Filtros do Método DAVI"
+      aria-label="Painel de Filtros do Radar MFS"
       className={cn(
         'relative flex shrink-0 flex-col rounded-2xl border border-slate-800 bg-obsidian-950/90 transition-all duration-200',
         isCollapsed ? 'w-12 items-center p-2' : 'w-full lg:w-64 xl:w-72 p-3 sm:p-3.5'
@@ -472,7 +472,7 @@ export function DaviSidebarFilters({
       <button
         type="button"
         onClick={() => setIsCollapsed(!isCollapsed)}
-        title={isCollapsed ? 'Expandir filtros do Método DAVI' : 'Recolher painel de filtros'}
+        title={isCollapsed ? 'Expandir filtros do Radar MFS' : 'Recolher painel de filtros'}
         aria-label={isCollapsed ? 'Expandir filtros' : 'Recolher filtros'}
         className="absolute -right-3 top-5 z-10 hidden h-7 w-7 items-center justify-center rounded-full border border-slate-700 bg-obsidian-900 text-slate-300 shadow-md hover:bg-obsidian-800 hover:text-white lg:flex"
       >
@@ -488,7 +488,7 @@ export function DaviSidebarFilters({
             </span>
           )}
           <span className="[writing-mode:vertical-rl] rotate-180 text-xs font-bold uppercase tracking-wider text-slate-400">
-            Método DAVI
+            Filtro MFS
           </span>
         </div>
       ) : (
@@ -498,7 +498,7 @@ export function DaviSidebarFilters({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Filter className="h-5 w-5 text-emerald-400" aria-hidden="true" />
-                <h2 className="text-base font-extrabold text-white">Método DAVI</h2>
+                <h2 className="text-base font-extrabold text-white">Filtro MFS</h2>
                 {activeCount > 0 && (
                   <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-500 px-1.5 text-xs font-extrabold text-obsidian-950">
                     {activeCount}

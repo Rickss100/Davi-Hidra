@@ -122,7 +122,7 @@ export function TutorialMethodTab() {
           </span>
         </div>
         <h3 className="text-lg font-bold text-white">
-          O Método Davi & O Carteira Antifrágil: Esculpa o Seu Império
+          O Método MFS & A Carteira Antifrágil: Esculpa o Seu Império
         </h3>
 
         <div className="mt-4 space-y-4">

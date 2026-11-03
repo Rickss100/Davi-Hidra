@@ -37,9 +37,22 @@ Sua missão é garantir a **blindagem jurídica irrefutável, a segurança regul
 
 ---
 
-## 🔍 Matriz de Riscos: O que Aprendemos com o Reclame Aqui dos Concorrentes
+## 🛡️ Cláusulas de Defesa Avançada e Blindagem Contratual Especial
 
-Ao auditar as queixas recorrentes de plataformas de consolidação de carteira no Brasil (Status Invest, Kinvo, Gorila, TradeMap), identificamos as 5 principais vulnerabilidades jurídicas e operacionais:
+1. **Atualização Unilateral dos Termos:**
+   - A Norte Invest pode alterar os termos a qualquer momento para refletir novas exigências da CVM, melhorias técnicas ou evolução comercial, com eficácia a partir da data de publicação no app.
+2. **SaaS em Evolução Contínua ("Software As-Is"):**
+   - Melhorias, refatorações de layout, atualizações de algoritmos e alterações na interface ocorrem dinamicamente e sem aviso prévio. O usuário anui que contrata uma ferramenta em aprimoramento contínuo.
+3. **Dever de Higiene Digital do Usuário e Excludente por Ataques Globais:**
+   - O usuário tem o dever de cadastrar senha forte e EXCLUSIVA para a Norte Invest.
+   - Aplicação do **Artigo 14, § 3º, II do CDC e Artigo 43, III da LGPD** (excludente de responsabilidade por culpa exclusiva da vítima/terceiro). Se o usuário reutiliza senha de banco ou e-mail que foi vazada na internet, a responsabilidade é dele.
+   - Ataques em escala mundial contra backbones de internet ou serviços de nuvem (AWS, Cloudflare, Vercel) enquadram-se como **caso fortuito e força maior (Artigo 393 do Código Civil)**.
+4. **Descontinuação das Operações e Cláusula de Restituição Pro-Rata Temporis:**
+   - Em caso de encerramento do serviço decorrente de **Fato do Príncipe (decisões judiciais ou resoluções políticas/CVM)** ou decisão estratégica de negócios, a obrigação da Norte Invest restringe-se única e exclusivamente à **devolução proporcional (*pro-rata temporis*) do valor pago referente ao período remanescente não usufruído**, sem qualquer obrigação de indenizar danos morais ou lucros cessantes.
+
+---
+
+## 🔍 Matriz de Riscos: O que Aprendemos com o Reclame Aqui dos Concorrentes
 
 | Vulnerabilidade dos Concorrentes | Impacto no Reclame Aqui / Procon | Solução e Blindagem Adotada na Norte Invest |
 | :--- | :--- | :--- |
@@ -55,22 +68,12 @@ Ao auditar as queixas recorrentes de plataformas de consolidação de carteira n
 
 O Contrato da Norte Invest (`TERMOS_DE_USO_E_ADESAO.md`) deve ser composto obrigatoriamente pelas seguintes seções contratuais:
 1. **Das Partes e Identificação Institucional:** Norte Invest como licenciante de software SaaS.
-2. **Do Objeto:** Licenciamento temporário, não exclusivo e intransferível da plataforma web e materiais pedagógicos.
+2. **Do Objeto e Modelo As-Is:** Licenciamento temporário da plataforma em evolução contínua sem aviso prévio de melhorias.
 3. **Do Enquadramento CVM e da Soberania do Investidor:** Cláusula pétrea de isenção de assessoria financeira individualizada.
-4. **Dos Planos, Degustação (Trial) e Formas de Pagamento:** Regras de 30 dias gratuitos, planos trimestrais, semestrais e anuais, e ausência de pegadinhas contratuais.
-5. **Do Direito de Arrependimento (Art. 49 CDC):** Regra dos 7 dias para estorno integral.
-6. **Dos Dados Pessoais e Segurança da Informação (LGPD):** Finalidade do tratamento, direitos do titular e padrões criptográficos.
-7. **Da Propriedade Intelectual e Vedação a Engenharia Reversa:** Proteção das marcas, métodos e códigos.
-8. **Da Disponibilidade e Limitação de Responsabilidade:** Acordo de nível de serviço de melhor esforço e dados de mercado com delay legal.
-9. **Do Foro de Eleição:** Eleição de foro judicial brasileiro.
-
----
-
-## 🛠️ Checklist de Governança no Aplicativo Norte Invest
-
-Sempre que a skill for invocada para auditar novas telas ou funcionalidades:
-- [ ] O cadastro possui checkbox explícito com link direto para os Termos de Uso?
-- [ ] O Radar de Ativos (`/radar`) exibe disclaimer de que indicadores fundamentalistas não constituem recomendação?
-- [ ] O Motor Onde Aportar (`/onde-aportar`) deixa claro que as sugestões matemáticas decorrem das metas configuradas pelo próprio usuário?
-- [ ] As telas de pagamento/upgrade informam o valor à vista, o parcelamento e o suporte sem letras miúdas enganosas?
-- [ ] A política de privacidade e os termos estão acessíveis pelo menu de rodapé e gaveta de configurações?
+4. **Da Segurança e Higiene Digital do Usuário:** Dever de cadastrar senha forte e exclusiva; excludente por negligência da vítima.
+5. **Dos Planos, Degustação (Trial) e Faturamento Consciente:** Regras de 30 dias gratuitos sem cartão e ausência de pegadinhas contratuais.
+6. **Do Direito de Arrependimento (Art. 49 CDC):** Regra dos 7 dias para estorno integral.
+7. **Dos Dados Pessoais e Segurança da Informação (LGPD):** Finalidade do tratamento, direitos do titular e padrões criptográficos.
+8. **Das Limitações Técnicas, Delay de Mercado e Força Maior:** Acordo de nível de serviço e proteção contra ataques globais.
+9. **Da Modificação dos Termos, Descontinuação e Pro-Rata:** Atualização unilateral dos termos e restituição pro-rata em caso de encerramento por ordens judiciais ou políticas.
+10. **Da Propriedade Intelectual e Foro de Eleição:** Proteção das marcas, métodos e códigos; Foro de Vitória/ES.

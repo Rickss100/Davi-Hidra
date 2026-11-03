@@ -10,7 +10,10 @@ import {
   AlertTriangle, 
   ArrowLeft,
   MessageCircle,
-  Sparkles
+  Sparkles,
+  ServerOff,
+  KeyRound,
+  RefreshCw
 } from 'lucide-react';
 import { Card, Badge, Button } from '@/components/ui/primitives';
 import { BrandLogo } from '@/components/ui/brand-logo';
@@ -108,7 +111,7 @@ export default function TermosPage() {
         <Card className="border-slate-800 bg-[#0b1325]/95 p-6 sm:p-9 space-y-8 text-xs sm:text-sm text-slate-300 leading-relaxed">
           
           <div className="border-b border-slate-800 pb-5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-gold-400">Contrato de Adesão v2.0</span>
+            <span className="text-[11px] font-bold uppercase tracking-wider text-gold-400">Contrato de Adesão v2.1 (Padrão Ouro)</span>
             <h2 className="text-xl font-bold text-white mt-1">Cláusulas Gerais de Licenciamento de Software (SaaS)</h2>
             <p className="text-xs text-slate-400 mt-1">
               Ao criar sua conta ou utilizar a Plataforma Norte Invest, você declara ciência e concordância integral com as condições abaixo:
@@ -118,10 +121,13 @@ export default function TermosPage() {
           {/* Cláusula 1 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">1.</span> Objeto da Licença
+              <span className="text-gold-400">1.</span> Objeto da Licença &bull; SaaS em Evolução Contínua
             </h3>
             <p>
               A Norte Invest concede ao Usuário uma licença de uso temporária, revogável, não exclusiva e intransferível para utilização de sua plataforma web de simulação matemática patrimonial, consolidação de investimentos e acesso aos módulos instrucionais da Academia Norte Invest. O software não realiza operações automáticas em nome do Usuário nem detém custódia de recursos financeiros.
+            </p>
+            <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
+              <strong className="text-gold-300">Software em Evolução Dinâmica (&quot;As-Is&quot;):</strong> O aplicativo está em contínuo desenvolvimento. A Norte Invest reserva-se o direito de implementar melhorias, refatorar interfaces, aprimorar algoritmos e adicionar ou descontinuar funcionalidades a qualquer tempo, de forma dinâmica e <strong>sem necessidade de aviso prévio</strong>, sempre visando à segurança, usabilidade e estabilidade sistêmica.
             </p>
           </section>
 
@@ -138,50 +144,76 @@ export default function TermosPage() {
           {/* Cláusula 3 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">3.</span> Degustação (Trial de 30 Dias) e Planos Comerciais
+              <span className="text-gold-400">3.</span> Segurança &bull; Dever de Higiene Digital e Senhas Exclusivas
             </h3>
             <p>
-              Novos usuários recebem 30 (trinta) dias de degustação gratuita sem a necessidade de informar dados de cartão de crédito antecipadamente. Ao término do período, caso não haja interesse na contratação de um dos planos comerciais (Trimestral, Semestral ou Anual), a conta será pausada sem qualquer cobrança surpresa, penalidade ou inscrição em cadastros de inadimplentes.
+              O Usuário assume a obrigação expressa de criar uma <strong>senha forte e EXCLUSIVA para a Norte Invest</strong>, sendo terminantemente desaconselhada a reutilização de senhas utilizadas em internet banking, e-mails ou outras redes sociais. 
+            </p>
+            <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
+              <strong className="text-amber-300">Excludente de Responsabilidade por Negligência do Usuário:</strong> A Norte Invest adota padrões de segurança bancária (Zero-Trust, cookies HttpOnly e criptografia AES-256). Contudo, por se tratar de serviço disponível na internet pública, a Norte Invest <strong>não se responsabiliza por invasões decorrentes de negligência do próprio Usuário</strong> na guarda de suas credenciais, contaminação de seus dispositivos por vírus/keyloggers, nem por ataques cibernéticos globais de força maior direcionados à infraestrutura mundial de redes.
             </p>
           </section>
 
           {/* Cláusula 4 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">4.</span> Política de Não Renovação Automática Furtiva &amp; Arrependimento
+              <span className="text-gold-400">4.</span> Degustação (Trial de 30 Dias) e Planos Comerciais
             </h3>
             <p>
-              A Norte Invest não realiza cobranças recorrentes automáticas silenciosas em cartões de crédito. Toda renovação é precedida de contato transparente e acordada com o investidor. Adicionalmente, em estrito cumprimento ao <strong>Artigo 49 do Código de Defesa do Consumidor</strong>, o Usuário possui o prazo incondicional de <strong>7 (sete) dias corridos</strong> a partir da contratação de plano pago para requerer o cancelamento com reembolso de 100% dos valores pagos diretamente com nossa equipe de suporte.
+              Novos usuários recebem 30 (trinta) dias de degustação gratuita sem a necessidade de informar dados de cartão de crédito antecipadamente. Ao término do período, caso não haja interesse na contratação de um dos planos comerciais (Trimestral, Semestral ou Anual), a conta será pausada sem qualquer cobrança surpresa, penalidade ou inscrição em cadastros de inadimplentes.
             </p>
           </section>
 
           {/* Cláusula 5 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">5.</span> Privacidade e Segurança de Dados (LGPD)
+              <span className="text-gold-400">5.</span> Política de Não Renovação Automática Furtiva &amp; Arrependimento (CDC)
             </h3>
             <p>
-              Em conformidade com a Lei Federal nº 13.709/2018 (LGPD), a Norte Invest coleta apenas os dados estritamente necessários para a prestação dos serviços (nome e e-mail). É terminantemente vedada a comercialização, cessão ou repasse de informações patrimoniais a corretoras de valores, financeiras ou parceiros comerciais. O Usuário pode solicitar a exclusão de sua conta a qualquer momento.
+              A Norte Invest não realiza cobranças recorrentes automáticas silenciosas em cartões de crédito. Toda renovação é precedida de contato transparente e acordada com o investidor. Adicionalmente, em estrito cumprimento ao <strong>Artigo 49 do Código de Defesa do Consumidor</strong>, o Usuário possui o prazo incondicional de <strong>7 (sete) dias corridos</strong> a partir da contratação de plano pago para requerer o cancelamento com reembolso de 100% dos valores pagos diretamente com nossa equipe de suporte.
             </p>
           </section>
 
           {/* Cláusula 6 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">6.</span> Limitação de Responsabilidade Tecnológica
+              <span className="text-gold-400">6.</span> Privacidade e Proteção de Dados (LGPD)
             </h3>
             <p>
-              As cotações e proventos são obtidos de fontes públicas e podem sofrer atrasos regulatórios de mercado (delay legal). A conferência de dados cabe ao investidor perante suas notas de corretagem oficiais e extratos da B3. A Norte Invest não se responsabiliza por indisponibilidades temporárias de serviços de telecomunicação ou provedores de nuvem de grande porte.
+              Em conformidade com a Lei Federal nº 13.709/2018 (LGPD), a Norte Invest coleta apenas os dados estritamente necessários para a prestação dos serviços (nome e e-mail). É terminantemente vedada a comercialização, cessão ou repasse de informações patrimoniais a corretoras de valores, financeiras ou parceiros comerciais. O Usuário pode solicitar a exclusão de sua conta a qualquer momento.
             </p>
           </section>
 
           {/* Cláusula 7 */}
           <section className="space-y-2">
             <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <span className="text-gold-400">7.</span> Propriedade Intelectual e Foro
+              <span className="text-gold-400">7.</span> Limitação Tecnológica &bull; Delay de Mercado e Força Maior
             </h3>
             <p>
-              É proibida a engenharia reversa do código-fonte ou a redistribuição comercial dos materiais educativos sem autorização escrita. Fica eleito o Foro da Comarca de Vitória/ES para dirimir quaisquer controvérsias decorrentes deste contrato, sem prejuízo das normas cogentes protetivas ao consumidor.
+              As cotações e proventos são obtidos de fontes públicas e podem sofrer atrasos regulatórios de mercado (delay legal). A conferência de dados cabe ao investidor perante suas notas de corretagem oficiais e extratos da B3. Indisponibilidades causadas por falhas em provedores de computação em nuvem globais ou operadoras de telecomunicações configuram caso fortuito e força maior (Art. 393 do Código Civil).
+            </p>
+          </section>
+
+          {/* Cláusula 8 */}
+          <section className="space-y-2">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="text-gold-400">8.</span> Atualização dos Termos &bull; Descontinuação do Serviço e Pro-Rata
+            </h3>
+            <p>
+              <strong className="text-slate-200">Alterações Contratuais:</strong> Os presentes Termos poderão ser atualizados a qualquer momento pela Norte Invest para refletir avanços técnicos ou regulatórios, vigorando a partir da data de sua publicação no app.
+            </p>
+            <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
+              <strong className="text-gold-300">Descontinuação por Decisões Judiciais, Políticas ou Estratégicas:</strong> A Norte Invest reserva-se o direito de suspender ou descontinuar a plataforma a qualquer tempo em caso de determinações judiciais, ordens governamentais/CVM, bloqueio de dados de mercado por terceiros ou conveniência estratégica. Nesta hipótese, a <strong>única obrigação indenizatória da Norte Invest limitará-se à devolução proporcional (pro-rata temporis)</strong> dos valores correspondentes ao período não utilizado dos planos vigentes contratados, com renúncia expressa a qualquer pleito de indenização por lucros cessantes ou danos morais.
+            </p>
+          </section>
+
+          {/* Cláusula 9 */}
+          <section className="space-y-2">
+            <h3 className="text-base font-bold text-white flex items-center gap-2">
+              <span className="text-gold-400">9.</span> Propriedade Intelectual e Foro
+            </h3>
+            <p>
+              O Método DAVI, a Carteira Hydra e o Algoritmo AM2O são propriedades intelectuais exclusivas protegidas pelas Leis 9.609/1998 e 9.279/1996. É proibida a engenharia reversa do código-fonte ou a redistribuição comercial dos materiais educativos. Fica eleito o Foro da Comarca de Vitória/ES para dirimir quaisquer controvérsias decorrentes deste contrato, ressalvadas as normas protetivas cogentes do CDC.
             </p>
           </section>
 

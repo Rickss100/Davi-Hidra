@@ -121,14 +121,14 @@ export const MACRO_MODEL_BRASIL: MacroAllocationConfig = {
 };
 
 export const MACRO_MODEL_GLOBAL: MacroAllocationConfig = {
-  fixed: 15,
-  variable: 85,
-  brasil: 60,
-  usa: 40,
-  acoes: 60,
-  fiis: 40,
-  stocks: 70,
-  reits: 30
+  fixed: 20,
+  variable: 80,
+  brasil: 75,
+  usa: 25,
+  acoes: 66.67,
+  fiis: 33.33,
+  stocks: 75,
+  reits: 25
 };
 
 export const EMPTY_ASSET_TARGETS: AssetTargetsConfig = {

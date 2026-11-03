@@ -117,6 +117,26 @@ export async function PUT(request: Request) {
   } else if (body.preset === 'global') {
     // Altera EXCLUSIVAMENTE as porcentagens Macro (zero recomendação/injeção de ativos)
     nextMacro = MACRO_MODEL_GLOBAL;
+    // Se o investidor estiver ativando o modelo Global e não tiver ativos selecionados nos EUA,
+    // a consultoria preenche automaticamente a base inicial de ativos de primeira linha
+    const currentStocks = nextTargets.stocks || [];
+    const currentReits = nextTargets.reits || [];
+    const updatedTargets = { ...nextTargets };
+
+    if (currentStocks.length === 0) {
+      updatedTargets.stocks = [
+        { code: 'AAPL', sector: 'Tecnologia', target: 34 },
+        { code: 'MSFT', sector: 'Tecnologia', target: 33 },
+        { code: 'JNJ', sector: 'Saúde', target: 33 }
+      ];
+    }
+    if (currentReits.length === 0) {
+      updatedTargets.reits = [
+        { code: 'O', sector: 'Varejo Comercial', target: 50 },
+        { code: 'PLD', sector: 'Logística', target: 50 }
+      ];
+    }
+    nextTargets = updatedTargets;
     auditAction = 'OBJECTIVES_MACRO_MODEL_GLOBAL';
   } else if (body.clearTargets) {
     nextTargets = EMPTY_ASSET_TARGETS;

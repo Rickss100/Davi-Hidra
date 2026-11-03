@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import {
+  Bookmark,
   ChevronLeft,
   ChevronRight,
   Filter,
   RotateCcw,
+  Save,
   Shield,
   TrendingUp,
   Zap
@@ -267,6 +269,18 @@ export interface DaviSidebarFiltersProps {
   onClearFilters: () => void;
 }
 
+
+export interface SavedFilterMemory {
+  id: number;
+  name: string;
+  filters: DaviFilterMap;
+  checkboxes: Record<string, boolean>;
+  category: string;
+  savedAt: string;
+}
+
+const STORAGE_KEY_MEMORIES = 'mantfrai_radar_filter_memories_v2';
+
 export function DaviSidebarFilters({
   category,
   totalAssets,
@@ -278,6 +292,65 @@ export function DaviSidebarFilters({
   const [filters, setFilters] = useState<DaviFilterMap>({});
   const [activeCheckboxes, setActiveCheckboxes] = useState<Record<string, boolean>>({});
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [memories, setMemories] = useState<Record<number, SavedFilterMemory>>({});
+  const [activeMemoryId, setActiveMemoryId] = useState<number | null>(null);
+  const [isSavingMemory, setIsSavingMemory] = useState(false);
+  const [targetSlot, setTargetSlot] = useState<number>(1);
+  const [memoryLabel, setMemoryLabel] = useState<string>('');
+  const [memoryFeedback, setMemoryFeedback] = useState<string>('');
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY_MEMORIES);
+      if (stored) {
+        setMemories(JSON.parse(stored));
+      }
+    } catch {}
+  }, []);
+
+  const handleSaveToMemory = (slot: number, customName?: string) => {
+    const name = customName?.trim() || `Memória M${slot}`;
+    const newMemory: SavedFilterMemory = {
+      id: slot,
+      name,
+      filters: { ...filters },
+      checkboxes: { ...activeCheckboxes },
+      category: normalizedCategory,
+      savedAt: new Date().toLocaleDateString('pt-BR')
+    };
+
+    const nextMemories = { ...memories, [slot]: newMemory };
+    setMemories(nextMemories);
+    setActiveMemoryId(slot);
+    setSelectedPreset(null);
+    try {
+      localStorage.setItem(STORAGE_KEY_MEMORIES, JSON.stringify(nextMemories));
+    } catch {}
+
+    setMemoryFeedback(`✓ Filtros salvos no slot M${slot}!`);
+    setIsSavingMemory(false);
+    setMemoryLabel('');
+    setTimeout(() => setMemoryFeedback(''), 3000);
+  };
+
+  const handleLoadMemory = (slot: number) => {
+    const mem = memories[slot];
+    if (!mem) {
+      setTargetSlot(slot);
+      setMemoryLabel(`Minha Estratégia M${slot}`);
+      setIsSavingMemory(true);
+      return;
+    }
+
+    setFilters(mem.filters);
+    setActiveCheckboxes(mem.checkboxes || {});
+    setActiveMemoryId(slot);
+    setSelectedPreset(null);
+    onApplyFilters(mem.filters);
+    setMemoryFeedback(`✓ M${slot} carregada: ${mem.name}`);
+    setTimeout(() => setMemoryFeedback(''), 2500);
+  };
+
 
   const normalizedCategory =
     category === 'all'
@@ -467,6 +540,132 @@ export function DaviSidebarFilters({
                 );
               })}
             </div>
+          </div>
+
+          {/* Seção Minhas Memórias Rápidas (M1 a M5) */}
+          <div className="space-y-2 rounded-xl border border-gold-500/35 bg-obsidian-950/80 p-3">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gold-400">
+                <Bookmark className="h-3.5 w-3.5" />
+                Minhas Memórias
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setTargetSlot(activeMemoryId || 1);
+                  setMemoryLabel(memories[activeMemoryId || 1]?.name || `Minha Estratégia M${activeMemoryId || 1}`);
+                  setIsSavingMemory(!isSavingMemory);
+                }}
+                className="flex items-center gap-1 text-[11px] font-bold text-gold-300 transition hover:text-gold-200 hover:underline"
+                title="Gravar configuração atual de filtros em um dos 5 slots de memória"
+              >
+                <Save className="h-3 w-3" />
+                Salvar Atual
+              </button>
+            </div>
+
+            {/* Grid dos 5 Slots de Memória (M1 a M5) */}
+            <div className="grid grid-cols-5 gap-1.5">
+              {[1, 2, 3, 4, 5].map((slot) => {
+                const mem = memories[slot];
+                const hasSaved = Boolean(mem);
+                const isActive = activeMemoryId === slot;
+
+                return (
+                  <button
+                    key={slot}
+                    type="button"
+                    onClick={() => handleLoadMemory(slot)}
+                    title={
+                      mem
+                        ? `M${slot}: ${mem.name} (Salvo em ${mem.savedAt}). Clique para carregar.`
+                        : `Slot M${slot} vazio. Clique para salvar o filtro atual aqui.`
+                    }
+                    className={cn(
+                      'relative flex flex-col items-center justify-center rounded-lg border py-2 text-xs font-black transition',
+                      isActive
+                        ? 'border-gold-400 bg-gold-500 text-obsidian-950 shadow-md shadow-gold-500/30'
+                        : hasSaved
+                          ? 'border-gold-500/50 bg-obsidian-900 text-gold-300 hover:border-gold-400 hover:bg-gold-500/10'
+                          : 'border-dashed border-slate-700/80 bg-obsidian-950/50 text-slate-500 hover:border-slate-500 hover:text-slate-300'
+                    )}
+                  >
+                    <span>M{slot}</span>
+                    {hasSaved && (
+                      <span
+                        className={cn(
+                          'mt-0.5 h-1.5 w-1.5 rounded-full',
+                          isActive ? 'bg-obsidian-950' : 'bg-gold-400'
+                        )}
+                      />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Painel Expansível de Gravação de Memória */}
+            {isSavingMemory && (
+              <div className="mt-2 space-y-2 rounded-lg border border-gold-500/40 bg-obsidian-900 p-2.5 shadow-xl">
+                <div className="text-xs font-bold text-white">
+                  Salvar filtro atual em qual slot?
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => {
+                          setTargetSlot(s);
+                          if (!memoryLabel || memoryLabel.startsWith('Minha Estratégia M')) {
+                            setMemoryLabel(memories[s]?.name || `Minha Estratégia M${s}`);
+                          }
+                        }}
+                        className={cn(
+                          'h-7 w-7 rounded font-extrabold text-xs transition',
+                          targetSlot === s
+                            ? 'bg-gold-500 text-obsidian-950'
+                            : 'bg-obsidian-950 border border-slate-700 text-slate-300'
+                        )}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                  <input
+                    type="text"
+                    value={memoryLabel}
+                    onChange={(e) => setMemoryLabel(e.target.value)}
+                    placeholder="Nome do filtro..."
+                    maxLength={28}
+                    className="h-7 flex-1 rounded border border-slate-700 bg-obsidian-950 px-2 text-xs text-white placeholder-slate-500 focus:border-gold-500 focus:outline-none"
+                  />
+                </div>
+                <div className="flex justify-end gap-1.5 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={() => setIsSavingMemory(false)}
+                    className="rounded px-2 py-1 text-[11px] font-bold text-slate-400 hover:text-white"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSaveToMemory(targetSlot, memoryLabel)}
+                    className="rounded bg-gold-500 px-2.5 py-1 text-[11px] font-extrabold text-obsidian-950 hover:bg-gold-400"
+                  >
+                    Gravar M{targetSlot}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {memoryFeedback && (
+              <div className="text-[11px] font-bold text-emerald-300">
+                {memoryFeedback}
+              </div>
+            )}
           </div>
 
           {/* Lista de Grupos de Filtros Fundamentalistas */}

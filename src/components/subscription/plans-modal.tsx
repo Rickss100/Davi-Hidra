@@ -100,13 +100,13 @@ export function PlansModal({ onClose, userEmail }: PlansModalProps) {
         <div className="text-center max-w-xl mx-auto space-y-2 mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-gold-500/40 bg-gold-500/10 px-3.5 py-1 text-xs font-bold text-gold-300">
             <Sparkles className="h-3.5 w-3.5 text-gold-400" />
-            CONDIÇÃO ESPECIAL DE LANÇAMENTO • NORTE INVEST
+            CONDIÇÃO ESPECIAL DE LANÇAMENTO • MANTFRAI
           </div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-white">
             Invista com Inteligência Institucional
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Economize tempo, evite erros caros e receba a indicação exata de onde aportar seus recursos com o Carteira Antifrágil & Motor RDM.
+            Economize tempo, evite erros caros e receba a indicação exata de onde aportar seus recursos com a metodologia MANTFRAI (Carteira Antifrágil & Motor RDM).
           </p>
         </div>
 

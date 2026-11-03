@@ -59,7 +59,7 @@ export function generateTotpSecret(): string {
 /**
  * Gera a URI otpauth:// compatível com Google Authenticator, Authy, 1Password e iCloud Keychain.
  */
-export function buildTotpOtpAuthUri(accountEmail: string, secretBase32: string, issuer = 'Norte Invest Private'): string {
+export function buildTotpOtpAuthUri(accountEmail: string, secretBase32: string, issuer = 'MANTFRAI Private'): string {
   const label = encodeURIComponent(`${issuer}:${accountEmail}`);
   const params = new URLSearchParams({
     secret: secretBase32,

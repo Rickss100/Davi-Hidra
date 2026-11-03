@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           error: 'PLAN_EXPIRED',
-          message: 'Seu período de assinatura encerrou. Fale com a equipe Norte Invest para renovar.'
+          message: 'Seu período de assinatura encerrou. Fale com a equipe MANTFRAI para renovar.'
         },
         { status: 403 }
       );

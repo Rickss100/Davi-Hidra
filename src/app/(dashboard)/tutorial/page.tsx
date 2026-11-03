@@ -64,7 +64,7 @@ function TutorialContent() {
           }`}
         >
           <GraduationCap className="h-4 w-4 text-emerald-400" />
-          <span>🎓 Academia Norte Invest (30 Aulas)</span>
+          <span>🎓 Academia MANTFRAI (30 Aulas)</span>
         </button>
 
         <button

@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json(
       {
         error: 'FORBIDDEN',
-        message: 'Acesso restrito ao Painel de Suporte, Gestão & TI da Norte Invest.'
+        message: 'Acesso restrito ao Painel de Suporte, Gestão & TI da MANTFRAI.'
       },
       { status: 403 }
     );

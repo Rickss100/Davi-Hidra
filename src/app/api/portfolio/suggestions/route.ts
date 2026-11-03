@@ -144,7 +144,7 @@ export async function POST(request: Request) {
 
     if (totalTargetCount === 0) {
       emptyReason =
-        'Você ainda não escolheu os ativos da sua carteira alvo! Siga o Método DAVI: 1º filtre e escolha empresas/fundos no Radar de Ativos e 2º defina os pesos em Definir Objetivos.';
+        'Você ainda não escolheu os ativos da sua carteira alvo! Siga a metodologia MANTFRAI: 1º filtre e escolha empresas/fundos no Radar de Ativos (Filtro MFS) e 2º defina os pesos em Definir Objetivos.';
     } else {
       emptyReason =
         'Nenhum ativo elegível abaixo da meta para este valor (verifique seus pesos em Definir Objetivos ou aumente o valor disponível para cobrir ao menos 1 cota).';
@@ -153,7 +153,7 @@ export async function POST(request: Request) {
 
   const dateStr = new Date().toLocaleDateString('pt-BR');
   const lines = [
-    `📊 *PLANO DE APORTE — NORTE INVEST (MÉTODO DAVI & HYDRA)*`,
+    `📊 *PLANO DE APORTE — MANTFRAI (MÉTODO ANTIFRÁGIL DE INVESTIMENTO)*`,
     `👤 Investidor: *${ctx.portfolioOwner.name}*`,
     `📅 Data: ${dateStr}`,
     `💰 Valor Disponível: *${formatBRL(parsed.data.availableAmountBrl)}*`,

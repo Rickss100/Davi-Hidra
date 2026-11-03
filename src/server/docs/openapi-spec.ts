@@ -1,12 +1,12 @@
 /**
- * Especificação Oficial OpenAPI 3.0.3 da API Norte Invest (Método DAVI & Hydra)
+ * Especificação Oficial OpenAPI 3.0.3 da API MANTFRAI (Método Antifrágil de Investimento)
  * Mapeamento estrito das rotas autenticadas, modelos Zod e parâmetros de DevSecOps.
  */
 
 export const NORTE_INVEST_OPENAPI_SPEC = {
   openapi: '3.0.3',
   info: {
-    title: 'Norte Invest API — Método DAVI & Mecanismo Hydra',
+    title: 'MANTFRAI API — Método Antifrágil de Investimento',
     version: '2.0.0',
     description: `
 API RESTful corporativa para gestão patrimonial, curadoria fundamentalista e alocação automática de investimentos.
@@ -14,15 +14,15 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
 
 ### Principais Módulos:
 * **Autenticação & 2FA:** Gestão de sessões, criptografia AES-256 e autenticação de dois fatores RFC 6238 TOTP.
-* **Radar Fundamentalista:** Peneira de ações e FIIs com os filtros do Método DAVI (Setores BEST, Novo Mercado, P/VP Inteligente e Multiativo).
-* **Mecanismo Onde Aportar:** Motor de alocação AM2O (*Always Move to Objective*) e cálculo do Ponto Mágico (*Magic Number*).
-* **Objetivos & Reserva:** Calibração da Carteira Hydra e estratégias de blindagem patrimonial.
+* **Radar Fundamentalista:** Peneira de ações e FIIs com os filtros do Filtro MFS (Setores BEST, Novo Mercado, P/VP Inteligente e Multiativo).
+* **Mecanismo Onde Aportar:** Motor de alocação RDM (*Rebalanceamento por Distância da Meta*) e cálculo do Ponto Mágico (*Magic Number*).
+* **Objetivos & Reserva:** Calibração da Carteira Antifrágil e estratégias de blindagem patrimonial.
 * **Governança & TI:** Auditoria de acessos e gestão de investidores autorizados.
     `,
     contact: {
-      name: 'Suporte Técnico Norte Invest',
-      email: 'suporte@norteinvest.com',
-      url: 'https://norteinvest.com'
+      name: 'Suporte Técnico MANTFRAI',
+      email: 'suporte@mantfrai.com.br',
+      url: 'https://mantfrai.com.br'
     }
   },
   servers: [

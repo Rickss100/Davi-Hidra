@@ -12,7 +12,7 @@ import { getAuthorizedContextOrNull } from '@/server/dal/auth-dal';
 describe('Documentação de APIs Swagger / OpenAPI 3.0.3 & Segurança DevSecOps', () => {
   it('deve conter uma especificação OpenAPI 3.0.3 válida e bem estruturada', () => {
     expect(NORTE_INVEST_OPENAPI_SPEC.openapi).toBe('3.0.3');
-    expect(NORTE_INVEST_OPENAPI_SPEC.info.title).toContain('Norte Invest API');
+    expect(NORTE_INVEST_OPENAPI_SPEC.info.title).toContain('MANTFRAI API');
     expect(NORTE_INVEST_OPENAPI_SPEC.info.version).toBe('2.0.0');
     expect(NORTE_INVEST_OPENAPI_SPEC.paths).toBeDefined();
   });
@@ -70,6 +70,6 @@ describe('Documentação de APIs Swagger / OpenAPI 3.0.3 & Segurança DevSecOps'
     expect(res.status).toBe(200);
     const spec = await res.json();
     expect(spec.openapi).toBe('3.0.3');
-    expect(spec.info.title).toContain('Norte Invest API');
+    expect(spec.info.title).toContain('MANTFRAI API');
   });
 });

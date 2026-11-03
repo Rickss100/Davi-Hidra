@@ -1,5 +1,5 @@
-export const FULL_MANUAL_TEXT = `# NORTE INVEST — O GUIA DEFINITIVO DO INVESTIDOR INTELIGENTE
-## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial da Plataforma (Filtro MFS & Carteira Antifrágil)
+export const FULL_MANUAL_TEXT = `# MANTFRAI — O GUIA DEFINITIVO DO INVESTIDOR ANTIFRÁGIL
+## Metodologia de Investimentos, Filosofia Patrimonial e Manual Oficial da Plataforma (Filtro MFS, Carteira Antifrágil & Motor RDM)
 
 ---
 
@@ -19,7 +19,7 @@ No mercado financeiro, enriquecer com consistência não é tentar adivinhar a p
 - Decisões emocionais tomadas no pânico ou na euforia.
 O que sobra após essa lapidação é a obra de arte: um patrimônio sólido, composto pelas maiores e mais lucrativas empresas do Brasil e do mundo.
 
-#### 3. O Carteira Antifrágil — Os Tentáculos Antifrágeis do seu Império
+#### 3. A Carteira Antifrágil — Os Pilares Barbell do seu Império
 Na mitologia grega, quando alguém tenta cortar uma cabeça da Hidra, duas novas cabeças nascem ainda mais fortes no lugar.
 No MANTFRAI, você nunca investe em uma única empresa ou setor isolado: você constrói um **império patrimonial antifrágil** dividido em quatro tentáculos soberanos:
 1. **Ações Brasil:** Sociedades em empresas perenes e lucrativas que repassam inflação e pagam dividendos.
@@ -27,7 +27,7 @@ No MANTFRAI, você nunca investe em uma única empresa ou setor isolado: você c
 3. **Renda Fixa Soberana:** Tesouro IPCA+ para ganho real garantido e blindagem do poder de compra.
 4. **Ativos Globais (Stocks & REITs):** Dolarização de patrimônio nas maiores empresas do planeta (Apple, Microsoft, Google, etc.).
 
-Quando uma crise econômica tenta "cortar uma cabeça" (como um setor em queda temporária), o algoritmo da Hydra se reposiciona automaticamente, aportando mais barato exatamente no tentáculo com maior desconto e fazendo o seu império florescer ainda mais robusto.
+Quando uma crise econômica tenta desvalorizar um ativo, o algoritmo do Motor RDM se reposiciona automaticamente, aportando mais barato exatamente no pilar com maior desconto e fazendo o seu império florescer ainda mais robusto.
 
 #### 4. O Algoritmo Motor RDM: Aporte no Mais Distante do Objetivo
 Motor RDM significa *"Aporte no Mais Distante do Objetivo"*. 
@@ -46,7 +46,7 @@ O *Magic Number* é o momento matemático em que os dividendos mensais pagos por
 
 ---
 
-### PARTE 2: MANUAL PRÁTICO DAS FUNCIONALIDADES DO NORTE INVEST
+### PARTE 2: MANUAL PRÁTICO DAS FUNCIONALIDADES DA PLATAFORMA MANTFRAI
 
 1. **Carteira (/carteira):**
    - Centro de controle patrimonial.

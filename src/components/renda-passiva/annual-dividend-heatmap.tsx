@@ -265,7 +265,7 @@ export function AnnualDividendHeatmap() {
         </div>
       )}
 
-      {/* 5. Dica Metodológica da Norte Invest */}
+      {/* 5. Dica Metodológica da MANTFRAI */}
       <div className="rounded-xl border border-slate-800/80 bg-obsidian-950/60 p-3.5 text-xs text-slate-300 flex items-start gap-2.5">
         <Info className="h-4 w-4 text-gold-400 shrink-0 mt-0.5" />
         <span>

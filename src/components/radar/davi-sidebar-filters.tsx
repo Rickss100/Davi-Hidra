@@ -49,110 +49,93 @@ export const PRESETS: Record<
   conservador: {
     name: 'Conservador',
     icon: Shield,
-    description: 'Filtros rigorosos para máxima segurança, governança Novo Mercado e setores perenes BEST',
+    description: 'Filtros rigorosos para máxima segurança: empresas perenes dos setores BEST e FIIs multiativos',
     filters: {
       acoes: {
-        only_novo_mercado: { min: 1, max: 1 },
         only_best_sectors: { min: 1, max: 1 },
-        pe_ratio: { min: 0.01, max: 12 },
-        pb_ratio: { max: 2 },
-        dividend_yield: { min: 4 },
-        roe: { min: 15 },
-        current_ratio: { min: 1.5 },
-        debt_to_equity: { max: 0.5 }
+        pe_ratio: { min: 0.01, max: 18 },
+        dividend_yield: { min: 3.5 },
+        roe: { min: 11 },
+        net_debt_ebitda: { max: 3.5 }
       },
       fiis: {
         only_multi_property: { min: 1, max: 1 },
         smart_fii_pvp: { min: 1, max: 1 },
-        p_vpa: { min: 0.85, max: 1.05 },
-        dividend_yield: { min: 9 },
-        vacancy_rate: { max: 5 },
-        liquidity: { min: 500000 }
+        p_vpa: { min: 0.80, max: 1.08 },
+        dividend_yield: { min: 7.5 },
+        vacancy_rate: { max: 10 }
       },
       stocks: {
-        pe_ratio: { min: 0.01, max: 22 },
-        pb_ratio: { max: 4 },
-        dividend_yield: { min: 2.0 },
-        roe: { min: 15 },
-        debt_to_equity: { max: 1.0 }
+        pe_ratio: { min: 0.01, max: 30 },
+        dividend_yield: { min: 1.5 },
+        roe: { min: 12 }
       },
       reits: {
-        pe_ratio: { min: 0.01, max: 16 },
+        pe_ratio: { min: 0.01, max: 20 },
         p_vpa: { max: 1.15 },
         dividend_yield: { min: 4.0 },
-        vacancy_rate: { max: 5 }
+        vacancy_rate: { max: 8 }
       },
       fixed: {
-        dividend_yield: { min: 10 },
-        liquidity: { min: 1000000 }
+        dividend_yield: { min: 9 }
       }
     }
   },
   moderado: {
     name: 'Moderado',
     icon: TrendingUp,
-    description: 'Equilíbrio padrão ouro entre governança Novo Mercado, dividendos e valuation justo',
+    description: 'Equilíbrio padrão ouro entre governança, dividendos recorrentes e valuation atrativo',
     filters: {
       acoes: {
-        only_novo_mercado: { min: 1, max: 1 },
-        pe_ratio: { min: 0.01, max: 15 },
-        pb_ratio: { max: 3 },
-        dividend_yield: { min: 3 },
+        pe_ratio: { min: 0.01, max: 25 },
+        dividend_yield: { min: 2.0 },
         roe: { min: 10 },
-        current_ratio: { min: 1.0 },
-        debt_to_equity: { max: 1.0 }
+        net_debt_ebitda: { max: 4.0 }
       },
       fiis: {
         smart_fii_pvp: { min: 1, max: 1 },
-        p_vpa: { min: 0.8, max: 1.15 },
-        dividend_yield: { min: 7 },
-        vacancy_rate: { max: 10 },
-        liquidity: { min: 200000 }
+        p_vpa: { min: 0.75, max: 1.15 },
+        dividend_yield: { min: 6.0 },
+        vacancy_rate: { max: 12 }
       },
       stocks: {
-        pe_ratio: { min: 0.01, max: 32 },
-        pb_ratio: { max: 7 },
-        dividend_yield: { min: 0.8 },
-        roe: { min: 15 }
+        pe_ratio: { min: 0.01, max: 38 },
+        dividend_yield: { min: 0.5 },
+        roe: { min: 10 }
       },
       reits: {
-        pe_ratio: { min: 0.01, max: 20 },
-        p_vpa: { max: 1.3 },
-        dividend_yield: { min: 3.5 },
-        vacancy_rate: { max: 8 }
+        pe_ratio: { min: 0.01, max: 24 },
+        p_vpa: { max: 1.25 },
+        dividend_yield: { min: 3.5 }
       },
       fixed: {
-        dividend_yield: { min: 11 }
+        dividend_yield: { min: 10 }
       }
     }
   },
   agressivo: {
     name: 'Agressivo',
     icon: Zap,
-    description: 'Maior flexibilidade para capturar oportunidades de crescimento',
+    description: 'Ampla convexidade: captura gigantes de tecnologia e crescimento acelerado com alto ROIC (ex: WEGE3)',
     filters: {
       acoes: {
-        pe_ratio: { min: 0.01, max: 20 },
-        pb_ratio: { max: 5 },
-        dividend_yield: { min: 2 },
+        pe_ratio: { min: 0.01, max: 45 },
         roe: { min: 8 }
       },
       fiis: {
-        p_vpa: { min: 0.7, max: 1.3 },
-        dividend_yield: { min: 5 },
-        vacancy_rate: { max: 15 }
+        p_vpa: { min: 0.70, max: 1.30 },
+        dividend_yield: { min: 4.0 }
       },
       stocks: {
-        pe_ratio: { min: 0.01, max: 45 },
-        roe: { min: 12 }
+        pe_ratio: { min: 0.01, max: 55 },
+        roe: { min: 10 }
       },
       reits: {
-        pe_ratio: { min: 0.01, max: 26 },
-        dividend_yield: { min: 2.5 },
-        vacancy_rate: { max: 12 }
+        pe_ratio: { min: 0.01, max: 30 },
+        dividend_yield: { min: 2.0 }
       },
       fixed: {
-        dividend_yield: { min: 12 }
+        dividend_yield: { min: 10 }
       }
     }
   }

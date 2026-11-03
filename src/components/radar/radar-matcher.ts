@@ -160,6 +160,27 @@ export function isEtfGlobalAsset(assetOrCode: ComprehensiveRadarItem | string): 
   return globalEtfs.includes(code.toUpperCase());
 }
 
+/**
+ * Identifica se a empresa pertence ao setor financeiro ou securitário (Bancos, Seguradoras, Previdência).
+ * Na análise contábil padrão (Graham/Barsi), essas instituições não apuram EBITDA, Dívida Líquida ou Liquidez Corrente.
+ */
+export function isFinancialOrInsuranceAsset(item: ComprehensiveRadarItem): boolean {
+  const code = item.code.toUpperCase();
+  const sec = (item.sector || '').toLowerCase();
+  const financialTickers = [
+    'BBAS3', 'ITUB3', 'ITUB4', 'BBDC3', 'BBDC4', 'SANB11', 'BPAC11', 'B3SA3', 'ITSA3', 'ITSA4',
+    'BBSE3', 'CXSE3', 'PSSA3', 'IRBR3', 'WIZC3'
+  ];
+  if (financialTickers.includes(code)) return true;
+  return (
+    sec.includes('banco') ||
+    sec.includes('financeir') ||
+    sec.includes('segur') ||
+    sec.includes('previdência') ||
+    sec.includes('serviços financeiros')
+  );
+}
+
 function isFilterActive(val: unknown): boolean {
   if (val === true) return true;
   if (val && typeof val === 'object') {
@@ -173,33 +194,37 @@ export function matchesDaviFilterMap(
   item: ComprehensiveRadarItem,
   filters: DaviFilterMap
 ): boolean {
+  const isAcao = item.category === 'acoes';
+  const isFii = item.category === 'fiis';
+  const isFixed = item.category === 'fixed';
+  const isStock = item.category === 'stocks';
+  const isFinancial = isFinancialOrInsuranceAsset(item);
+
   // 1. Filtros Especiais da Metodologia DAVI & Hydra
   if (isFilterActive(filters.only_novo_mercado)) {
-    if (!isNovoMercadoAsset(item)) return false;
+    if (isAcao && !isNovoMercadoAsset(item)) return false;
   }
 
   if (isFilterActive(filters.only_best_sectors)) {
-    if (!isBestSectorAsset(item)) return false;
+    if (isAcao && !isBestSectorAsset(item)) return false;
   }
 
   if (isFilterActive(filters.only_multi_property)) {
-    if (!isMultiPropertyFii(item)) return false;
+    if (isFii && !isMultiPropertyFii(item)) return false;
   }
 
   if (isFilterActive(filters.only_etfs)) {
-    if (!isEtfGlobalAsset(item)) return false;
+    if ((isStock || isAcao) && !isEtfGlobalAsset(item)) return false;
   }
 
   // 2. Régua Inteligente de P/VP para FIIs (Aula 5.2):
-  // Para FIIs de Papel, o P/VP NUNCA deve ultrapassar 1.02.
   if (isFilterActive(filters.smart_fii_pvp)) {
-    if (item.category === 'fiis') {
+    if (isFii) {
       const pvp = item.pVpa ?? item.pbRatio;
       if (pvp !== null) {
         if (isPaperFii(item)) {
           if (pvp > 1.02) return false;
         } else {
-          // Tijolo: aceita até 1.08
           if (pvp > 1.08) return false;
         }
       }
@@ -210,6 +235,21 @@ export function matchesDaviFilterMap(
   for (const [key, bound] of Object.entries(filters)) {
     if (!bound || typeof bound !== 'object' || (bound.min == null && bound.max == null)) continue;
     if (['only_novo_mercado', 'only_best_sectors', 'only_multi_property', 'only_etfs', 'smart_fii_pvp'].includes(key)) {
+      continue;
+    }
+
+    // Se o ativo for FII ou Renda Fixa, ignora métricas de ações industriais
+    if ((isFii || isFixed) && ['pe_ratio', 'ebit_margin', 'roic', 'debt_to_equity', 'current_ratio', 'net_debt_ebitda'].includes(key)) {
+      continue;
+    }
+
+    // Se o ativo for Ação ou Renda Fixa, ignora métricas imobiliárias
+    if ((isAcao || isFixed) && ['vacancy_rate', 'cap_rate', 'ffo_yield', 'property_count', 'price_per_sqm', 'rent_per_sqm'].includes(key)) {
+      continue;
+    }
+
+    // Se o ativo for Banco ou Seguradora, ignora métricas de endividamento industrial e liquidez corrente
+    if (isFinancial && ['current_ratio', 'debt_to_equity', 'net_debt_ebitda', 'ebit_margin'].includes(key)) {
       continue;
     }
 

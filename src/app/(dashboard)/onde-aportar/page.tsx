@@ -193,7 +193,7 @@ export default function OndeAportarPage() {
             : Number(s.valorTotal.toFixed(2)),
         totalValue: s.valorTotal,
         executedDate: today,
-        notes: 'Aporte guiado pelo Onde Aportar (Método DAVI & Hydra)'
+        notes: 'Aporte guiado pelo Motor RDM (Carteira Antifrágil)'
       }));
 
       const res = await fetch('/api/portfolio/transactions', {
@@ -230,10 +230,10 @@ export default function OndeAportarPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
-            Onde Aportar — Método DAVI & Hydra
+            Onde Aportar — Motor RDM &amp; Carteira Antifrágil
           </h1>
           <p className="mt-1 text-sm text-slate-200 sm:text-base">
-            Calculadora inteligente de equilíbrio patrimonial (AM2O): aporta no que está descontado sem girar carteira.
+            Calculadora inteligente de equilíbrio patrimonial (RDM): aporta no que está mais distante da meta sem girar carteira.
           </p>
         </div>
 
@@ -265,7 +265,7 @@ export default function OndeAportarPage() {
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
           <div>
             <strong className="block text-sm font-extrabold text-white sm:text-base">
-              1. Blindagem Hydra (Reserva)
+              1. Blindagem Antifrágil (Reserva)
             </strong>
             <p className="mt-1 text-sm leading-relaxed text-slate-200">
               Garante seu colchão de liquidez antes de acelerar renda variável.
@@ -277,7 +277,7 @@ export default function OndeAportarPage() {
           <Scale className="mt-0.5 h-5 w-5 shrink-0 text-gold-400" />
           <div>
             <strong className="block text-sm font-extrabold text-white sm:text-base">
-              2. Régua de Equilíbrio (AM2O)
+              2. Régua de Equilíbrio (RDM)
             </strong>
             <p className="mt-1 text-sm leading-relaxed text-slate-200">
               Direciona o aporte aos ativos mais distantes abaixo da sua meta (%).
@@ -641,7 +641,7 @@ export default function OndeAportarPage() {
               Aviso Importante &amp; Regulatório (Resoluções CVM 19/2021 e 20/2021)
             </h3>
             <p className="text-sm leading-relaxed text-slate-100 sm:text-base">
-              A <strong className="text-white">Norte Invest</strong> é uma plataforma tecnológica educacional e o motor AM2O opera como uma calculadora matemática de rebalanceamento passivo, baseada exclusivamente nas metas percentuais que você mesmo definiu. As simulações geradas{' '}
+              A <strong className="text-white">MANTFRAI</strong> é uma plataforma tecnológica educacional e o Motor RDM opera como uma calculadora matemática de rebalanceamento passivo, baseada exclusivamente nas metas percentuais que você mesmo definiu. As simulações geradas{' '}
               <strong className="text-amber-200">
                 não constituem análise, consultoria ou recomendação individualizada de investimento
               </strong>{' '}

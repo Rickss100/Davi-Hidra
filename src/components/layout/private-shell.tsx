@@ -463,7 +463,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
       {showIosGuide && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4">
           <div className="w-full max-w-sm rounded-2xl border border-gold-500/30 bg-obsidian-900 p-6">
-            <h3 className="text-base font-bold text-white">Instalar App Norte Invest</h3>
+            <h3 className="text-base font-bold text-white">Instalar App MANTFRAI</h3>
             <p className="mt-2 text-xs leading-relaxed text-slate-300">
               • <strong>No iPhone (Safari):</strong> toque em <em>Compartilhar</em> na barra inferior e escolha{' '}
               <strong>&quot;Adicionar à Tela de Início&quot;</strong>.

@@ -317,7 +317,7 @@ export default function RadarAtivosPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-extrabold text-white sm:text-2xl lg:text-3xl">
-            Radar Fundamentalista — Método DAVI
+            Radar Fundamentalista — Filtro MFS (Máxima Filtragem por Subtração)
           </h1>
           <p className="mt-0.5 text-xs text-slate-300 sm:text-sm">
             Peneire empresas e fundos pelos fundamentos, avalie com estrelas (★) e envie suas escolhas direto para Meus Objetivos.
@@ -920,7 +920,7 @@ export default function RadarAtivosPage() {
 
                 {sortedItems.length === 0 && (
                   <div className="p-8 text-center text-xs text-slate-300 sm:text-sm">
-                    Nenhum ativo passou pelos critérios atuais do filtro DAVI. Relaxe algum indicador na barra lateral ou clique em <strong className="text-gold-300">Limpar</strong>.
+                    Nenhum ativo passou pelos critérios atuais do filtro MFS. Relaxe algum indicador na barra lateral ou clique em <strong className="text-gold-300">Limpar</strong>.
                   </div>
                 )}
               </div>
@@ -930,7 +930,7 @@ export default function RadarAtivosPage() {
           {/* Rodapé de Governança & Disclaimer CVM */}
           <div className="mt-6 rounded-xl border border-slate-800/80 bg-obsidian-950/60 p-4 text-center">
             <p className="text-[11px] text-slate-400 leading-relaxed max-w-4xl mx-auto">
-              <strong className="text-slate-300">Aviso Regulatório (Isenção CVM):</strong> As informações e filtros do Radar de Ativos possuem finalidade exclusivamente didática e de organização financeira pessoal. A Norte Invest não é analista nem consultora de valores mobiliários (Resoluções CVM nº 19/2021 e nº 20/2021) e não emite recomendações de investimento. Toda decisão de aporte é de soberana e exclusiva responsabilidade do investidor.
+              <strong className="text-slate-300">Aviso Regulatório (Isenção CVM):</strong> As informações e filtros do Radar de Ativos possuem finalidade exclusivamente didática e de organização financeira pessoal. A MANTFRAI não é analista nem consultora de valores mobiliários (Resoluções CVM nº 19/2021 e nº 20/2021) e não emite recomendações de investimento. Toda decisão de aporte é de soberana e exclusiva responsabilidade do investidor.
             </p>
           </div>
         </div>

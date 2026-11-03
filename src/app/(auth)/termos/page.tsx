@@ -19,8 +19,8 @@ import { Card, Badge, Button } from '@/components/ui/primitives';
 import { BrandLogo } from '@/components/ui/brand-logo';
 
 export const metadata = {
-  title: 'Termos de Uso, Adesão & Aviso Regulatório CVM | Norte Invest',
-  description: 'Contrato de Licença de Software (SaaS), Termos de Adesão, Isenção Regulatória CVM, Política de Privacidade LGPD e Defesa do Consumidor da Norte Invest.'
+  title: 'Termos de Uso, Adesão & Aviso Regulatório CVM | MANTFRAI',
+  description: 'Contrato de Licença de Software (SaaS), Termos de Adesão, Isenção Regulatória CVM, Política de Privacidade LGPD e Defesa do Consumidor da MANTFRAI.'
 };
 
 export default function TermosPage() {
@@ -54,7 +54,7 @@ export default function TermosPage() {
                 Aviso Regulatório Obrigatório &bull; Isenção CVM
               </h2>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                A plataforma <strong>Norte Invest (Método DAVI &amp; Mecanismo Hydra)</strong> é exclusivamente uma <strong>ferramenta tecnológica de simulação matemática, organização de carteira e educação financeira</strong>.
+                A plataforma <strong>MANTFRAI (MANTFRAI (Método Antifrágil de Investimento))</strong> é exclusivamente uma <strong>ferramenta tecnológica de simulação matemática, organização de carteira e educação financeira</strong>.
               </p>
               <ul className="space-y-1.5 text-xs text-slate-300 pt-1">
                 <li className="flex items-start gap-2">
@@ -102,7 +102,7 @@ export default function TermosPage() {
             </div>
             <h3 className="text-sm font-bold text-white">Propriedade Intelectual</h3>
             <p className="text-xs text-slate-400 leading-relaxed">
-              O Método DAVI, a Carteira Hydra e o Algoritmo AM2O são marcas e softwares protegidos pelas Leis 9.609/1998 e 9.279/1996.
+              O Método Antifrágil de Investimento (MANTFRAI), a Carteira Antifrágil e o Motor RDM são marcas e softwares protegidos pelas Leis 9.609/1998 e 9.279/1996.
             </p>
           </Card>
         </div>
@@ -114,7 +114,7 @@ export default function TermosPage() {
             <span className="text-[11px] font-bold uppercase tracking-wider text-gold-400">Contrato de Adesão v2.1 (Padrão Ouro)</span>
             <h2 className="text-xl font-bold text-white mt-1">Cláusulas Gerais de Licenciamento de Software (SaaS)</h2>
             <p className="text-xs text-slate-400 mt-1">
-              Ao criar sua conta ou utilizar a Plataforma Norte Invest, você declara ciência e concordância integral com as condições abaixo:
+              Ao criar sua conta ou utilizar a Plataforma MANTFRAI, você declara ciência e concordância integral com as condições abaixo:
             </p>
           </div>
 
@@ -124,10 +124,10 @@ export default function TermosPage() {
               <span className="text-gold-400">1.</span> Objeto da Licença &bull; SaaS em Evolução Contínua
             </h3>
             <p>
-              A Norte Invest concede ao Usuário uma licença de uso temporária, revogável, não exclusiva e intransferível para utilização de sua plataforma web de simulação matemática patrimonial, consolidação de investimentos e acesso aos módulos instrucionais da Academia Norte Invest. O software não realiza operações automáticas em nome do Usuário nem detém custódia de recursos financeiros.
+              A MANTFRAI concede ao Usuário uma licença de uso temporária, revogável, não exclusiva e intransferível para utilização de sua plataforma web de simulação matemática patrimonial, consolidação de investimentos e acesso aos módulos instrucionais da Academia MANTFRAI. O software não realiza operações automáticas em nome do Usuário nem detém custódia de recursos financeiros.
             </p>
             <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
-              <strong className="text-gold-300">Software em Evolução Dinâmica (&quot;As-Is&quot;):</strong> O aplicativo está em contínuo desenvolvimento. A Norte Invest reserva-se o direito de implementar melhorias, refatorar interfaces, aprimorar algoritmos e adicionar ou descontinuar funcionalidades a qualquer tempo, de forma dinâmica e <strong>sem necessidade de aviso prévio</strong>, sempre visando à segurança, usabilidade e estabilidade sistêmica.
+              <strong className="text-gold-300">Software em Evolução Dinâmica (&quot;As-Is&quot;):</strong> O aplicativo está em contínuo desenvolvimento. A MANTFRAI reserva-se o direito de implementar melhorias, refatorar interfaces, aprimorar algoritmos e adicionar ou descontinuar funcionalidades a qualquer tempo, de forma dinâmica e <strong>sem necessidade de aviso prévio</strong>, sempre visando à segurança, usabilidade e estabilidade sistêmica.
             </p>
           </section>
 
@@ -137,7 +137,7 @@ export default function TermosPage() {
               <span className="text-gold-400">2.</span> Delimitação de Função &bull; Instrumento de Apoio Didático
             </h3>
             <p>
-              O <strong>Algoritmo AM2O (Alocação com Maximização da Menor Oscilação)</strong> é um algoritmo de rebalanceamento financeiro passivo que processa estritamente as metas percentuais e os ativos informados livremente pelo próprio Usuário. O <strong>Radar de Ativos</strong> compila indicadores fundamentalistas de domínio público para facilitar a análise do investidor. Nenhuma exibição gráfica ou sugestão algorítmica constitui recomendação vinculante de investimento.
+              O <strong>Motor RDM (Rebalanceamento por Distância da Meta)</strong> é um algoritmo de rebalanceamento financeiro passivo que processa estritamente as metas percentuais e os ativos informados livremente pelo próprio Usuário. O <strong>Radar de Ativos</strong> compila indicadores fundamentalistas de domínio público para facilitar a análise do investidor. Nenhuma exibição gráfica ou sugestão algorítmica constitui recomendação vinculante de investimento.
             </p>
           </section>
 
@@ -147,10 +147,10 @@ export default function TermosPage() {
               <span className="text-gold-400">3.</span> Segurança &bull; Dever de Higiene Digital e Senhas Exclusivas
             </h3>
             <p>
-              O Usuário assume a obrigação expressa de criar uma <strong>senha forte e EXCLUSIVA para a Norte Invest</strong>, sendo terminantemente desaconselhada a reutilização de senhas utilizadas em internet banking, e-mails ou outras redes sociais. 
+              O Usuário assume a obrigação expressa de criar uma <strong>senha forte e EXCLUSIVA para a MANTFRAI</strong>, sendo terminantemente desaconselhada a reutilização de senhas utilizadas em internet banking, e-mails ou outras redes sociais. 
             </p>
             <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
-              <strong className="text-amber-300">Excludente de Responsabilidade por Negligência do Usuário:</strong> A Norte Invest adota padrões de segurança bancária (Zero-Trust, cookies HttpOnly e criptografia AES-256). Contudo, por se tratar de serviço disponível na internet pública, a Norte Invest <strong>não se responsabiliza por invasões decorrentes de negligência do próprio Usuário</strong> na guarda de suas credenciais, contaminação de seus dispositivos por vírus/keyloggers, nem por ataques cibernéticos globais de força maior direcionados à infraestrutura mundial de redes.
+              <strong className="text-amber-300">Excludente de Responsabilidade por Negligência do Usuário:</strong> A MANTFRAI adota padrões de segurança bancária (Zero-Trust, cookies HttpOnly e criptografia AES-256). Contudo, por se tratar de serviço disponível na internet pública, a MANTFRAI <strong>não se responsabiliza por invasões decorrentes de negligência do próprio Usuário</strong> na guarda de suas credenciais, contaminação de seus dispositivos por vírus/keyloggers, nem por ataques cibernéticos globais de força maior direcionados à infraestrutura mundial de redes.
             </p>
           </section>
 
@@ -170,7 +170,7 @@ export default function TermosPage() {
               <span className="text-gold-400">5.</span> Política de Não Renovação Automática Furtiva &amp; Arrependimento (CDC)
             </h3>
             <p>
-              A Norte Invest não realiza cobranças recorrentes automáticas silenciosas em cartões de crédito. Toda renovação é precedida de contato transparente e acordada com o investidor. Adicionalmente, em estrito cumprimento ao <strong>Artigo 49 do Código de Defesa do Consumidor</strong>, o Usuário possui o prazo incondicional de <strong>7 (sete) dias corridos</strong> a partir da contratação de plano pago para requerer o cancelamento com reembolso de 100% dos valores pagos diretamente com nossa equipe de suporte.
+              A MANTFRAI não realiza cobranças recorrentes automáticas silenciosas em cartões de crédito. Toda renovação é precedida de contato transparente e acordada com o investidor. Adicionalmente, em estrito cumprimento ao <strong>Artigo 49 do Código de Defesa do Consumidor</strong>, o Usuário possui o prazo incondicional de <strong>7 (sete) dias corridos</strong> a partir da contratação de plano pago para requerer o cancelamento com reembolso de 100% dos valores pagos diretamente com nossa equipe de suporte.
             </p>
           </section>
 
@@ -180,7 +180,7 @@ export default function TermosPage() {
               <span className="text-gold-400">6.</span> Privacidade e Proteção de Dados (LGPD)
             </h3>
             <p>
-              Em conformidade com a Lei Federal nº 13.709/2018 (LGPD), a Norte Invest coleta apenas os dados estritamente necessários para a prestação dos serviços (nome e e-mail). É terminantemente vedada a comercialização, cessão ou repasse de informações patrimoniais a corretoras de valores, financeiras ou parceiros comerciais. O Usuário pode solicitar a exclusão de sua conta a qualquer momento.
+              Em conformidade com a Lei Federal nº 13.709/2018 (LGPD), a MANTFRAI coleta apenas os dados estritamente necessários para a prestação dos serviços (nome e e-mail). É terminantemente vedada a comercialização, cessão ou repasse de informações patrimoniais a corretoras de valores, financeiras ou parceiros comerciais. O Usuário pode solicitar a exclusão de sua conta a qualquer momento.
             </p>
           </section>
 
@@ -200,10 +200,10 @@ export default function TermosPage() {
               <span className="text-gold-400">8.</span> Atualização dos Termos &bull; Descontinuação do Serviço e Pro-Rata
             </h3>
             <p>
-              <strong className="text-slate-200">Alterações Contratuais:</strong> Os presentes Termos poderão ser atualizados a qualquer momento pela Norte Invest para refletir avanços técnicos ou regulatórios, vigorando a partir da data de sua publicação no app.
+              <strong className="text-slate-200">Alterações Contratuais:</strong> Os presentes Termos poderão ser atualizados a qualquer momento pela MANTFRAI para refletir avanços técnicos ou regulatórios, vigorando a partir da data de sua publicação no app.
             </p>
             <p className="rounded-lg border border-slate-800/90 bg-obsidian-950/70 p-3 text-xs text-slate-300">
-              <strong className="text-gold-300">Descontinuação por Decisões Judiciais, Políticas ou Estratégicas:</strong> A Norte Invest reserva-se o direito de suspender ou descontinuar a plataforma a qualquer tempo em caso de determinações judiciais, ordens governamentais/CVM, bloqueio de dados de mercado por terceiros ou conveniência estratégica. Nesta hipótese, a <strong>única obrigação indenizatória da Norte Invest limitará-se à devolução proporcional (pro-rata temporis)</strong> dos valores correspondentes ao período não utilizado dos planos vigentes contratados, com renúncia expressa a qualquer pleito de indenização por lucros cessantes ou danos morais.
+              <strong className="text-gold-300">Descontinuação por Decisões Judiciais, Políticas ou Estratégicas:</strong> A MANTFRAI reserva-se o direito de suspender ou descontinuar a plataforma a qualquer tempo em caso de determinações judiciais, ordens governamentais/CVM, bloqueio de dados de mercado por terceiros ou conveniência estratégica. Nesta hipótese, a <strong>única obrigação indenizatória da MANTFRAI limitará-se à devolução proporcional (pro-rata temporis)</strong> dos valores correspondentes ao período não utilizado dos planos vigentes contratados, com renúncia expressa a qualquer pleito de indenização por lucros cessantes ou danos morais.
             </p>
           </section>
 
@@ -213,7 +213,7 @@ export default function TermosPage() {
               <span className="text-gold-400">9.</span> Propriedade Intelectual e Foro
             </h3>
             <p>
-              O Método DAVI, a Carteira Hydra e o Algoritmo AM2O são propriedades intelectuais exclusivas protegidas pelas Leis 9.609/1998 e 9.279/1996. É proibida a engenharia reversa do código-fonte ou a redistribuição comercial dos materiais educativos. Fica eleito o Foro da Comarca de Vitória/ES para dirimir quaisquer controvérsias decorrentes deste contrato, ressalvadas as normas protetivas cogentes do CDC.
+              O Método Antifrágil de Investimento (MANTFRAI), a Carteira Antifrágil e o Motor RDM são propriedades intelectuais exclusivas protegidas pelas Leis 9.609/1998 e 9.279/1996. É proibida a engenharia reversa do código-fonte ou a redistribuição comercial dos materiais educativos. Fica eleito o Foro da Comarca de Vitória/ES para dirimir quaisquer controvérsias decorrentes deste contrato, ressalvadas as normas protetivas cogentes do CDC.
             </p>
           </section>
 

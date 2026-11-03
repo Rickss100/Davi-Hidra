@@ -34,10 +34,10 @@ export function BrandLogo({ size = 'md', centered = false, className }: BrandLog
         className
       )}
     >
-      {/* Arte Oficial Norte Invest (N Esmeralda + Seta Dourada + Ponto) */}
+      {/* Arte Oficial MANTFRAI */}
       <img
         src="/icon.svg"
-        alt="Norte Invest — Método DAVI & Hydra"
+        alt="MANTFRAI — Método Antifrágil de Investimento"
         className={cn('shrink-0 shadow-md', iconSizes[size])}
       />
       <div className="text-left leading-tight">
@@ -47,7 +47,7 @@ export function BrandLogo({ size = 'md', centered = false, className }: BrandLog
             titleSizes[size]
           )}
         >
-          NORTE INVEST
+          MANTFRAI
         </span>
         <span
           className={cn(
@@ -55,7 +55,7 @@ export function BrandLogo({ size = 'md', centered = false, className }: BrandLog
             subtitleSizes[size]
           )}
         >
-          MÉTODO DAVI &amp; HYDRA
+          MÉTODO ANTIFRÁGIL DE INVESTIMENTO
         </span>
       </div>
     </div>

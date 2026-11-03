@@ -31,10 +31,10 @@ const PLANS: PlanOption[] = [
     priceTotal: 'R$ 89,70',
     priceMonthly: 'R$ 29,90 / mês',
     ctaText: 'Escolher Trimestral',
-    whatsappMessage: 'Olá! Gostaria de contratar o Plano Trimestral da Norte Invest (R$ 89,70). Como posso efetuar o pagamento?',
+    whatsappMessage: 'Olá! Gostaria de contratar o Plano Trimestral da MANTFRAI (R$ 89,70). Como posso efetuar o pagamento?',
     features: [
-      'Acesso completo ao Motor AM2O',
-      'Radar de Ativos Fundamentalista DAVI',
+      'Acesso completo ao Motor RDM (Rebalanceamento por Distância da Meta)',
+      'Radar de Ativos com Filtro MFS',
       'Mapa Anual de Proventos',
       'Academia com 30 Aulas e Simulador'
     ]
@@ -48,7 +48,7 @@ const PLANS: PlanOption[] = [
     savingsBadge: '45% DE ECONOMIA • MAIS ESCOLHIDO',
     highlight: true,
     ctaText: 'Garantir Oferta de Lançamento',
-    whatsappMessage: 'Olá! Gostaria de aproveitar a condição especial de lançamento do Plano Anual da Norte Invest (R$ 197,00 à vista ou 12x R$ 19,90). Como posso efetuar o pagamento?',
+    whatsappMessage: 'Olá! Gostaria de aproveitar a condição especial de lançamento do Plano Anual da MANTFRAI (R$ 197,00 à vista ou 12x R$ 19,90). Como posso efetuar o pagamento?',
     features: [
       'Tudo do plano trimestral',
       'Apenas R$ 0,54 por dia (menos que um café)',
@@ -66,7 +66,7 @@ const PLANS: PlanOption[] = [
     priceMonthly: 'R$ 24,90 / mês',
     savingsBadge: '17% de Economia',
     ctaText: 'Escolher Semestral',
-    whatsappMessage: 'Olá! Gostaria de contratar o Plano Semestral da Norte Invest (R$ 149,40). Como posso efetuar o pagamento?',
+    whatsappMessage: 'Olá! Gostaria de contratar o Plano Semestral da MANTFRAI (R$ 149,40). Como posso efetuar o pagamento?',
     features: [
       'Acesso completo ao Motor AM2O',
       'Radar de Ativos Fundamentalista DAVI',
@@ -106,7 +106,7 @@ export function PlansModal({ onClose, userEmail }: PlansModalProps) {
             Invista com Inteligência Institucional
           </h2>
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-            Economize tempo, evite erros caros e receba a indicação exata de onde aportar seus recursos com o Método DAVI & Mecanismo Hydra.
+            Economize tempo, evite erros caros e receba a indicação exata de onde aportar seus recursos com o Carteira Antifrágil & Motor RDM.
           </p>
         </div>
 

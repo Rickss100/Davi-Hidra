@@ -3,14 +3,14 @@ import './globals.css';
 import { AppProviders } from '@/components/providers';
 
 export const metadata: Metadata = {
-  title: 'Norte Invest Private | Método DAVI & Hydra',
+  title: 'MANTFRAI • Método Antifrágil de Investimento',
   description:
-    'Plataforma Institucional de Gestão Patrimonial, Rebalanceamento Inteligente e Renda Passiva.',
+    'Plataforma de Gestão Patrimonial Antifrágil, Motor RDM de Rebalanceamento e Filtro MFS de Ações Perenes.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Norte Invest'
+    title: 'MANTFRAI'
   },
   icons: {
     icon: [

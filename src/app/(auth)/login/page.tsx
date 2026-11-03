@@ -216,7 +216,7 @@ export default function LoginPage() {
               </h1>
               <p className="mt-1 text-xs text-slate-400">
                 {mode === 'register'
-                  ? 'Ambiente exclusivo Norte Invest para controle, diversificação e aportes inteligentes'
+                  ? 'Ambiente exclusivo MANTFRAI para controle de aportes pelo Método Antifrágil'
                   : 'Acesso seguro à sua carteira, metas e estratégias de alocação'}
               </p>
             </div>
@@ -359,7 +359,7 @@ export default function LoginPage() {
                     >
                       Termos de Uso
                     </Link>{' '}
-                    e o Aviso CVM, ciente de que a Norte Invest é uma ferramenta pedagógica e tecnológica e que toda decisão de investimento é de minha exclusiva responsabilidade.
+                    e o Aviso CVM, ciente de que a MANTFRAI é uma ferramenta pedagógica e tecnológica e que toda decisão de investimento é de minha exclusiva responsabilidade.
                   </span>
                 </label>
               </div>

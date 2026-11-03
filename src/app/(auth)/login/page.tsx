@@ -29,6 +29,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [inactiveNotice, setInactiveNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const handleLoginOrRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +38,12 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      if (mode === 'register' && !acceptedTerms) {
+        setError('É necessário concordar com os Termos de Uso e o Aviso de Isenção CVM para criar sua conta.');
+        setLoading(false);
+        return;
+      }
+
       const endpoint = mode === 'register' ? '/api/auth/register' : '/api/auth/login';
       const payload =
         mode === 'register'
@@ -332,6 +339,31 @@ export default function LoginPage() {
                 </button>
               </div>
             </div>
+
+            {mode === 'register' && (
+              <div className="rounded-xl border border-slate-800 bg-obsidian-950/80 p-3">
+                <label className="flex items-start gap-2.5 cursor-pointer text-xs text-slate-300">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    required
+                    className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-obsidian-900 text-gold-500 focus:ring-gold-500"
+                  />
+                  <span className="leading-snug">
+                    Li e concordo com os{' '}
+                    <Link
+                      href="/termos"
+                      target="_blank"
+                      className="font-bold text-gold-400 underline hover:text-gold-300"
+                    >
+                      Termos de Uso
+                    </Link>{' '}
+                    e o Aviso CVM, ciente de que a Norte Invest é uma ferramenta pedagógica e tecnológica e que toda decisão de investimento é de minha exclusiva responsabilidade.
+                  </span>
+                </label>
+              </div>
+            )}
 
             {error && (
               <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 p-2.5 text-xs text-rose-300">

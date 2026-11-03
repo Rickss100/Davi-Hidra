@@ -630,7 +630,7 @@ export default function OndeAportarPage() {
         </div>
       </div>
 
-      {/* Aviso Legal Regulatório CVM 19/2021 — Alto Contraste e Leitura Confortável */}
+      {/* Aviso Legal Regulatório CVM 19 e 20/2021 — Alto Contraste e Leitura Confortável */}
       <div className="rounded-2xl border-2 border-amber-400/60 bg-[#161208] p-5 shadow-lg sm:p-6">
         <div className="flex items-start gap-3.5">
           <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/50 bg-amber-500/20 text-amber-300">
@@ -638,17 +638,14 @@ export default function OndeAportarPage() {
           </div>
           <div className="space-y-1.5">
             <h3 className="text-base font-extrabold text-amber-300 sm:text-lg">
-              Aviso Importante & Regulatório (CVM 19/2021)
+              Aviso Importante &amp; Regulatório (Resoluções CVM 19/2021 e 20/2021)
             </h3>
             <p className="text-sm leading-relaxed text-slate-100 sm:text-base">
-              O <strong className="text-white">Método DAVI & Hydra</strong> é uma ferramenta
-              educacional e uma calculadora matemática de rebalanceamento baseada exclusivamente nas
-              suas próprias metas percentuais. As sugestões geradas{' '}
+              A <strong className="text-white">Norte Invest</strong> é uma plataforma tecnológica educacional e o motor AM2O opera como uma calculadora matemática de rebalanceamento passivo, baseada exclusivamente nas metas percentuais que você mesmo definiu. As simulações geradas{' '}
               <strong className="text-amber-200">
-                não constituem análise, consultoria ou recomendação de compra ou venda
+                não constituem análise, consultoria ou recomendação individualizada de investimento
               </strong>{' '}
-              de valores mobiliários (Resolução CVM 19/2021). Toda decisão de investimento é de sua
-              exclusiva responsabilidade e perfil de risco.
+              e não substituem a consulta a um especialista financeiro credenciado. Toda e qualquer decisão de investimento é de sua soberana e exclusiva responsabilidade. Rentabilidade passada não é garantia de rentabilidade futura.
             </p>
           </div>
         </div>

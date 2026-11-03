@@ -23,7 +23,8 @@ import {
   Menu,
   X,
   Settings,
-  KeyRound
+  KeyRound,
+  FileText
 } from 'lucide-react';
 import { usePortfolioData, useSyncLivePrices } from '@/hooks/use-portfolio';
 import { Button, Badge } from '@/components/ui/primitives';
@@ -225,6 +226,17 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
               <span>Instalar App no Celular</span>
             </button>
 
+            <Link
+              href="/termos"
+              target="_blank"
+              className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-obsidian-950 px-3 py-2 text-xs font-medium text-slate-400 hover:border-slate-700 hover:text-slate-200 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-slate-400" />
+                Termos &amp; Compliance CVM
+              </span>
+            </Link>
+
             <button
               type="button"
               onClick={handleLogout}
@@ -392,6 +404,15 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
                 <KeyRound className="h-4 w-4 text-gold-400" />
                 Alterar Minha Senha
               </Button>
+              <Link
+                href="/termos"
+                target="_blank"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center gap-2 rounded-lg border border-slate-800 bg-obsidian-950 px-3 py-2 text-xs font-medium text-slate-300 hover:border-slate-700"
+              >
+                <FileText className="h-4 w-4 text-slate-400" />
+                Termos &amp; Compliance CVM
+              </Link>
               <Button variant="danger" size="sm" className="w-full justify-start" onClick={handleLogout}>
                 <LogOut className="h-4 w-4" />
                 Sair da Conta

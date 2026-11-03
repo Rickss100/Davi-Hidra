@@ -926,6 +926,13 @@ export default function RadarAtivosPage() {
               </div>
             </Card>
           )}
+
+          {/* Rodapé de Governança & Disclaimer CVM */}
+          <div className="mt-6 rounded-xl border border-slate-800/80 bg-obsidian-950/60 p-4 text-center">
+            <p className="text-[11px] text-slate-400 leading-relaxed max-w-4xl mx-auto">
+              <strong className="text-slate-300">Aviso Regulatório (Isenção CVM):</strong> As informações e filtros do Radar de Ativos possuem finalidade exclusivamente didática e de organização financeira pessoal. A Norte Invest não é analista nem consultora de valores mobiliários (Resoluções CVM nº 19/2021 e nº 20/2021) e não emite recomendações de investimento. Toda decisão de aporte é de soberana e exclusiva responsabilidade do investidor.
+            </p>
+          </div>
         </div>
       </div>
     </div>

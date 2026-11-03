@@ -496,10 +496,10 @@ export default function OndeAportarPage() {
                                 {s.assetName}
                               </span>
                             )}
-                            {s.daviWarning && (
+                            {(s.mfsWarning || s.daviWarning) && (
                               <div className="mt-2 flex items-start gap-2 rounded-lg border border-amber-400/55 bg-[#191407] px-3 py-2 text-xs leading-relaxed text-amber-100 sm:text-sm">
                                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
-                                <span>{s.daviWarning}</span>
+                                <span>{s.mfsWarning || s.daviWarning}</span>
                               </div>
                             )}
                           </td>

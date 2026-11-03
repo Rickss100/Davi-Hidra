@@ -86,6 +86,7 @@ export interface InvestmentSuggestionDTO {
   isEmergencyReserve?: boolean;
   reason: string;
   daviWarning?: string;
+  mfsWarning?: string;
   magicNumberText?: string;
 }
 
@@ -642,7 +643,7 @@ export function suggestInvestments(params: {
           currentPrice: 1,
           valorTotal: valFixed,
           distance: roundPercent(item.distance, 2),
-          reason: `Rebalanceamento DAVI: Renda Fixa ${roundPercent(item.distance, 2)}% abaixo da meta.`
+          reason: `Rebalanceamento MANTFRAI: Renda Fixa ${roundPercent(item.distance, 2)}% abaixo da meta.`
         });
         remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(valFixed));
       }
@@ -662,7 +663,7 @@ export function suggestInvestments(params: {
             currentPrice: roundCurrency(unitBrl),
             valorTotal: valUsBrl,
             distance: roundPercent(item.distance, 2),
-            reason: `Equilíbrio Global Hydra: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
+            reason: `Equilíbrio Global MANTFRAI: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
           });
           remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(valUsBrl));
         }
@@ -686,7 +687,7 @@ export function suggestInvestments(params: {
           currentPrice: roundCurrency(unitBrl),
           valorTotal: totalOrderBrl,
           distance: roundPercent(item.distance, 2),
-          reason: `Desconto de Alocação Hydra: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
+          reason: `Desconto de Alocação MANTFRAI: ${item.currentPercent.toFixed(1)}% atual vs ${item.targetPercent.toFixed(1)}% meta.`
         });
         remainingBudgetDec = DecimalMaxZero(remainingBudgetDec.minus(totalOrderBrl));
       }

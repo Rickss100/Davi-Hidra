@@ -17,7 +17,7 @@ Agora, vamos unificar todo esse conhecimento através do **cinzel do Filtro MFS 
 
 ---
 
-## 🔨 1. O Cinzel DAVI Imobiliário: De 450 Fundos para a Lista de Ouro
+## 🔨 1. O Cinzel MFS Imobiliário: De 450 Fundos para a Lista de Ouro
 
 Hoje existem mais de **450 Fundos Imobiliários listados na B3**. Mais de 70% deles são fundos pequenos, ilíquidos, monoativos ou com gestoras inexperientes.
 

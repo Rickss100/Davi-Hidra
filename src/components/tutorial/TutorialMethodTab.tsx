@@ -19,7 +19,7 @@ export function TutorialMethodTab() {
             A Tríade da Riqueza Duradoura: Disciplina, Método e Tempo
           </h2>
           <p className="text-xs leading-relaxed text-slate-300">
-            O <strong className="text-emerald-400">DAVI & HYDRA</strong> não é uma ferramenta de apostas ou especulação. É um sistema desenhado para eliminar a emoção humana e transformar poupança mensal regular em um fluxo crescente de liberdade financeira.
+            O <strong className="text-emerald-400">MANTFRAI</strong> não é uma ferramenta de apostas ou especulação. É um sistema desenhado para eliminar a emoção humana e transformar poupança mensal regular em um fluxo crescente de liberdade financeira.
           </p>
         </div>
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -139,11 +139,11 @@ export function TutorialMethodTab() {
 
           <div className="rounded-xl border-l-4 border-emerald-500 bg-[#111c34]/60 p-4">
             <h4 className="mb-1 text-sm font-bold text-white">
-              🐉 O Carteira Antifrágil: Os tentáculos antifrágeis do seu Império
+              🐉 A Estratégia Antifrágil: Os múltiplos motores do seu Império
             </h4>
             <p className="text-xs leading-relaxed text-slate-300">
               Na mitologia, quando alguém tenta cortar uma cabeça da Hidra, novas cabeças nascem ainda mais fortes.  
-              No <strong>MANTFRAI</strong>, você não investe em uma única empresa ou aposta isolada — <strong>você constrói um império patrimonial</strong> distribuído em múltiplos tentáculos: Ações, Fundos Imobiliários, Renda Fixa Soberana e Ativos Globais. Quando o mercado entra em crise e &quot;tenta cortar uma cabeça&quot; (um setor em baixa ou inflação alta), o algoritmo da Hydra automaticamente se reposiciona, aportando com desconto nos ativos mais baratos e fazendo o seu império florescer ainda mais forte.
+              No <strong>MANTFRAI</strong>, você não investe em uma única empresa ou aposta isolada — <strong>você constrói um império patrimonial</strong> distribuído em múltiplos motores: Ações, Fundos Imobiliários, Renda Fixa Soberana e Ativos Globais. Quando o mercado entra em crise e pressiona um setor ou moeda, o algoritmo do Motor RDM automaticamente se reposiciona, aportando com desconto nos ativos mais baratos e fazendo o seu império florescer ainda mais forte.
             </p>
           </div>
         </div>

@@ -71,7 +71,7 @@ export function isNovoMercadoAsset(assetOrCode: ComprehensiveRadarItem | string,
 }
 
 /**
- * Identifica se a empresa pertence aos Setores Perenes do Método DAVI (Acrônimo BEST - Aula 4.4):
+ * Identifica se a empresa pertence aos Setores Perenes do Filtro MFS (Acrônimo BEST - Aula 4.4):
  * B = Bancos & Financeiro
  * E = Energia Elétrica / Utilidade Pública
  * S = Saneamento Básico & Água
@@ -200,7 +200,7 @@ export function matchesDaviFilterMap(
   const isStock = item.category === 'stocks';
   const isFinancial = isFinancialOrInsuranceAsset(item);
 
-  // 1. Filtros Especiais da Metodologia DAVI & Hydra
+  // 1. Filtros Especiais da Metodologia MANTFRAI (Filtro MFS & Motor RDM)
   if (isFilterActive(filters.only_novo_mercado)) {
     if (isAcao && !isNovoMercadoAsset(item)) return false;
   }

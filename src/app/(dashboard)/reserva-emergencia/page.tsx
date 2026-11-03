@@ -186,7 +186,7 @@ export default function ReservaEmergenciaPage() {
         <div>
           <h1 className="flex items-center gap-2.5 text-2xl font-extrabold text-white sm:text-3xl">
             <PiggyBank className="h-8 w-8 text-emerald-400" />
-            Reserva de Emergência — Blindagem Hydra
+            Reserva de Emergência — Blindagem Antifrágil
           </h1>
           <p className="mt-1 text-sm text-slate-200 sm:text-base">
             Sua fortaleza de proteção patrimonial e liquidez diária antes de qualquer exposição ao

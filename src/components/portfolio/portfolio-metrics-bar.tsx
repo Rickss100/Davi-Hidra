@@ -121,7 +121,7 @@ export function PortfolioMetricsBar({ snapshot }: PortfolioMetricsBarProps) {
             <div className="flex items-center gap-2">
               <Target className="h-4 w-4 text-gold-400" />
               <h2 className="text-sm font-bold text-white sm:text-base">
-                Alocação Real vs. Meta Hydra
+                Alocação Real vs. Meta MANTFRAI
               </h2>
             </div>
 

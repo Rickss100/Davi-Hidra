@@ -77,7 +77,7 @@ export function ReserveRoadmapCard({
           </div>
         </div>
         <Badge tone="gold" className="px-3 py-1 text-xs font-extrabold">
-          Etapa 1 do Método Hydra
+          Etapa 1 da Blindagem Antifrágil
         </Badge>
       </div>
 

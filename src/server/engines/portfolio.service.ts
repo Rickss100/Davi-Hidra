@@ -319,7 +319,7 @@ export async function buildPortfolioSnapshot(userId: number): Promise<PortfolioS
   });
   flatHoldings.sort((a, b) => b.currentValueBrl - a.currentValueBrl);
 
-  // Objetivos do investidor (contas novas iniciam apenas com divisão macro e lista de ativos limpa para escolha via Método DAVI)
+  // Objetivos do investidor (contas novas iniciam apenas com divisão macro e lista de ativos limpa para escolha via Metodologia MANTFRAI)
   const savedObj = objRows[0];
   const macroAllocation = savedObj?.macroAllocation ?? MACRO_MODEL_BRASIL;
   const assetTargets = savedObj?.assetTargets ?? EMPTY_ASSET_TARGETS;

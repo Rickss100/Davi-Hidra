@@ -126,6 +126,7 @@ export async function POST(request: Request) {
       ...s,
       assetName,
       daviWarning,
+      mfsWarning: daviWarning,
       magicNumberText
     };
   });

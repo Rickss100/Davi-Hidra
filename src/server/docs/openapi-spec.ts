@@ -99,7 +99,7 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
     },
     '/api/radar': {
       get: {
-        tags: ['Radar de Ativos (Método DAVI)'],
+        tags: ['Radar de Ativos (Filtro MFS)'],
         summary: 'Consultar catálogo de ativos com indicadores fundamentalistas',
         description: 'Retorna a lista de Ações, FIIs, Renda Fixa e Ativos Internacionais com métricas de valuation, eficiência e governança.',
         parameters: [

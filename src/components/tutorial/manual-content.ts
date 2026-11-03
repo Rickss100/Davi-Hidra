@@ -107,7 +107,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     category: 'metodo',
     q: 'Com que frequência devo realizar aportes no aplicativo?',
-    a: 'A recomendação de ouro é aportar mensalmente, logo após receber seu salário ou renda profissional. A disciplina periódica vence a tentativa de acertar o melhor dia do mês. Basta abrir a tela "Onde Aportar", digitar o valor poupado e seguir o direcionamento matemático da Hydra.'
+    a: 'A recomendação de ouro é aportar mensalmente, logo após receber seu salário ou renda profissional. A disciplina periódica vence a tentativa de acertar o melhor dia do mês. Basta abrir a tela "Onde Aportar", digitar o valor poupado e seguir o direcionamento matemático do Motor RDM.'
   },
   {
     category: 'metodo',

@@ -33,7 +33,7 @@ O que sobra após os cortes não é uma aposta: **é a verdadeira obra de arte d
 
 ---
 
-## 🔨 2. Os Quatro Golpes do Cinzel DAVI
+## 🔨 2. Os Quatro Golpes do Cinzel MFS
 
 Veja como o filtro funciona de forma implacável e matemática:
 
@@ -43,7 +43,7 @@ flowchart TD
     Golpe1 -->|Restam ~150 Empresas| Golpe2["🔨 2º Golpe: Cinzel do Lucro & Eficiência<br/>Elimina quem deu prejuízo nos últimos 5 anos ou ROE < 10%"]
     Golpe2 -->|Restam ~60 Empresas| Golpe3["🔨 3º Golpe: Cinzel da Dívida & Solvência<br/>Elimina quem tem Dívida Líquida / EBITDA > 3,0x (ou Basileia frágil)"]
     Golpe3 -->|Restam ~40 Empresas| Golpe4["🔨 4º Golpe: Cinzel da Liquidez Operacional<br/>Elimina quem negocia menos de R$ 1 Milhão por dia"]
-    Golpe4 --> Davi["👑 A ESCULTURA DO DAVI: As 25 a 35 Melhores Ações do Brasil<br/>(A Lista de Ouro MANTFRAI)"]
+    Golpe4 --> Davi["👑 A ESCULTURA DE OURO: As 25 a 35 Melhores Ações do Brasil<br/>(A Lista de Ouro MANTFRAI)"]
 ```
 
 ---

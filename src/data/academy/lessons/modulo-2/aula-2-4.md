@@ -67,7 +67,7 @@ A sua carteira no MANTFRAI é um veículo de precisão:
 No **MANTFRAI Enterprise**, você não precisa quebrar a cabeça equilibrando planilhas complexas:
 1. **Definir Objetivos (`/definir-objetivos`):** Estabeleça as fatias ideais da sua Carteira Antifrágil (ex: 35% Ações, 35% FIIs, 15% Renda Fixa, 15% Ativos Globais).
 2. **Onde Aportar (`/onde-aportar`):** Todo mês, informe o valor disponível e o algoritmo Motor RDM direciona seu capital exatamente para o tentáculo mais defasado, executando a compra na baixa de forma 100% mecânica.
-3. **Resumo Geral (`/resumo`):** Visualize a pizza de distribuição e o termômetro de saúde patrimonial da sua Hydra em tempo real.
+3. **Resumo Geral (`/resumo`):** Visualize a pizza de distribuição e o termômetro de saúde patrimonial da sua carteira em tempo real.
 
 ---
 
@@ -82,7 +82,7 @@ No **MANTFRAI Enterprise**, você não precisa quebrar a cabeça equilibrando pl
 
 ```mermaid
 flowchart TD
-    Patrimonio["🏛️ Império Patrimonial Hydra"]
+    Patrimonio["🏛️ Império Patrimonial MANTFRAI"]
     
     Patrimonio --> T1["Tentáculo 1: Ações de Valor BR<br/>(Crescimento & Dividendos)"]
     Patrimonio --> T2["Tentáculo 2: Fundos Imobiliários<br/>(Aluguéis Mensais Isentos)"]

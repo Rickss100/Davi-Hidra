@@ -51,7 +51,7 @@ No **MANTFRAI**, a regra é transparente: **os ativos de excelência da Lista de
 | **Equilibrado (Padrão Ouro)** | **30%** | **35%** | **20%** | **15%** |
 | **Multiplicador / Acumulação** | **40%** | 30% | 10% | **20%** |
 
-Observe que em qualquer uma das três configurações, **a sua carteira continua sendo uma Hydra completa e antifrágil**.
+Observe que em qualquer uma das três configurações, **a sua carteira continua sendo um império completo e antifrágil**.
 
 ---
 
@@ -69,7 +69,7 @@ No **MANTFRAI Enterprise**, você materializa a sua estratégia em segundos:
 
 > 🚫 **O Erro:** Mudar as metas de porcentagem da carteira toda semana porque uma ação subiu muito ou porque saiu uma notícia assustadora no portal de notícias.
 > 
-> 🛡️ **A Postura MANTFRAI:** As metas de alocação estratégica da sua Hydra são a Constituição do seu patrimônio. Elas são definidas com a mente fria e devem ser mantidas ao longo dos anos para permitir que a matemática do rebalanceamento funcione.
+> 🛡️ **A Postura MANTFRAI:** As metas de alocação estratégica do seu patrimônio são a Constituição da sua carteira. Elas são definidas com a mente fria e devem ser mantidas ao longo dos anos para permitir que a matemática do rebalanceamento funcione.
 
 ---
 
@@ -77,7 +77,7 @@ No **MANTFRAI Enterprise**, você materializa a sua estratégia em segundos:
 
 ```mermaid
 flowchart TD
-    Hydra["🐉 Ecossistema Patrimonial Hydra"]
+    Hydra["🐉 Ecossistema Patrimonial MANTFRAI"]
     
     Hydra --> A["30% Ações de Valor BR<br/>(Motor de Crescimento)"]
     Hydra --> B["35% Fundos Imobiliários<br/>(Coração dos Aluguéis Mensais)"]

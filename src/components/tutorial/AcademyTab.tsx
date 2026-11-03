@@ -88,7 +88,7 @@ export function AcademyTab() {
   const levelBadge = useMemo(() => {
     if (progressPercent === 100) return { label: '👑 Mestre do Ponto Mágico', color: 'text-amber-400 border-amber-500/30 bg-amber-500/10' };
     if (progressPercent >= 75) return { label: '💎 Escultor de Riqueza', color: 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' };
-    if (progressPercent >= 50) return { label: '🐉 Estrategista Hydra', color: 'text-teal-400 border-teal-500/30 bg-teal-500/10' };
+    if (progressPercent >= 50) return { label: '🐉 Estrategista Antifrágil', color: 'text-teal-400 border-teal-500/30 bg-teal-500/10' };
     if (progressPercent >= 25) return { label: '🛡️ Construtor de Defesa', color: 'text-blue-400 border-blue-500/30 bg-blue-500/10' };
     return { label: '🌱 Aprendiz do Método', color: 'text-slate-300 border-slate-700 bg-slate-800/40' };
   }, [progressPercent]);

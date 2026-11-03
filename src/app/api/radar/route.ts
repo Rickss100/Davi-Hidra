@@ -124,8 +124,15 @@ export async function GET(request: Request) {
       peRatio: f?.peRatio !== null && f?.peRatio !== undefined ? Number(f.peRatio) : null,
       pbRatio: f?.pbRatio !== null && f?.pbRatio !== undefined ? Number(f.pbRatio) : null,
       pVpa: f?.pVpa !== null && f?.pVpa !== undefined ? Number(f.pVpa) : null,
-      dividendYield:
-        f?.dividendYield !== null && f?.dividendYield !== undefined ? Number(f.dividendYield) : null,
+      dividendYield: (() => {
+        if (f?.dividendYield === null || f?.dividendYield === undefined) return null;
+        const val = Number(f.dividendYield);
+        // Autocorreção DevSecOps: se ativo brasileiro vier como decimal (ex: 0.098 em vez de 9.8), normaliza para porcentagem
+        if (a.market === 'BR' && val > 0 && val < 0.30 && a.type !== 'Renda Fixa' && a.code !== 'TESOURO_SELIC_2029') {
+          return Number((val * 100).toFixed(2));
+        }
+        return val;
+      })(),
       roe: f?.roe !== null && f?.roe !== undefined ? Number(f.roe) : null,
       roic: f?.roic !== null && f?.roic !== undefined ? Number(f.roic) : null,
       debtToEquity:

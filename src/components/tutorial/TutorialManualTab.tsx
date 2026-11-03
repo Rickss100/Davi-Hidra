@@ -29,7 +29,7 @@ const APP_MODULES = [
     title: '2. Onde Aportar',
     path: '/onde-aportar',
     tone: 'sky',
-    desc: 'No dia do seu aporte mensal, entre nesta tela e digite o valor que deseja investir. A Hydra cruza sua carteira atual com seus objetivos e entrega a recomendação exata de compras para o mês.',
+    desc: 'No dia do seu aporte mensal, entre nesta tela e digite o valor que deseja investir. O Motor RDM cruza sua carteira atual com seus objetivos e entrega a recomendação exata de compras para o mês.',
     tip: 'Dica: O motor divide matematicamente seu aporte nos ativos mais distantes da meta sem precisar vender nada.'
   },
   {

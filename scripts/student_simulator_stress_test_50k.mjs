@@ -83,15 +83,15 @@ async function seedStressTestData() {
     `, [a.code, curPrice]);
 
     // Inserir dados fundamentalistas de Dividend Yield e P/VPA para alimentar os cálculos
-    let dy = 0.085;
+    let dy = 8.50;
     let pvpa = 1.0;
-    if (a.code === 'BBAS3') { dy = 0.098; pvpa = 0.88; }
-    if (a.code === 'ITUB4') { dy = 0.076; pvpa = 1.45; }
-    if (a.code === 'WEGE3') { dy = 0.024; pvpa = 9.80; }
-    if (a.code === 'TAEE11') { dy = 0.102; pvpa = 1.65; }
-    if (a.code === 'HGLG11') { dy = 0.088; pvpa = 1.02; }
-    if (a.code === 'KNRI11') { dy = 0.084; pvpa = 0.98; }
-    if (a.code === 'XPLG11') { dy = 0.092; pvpa = 0.96; }
+    if (a.code === 'BBAS3') { dy = 9.80; pvpa = 0.88; }
+    if (a.code === 'ITUB4') { dy = 7.60; pvpa = 1.45; }
+    if (a.code === 'WEGE3') { dy = 2.40; pvpa = 9.80; }
+    if (a.code === 'TAEE11') { dy = 10.20; pvpa = 1.65; }
+    if (a.code === 'HGLG11') { dy = 8.80; pvpa = 1.02; }
+    if (a.code === 'KNRI11') { dy = 8.40; pvpa = 0.98; }
+    if (a.code === 'XPLG11') { dy = 9.20; pvpa = 0.96; }
 
     await p.query(`
       INSERT INTO fundamentals (asset_code, dividend_yield, p_vpa, roe, liquidity)

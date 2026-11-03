@@ -82,7 +82,7 @@ No **MANTFRAI Enterprise**, você tem um módulo exclusivo para gerenciar essa e
 flowchart TD
     Emergencia["🛡️ Camada 1: Reserva de Emergência<br/>(Tesouro Selic / CDB Liquidez Diária)<br/>6 a 12 Meses de Tranquilidade"]
     
-    Emergencia -->|Defesa Garantida| Investimentos["🏛️ Camada 2: O Império Hydra"]
+    Emergencia -->|Defesa Garantida| Investimentos["🏛️ Camada 2: O Império Antifrágil"]
     
     Investimentos --> T1["Ações Brasileiras de Valor"]
     Investimentos --> T2["Fundos Imobiliários (FIIs)"]

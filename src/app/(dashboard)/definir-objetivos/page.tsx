@@ -384,7 +384,7 @@ export default function DefinirObjetivosPage() {
         </div>
       </Card>
 
-      {/* PASSO 2: ESCOLHA PESSOAL DE ATIVOS (CONECTADA AO MÉTODO DAVI & CARTEIRA) */}
+      {/* PASSO 2: ESCOLHA PESSOAL DE ATIVOS (CONECTADA AO FILTRO MFS & CARTEIRA) */}
       <Card className="space-y-4 border-emerald-500/30 bg-[#081713] p-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="max-w-3xl">

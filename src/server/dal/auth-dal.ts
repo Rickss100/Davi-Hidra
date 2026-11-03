@@ -133,11 +133,19 @@ export async function createServerSessionAndCookie(
  * Valida a sessão HttpOnly contra o PostgreSQL (`user_sessions` + `users`).
  * Retorna null se a sessão foi revogada, expirou ou a conta está inativa.
  */
+const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function getAuthorizedContextOrNull(): Promise<AuthorizedPortfolioContext | null> {
+  try {
   const cookieStore = await cookies();
   const rawToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   const parsed = await verifySessionToken(rawToken);
   if (!parsed) return null;
+
+  // Hardening DevSecOps: validação de formato UUID para evitar SQL syntax error
+  if (!parsed.sid || typeof parsed.sid !== 'string' || !UUID_V4_REGEX.test(parsed.sid)) {
+    return null;
+  }
 
   const db = await getDb();
   const now = new Date();
@@ -204,6 +212,10 @@ export async function getAuthorizedContextOrNull(): Promise<AuthorizedPortfolioC
     portfolioOwner: actorDto,
     isAuditing: false
   };
+  } catch (err) {
+    console.error('⚠️ [AuthDAL Error in getAuthorizedContextOrNull]:', err);
+    return null;
+  }
 }
 
 /**

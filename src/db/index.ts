@@ -177,12 +177,20 @@ declare global {
 async function createDatabaseConnection(): Promise<AppDatabase> {
   // 1. Conexão Produção / Cloud: PostgreSQL Supabase / Neon via postgres-js
   if (env.DATABASE_URL && env.DATABASE_URL.startsWith('postgres')) {
-    const client = postgres(env.DATABASE_URL, {
+    let connectionUrl = env.DATABASE_URL;
+
+    // Normalização Automática Supabase: porta 5432 (Session Mode com limite de 15 conexões)
+    // para porta 6543 (Transaction Mode - Supavisor), evitando erro fatal EMAXCONNSESSION em Serverless/Vercel
+    if (connectionUrl.includes('pooler.supabase.com:5432')) {
+      connectionUrl = connectionUrl.replace(':5432', ':6543');
+    }
+
+    const client = postgres(connectionUrl, {
       ssl: 'require',
-      prepare: false, // Compatível com Supabase Transaction Pooler (Supavisor porta 6543)
-      max: 5,
-      idle_timeout: 20,
-      connect_timeout: 15
+      prepare: false, // Obrigatório para Supabase Transaction Pooler (porta 6543)
+      max: process.env.VERCEL ? 1 : 2, // Pool enxuto por lambda para evitar contenção
+      idle_timeout: 10,
+      connect_timeout: 10
     });
     return drizzlePostgres(client, { schema });
   }

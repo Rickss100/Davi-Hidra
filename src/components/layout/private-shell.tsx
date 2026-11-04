@@ -128,7 +128,7 @@ export function PrivateShell({ children }: { children: React.ReactNode }) {
         </div>
       )}
 
-      <div className="flex flex-1">
+      <div id="magnifiable-page-content" className="flex flex-1">
         {/* Sidebar Desktop */}
         <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-800/90 bg-obsidian-900/95 md:flex">
           <div className="border-b border-slate-800/80 px-5 py-5">

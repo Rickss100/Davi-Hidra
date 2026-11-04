@@ -5,8 +5,8 @@ export const FULL_MANUAL_TEXT = `# MANTFRAI — O GUIA DEFINITIVO DO INVESTIDOR 
 
 ### PARTE 1: A FILOSOFIA & A TRÍADE PATRIMONIAL
 
-#### 1. O Norte: A Bússola e o Destino Inabalável
-O Norte representa a clareza inabalável do seu destino financeiro. Em vez de se perder no caos diário das manchetes sensacionalistas, ruídos políticos e oscilações do mercado, o investidor mantém seu rumo fixado na acumulação sistemática de ativos geradores de renda passiva real.
+#### 1. A Bússola Estratégica e o Destino Inabalável
+A bússola estratégica representa a clareza inabalável do seu destino financeiro. Em vez de se perder no caos diário das manchetes sensacionalistas, ruídos políticos e oscilações do mercado, o investidor mantém seu rumo fixado na acumulação sistemática de ativos geradores de renda passiva real.
 
 #### 2. A Filosofia de Davi (Michelangelo) — A Arte de Lapidar e Eliminar Erros
 Quando perguntaram a Michelangelo Buonarroti como ele conseguiu esculpir a perfeição da estátua de Davi a partir de um bloco bruto de mármore de Carrara, ele respondeu com genialidade:
@@ -20,7 +20,7 @@ No mercado financeiro, enriquecer com consistência não é tentar adivinhar a p
 O que sobra após essa lapidação é a obra de arte: um patrimônio sólido, composto pelas maiores e mais lucrativas empresas do Brasil e do mundo.
 
 #### 3. A Carteira Antifrágil — Os Pilares Barbell do seu Império
-Na mitologia grega, quando alguém tenta cortar uma cabeça da Hidra, duas novas cabeças nascem ainda mais fortes no lugar.
+Na filosofia de Nassim Taleb, sistemas verdadeiramente antifrágeis tornam-se ainda mais fortes sob estresse e volatilidade.
 No MANTFRAI, você nunca investe em uma única empresa ou setor isolado: você constrói um **império patrimonial antifrágil** dividido em quatro tentáculos soberanos:
 1. **Ações Brasil:** Sociedades em empresas perenes e lucrativas que repassam inflação e pagam dividendos.
 2. **Fundos Imobiliários (FIIs):** Aluguéis mensais isentos de imposto de renda pingando todos os meses na sua conta.
@@ -167,7 +167,7 @@ export const GROWTH_TEMPLATES = [
 Em vez daquela loucura de ficar tentando adivinhar se a bolsa vai subir ou cair, o sistema aplica a ideia de Michelangelo: elimina empresas ruins e usa um algoritmo que aponta todo mês onde aportar para comprar barato e fazer o dinheiro render juros compostos.
 
 Dá uma olhada depois no método, tem um tutorial completo com simulador de dividendos:
-👉 https://norteinvest.com.br/tutorial`
+👉 https://www.mantfrai.com.br/tutorial`
   },
   {
     channel: 'LinkedIn — Artigo / Post Institucional',
@@ -187,7 +187,7 @@ O MANTFRAI (Método Antifrágil de Investimento) aplica isso na prática com o a
 
 Quem foca em ser sócio de bons negócios dorme em paz e colhe renda passiva crescente. 
 
-#Investimentos #FinançasPessoais #MercadoFinanceiro #NorteInvest #LiberdadeFinanceira`
+#Investimentos #FinançasPessoais #MercadoFinanceiro #MANTFRAI #LiberdadeFinanceira`
   },
   {
     channel: 'Instagram / X (Twitter) — Roteiro de Vídeo (60 segundos)',
@@ -201,7 +201,7 @@ Quem foca em ser sócio de bons negócios dorme em paz e colhe renda passiva cre
 A maioria dos investidores perde dinheiro porque tenta adivinhar o futuro. Mas o verdadeiro segredo é a eliminação: retirar empresas ruins, parar de pagar taxas abusivas e parar de vender na baixa."
 
 [SOLUÇÃO - 25 a 45s]:
-"Com o MANTFRAI (Método Antifrágil de Investimento), você divide seu dinheiro em tentáculos antifrágeis: Ações, Fundos Imobiliários e Renda Fixa. Todo mês, o sistema te mostra exatamente onde colocar seu aporte para comprar o ativo mais barato com desconto!"
+"Com o MANTFRAI (Método Antifrágil de Investimento), você divide seu dinheiro em motores antifrágeis: Ações, Fundos Imobiliários, Renda Fixa e Ativos Globais. Todo mês, o sistema te mostra exatamente onde colocar seu aporte para comprar o ativo mais barato com desconto!"
 
 [CHAMADA - 45 a 60s]:
 "Quer aprender como funciona o Ponto Mágico dos dividendos? Acesse o link na bio ou comente 'MÉTODO' que eu te mando o tutorial completo!"`

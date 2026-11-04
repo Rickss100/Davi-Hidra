@@ -145,7 +145,7 @@ export default function LoginPage() {
             </div>
             <div className="space-y-2.5 pt-1">
               <a
-                href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20preciso%20de%20suporte%20t%C3%A9cnico%20referente%20%C3%A0%20minha%20conta%20na%20Norte%20Invest."
+                href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20preciso%20de%20suporte%20t%C3%A9cnico%20referente%20%C3%A0%20minha%20conta%20no%20MANTFRAI."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 px-4 py-2.5 text-xs font-bold text-obsidian-950 transition hover:bg-emerald-400"
@@ -406,7 +406,7 @@ export default function LoginPage() {
 
       <div className="mt-5 flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500">
         <a
-          href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20meu%20acesso%20no%20Norte%20Invest."
+          href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20com%20meu%20acesso%20no%20MANTFRAI."
           target="_blank"
           rel="noopener noreferrer"
           className="hover:text-emerald-400"

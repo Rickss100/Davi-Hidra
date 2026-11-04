@@ -22,7 +22,7 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
     contact: {
       name: 'Suporte Técnico MANTFRAI',
       email: 'suporte@mantfrai.com.br',
-      url: 'https://mantfrai.com.br'
+      url: 'https://www.mantfrai.com.br'
     }
   },
   servers: [
@@ -52,7 +52,7 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
                 type: 'object',
                 required: ['email', 'password'],
                 properties: {
-                  email: { type: 'string', example: 'investidor@norteinvest.com' },
+                  email: { type: 'string', example: 'investidor@mantfrai.com.br' },
                   password: { type: 'string', format: 'password', example: 'SenhaSegura123!' }
                 }
               }
@@ -72,7 +72,7 @@ Desenvolvida sob as diretrizes **Zero-Trust (DevSecOps)** com cookies assinados 
                       type: 'object',
                       properties: {
                         id: { type: 'integer', example: 1000000 },
-                        email: { type: 'string', example: 'investidor@norteinvest.com' },
+                        email: { type: 'string', example: 'investidor@mantfrai.com.br' },
                         name: { type: 'string', example: 'Carlos Silva' },
                         role: { type: 'string', enum: ['admin', 'collaborator', 'user'], example: 'user' }
                       }

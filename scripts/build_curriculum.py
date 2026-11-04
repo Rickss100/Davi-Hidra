@@ -3,7 +3,7 @@ import os
 import re
 import json
 
-files = sorted(glob.glob('v2/src/data/academy/lessons/**/*.md', recursive=True))
+files = sorted(glob.glob('src/data/academy/lessons/**/*.md', recursive=True))
 
 module_meta = {
     'modulo-1': {
@@ -17,7 +17,7 @@ module_meta = {
         'numero': 2,
         'titulo': 'Módulo 2: Clareza de Investidor & Alicerces Mentais',
         'subtitulo': 'Blindagem Psicológica e Autonomia',
-        'descricao': 'Elimine os intermediários caros, aplique o Efeito Lindy nos ativos, domine o estômago contra a volatilidade e conheça a arquitetura antifrágil da Hydra.',
+        'descricao': 'Elimine os intermediários caros, aplique o Efeito Lindy nos ativos, domine o estômago contra a volatilidade e conheça a arquitetura da Carteira Antifrágil.',
         'icone': 'Shield'
     },
     'modulo-3': {
@@ -29,9 +29,9 @@ module_meta = {
     },
     'modulo-4': {
         'numero': 4,
-        'titulo': 'Módulo 4: Selecionando as Melhores Ações (Método DAVI)',
+        'titulo': 'Módulo 4: Selecionando as Melhores Ações (Filtro MFS)',
         'subtitulo': 'O Cinzel de Michelangelo na Bolsa',
-        'descricao': 'Filtre as 400 empresas da B3 com o Método DAVI: governança, Novo Mercado, Tag Along, 5 anos de lucros, ROE e dívida sob controle (setores BEST).',
+        'descricao': 'Filtre as 400 empresas da B3 com o Filtro MFS: governança, Novo Mercado, Tag Along, 5 anos de lucros, ROE e dívida sob controle (setores BEST).',
         'icone': 'TrendingUp'
     },
     'modulo-5': {
@@ -45,14 +45,14 @@ module_meta = {
         'numero': 6,
         'titulo': 'Módulo 6: Investimentos no Exterior (Dolarização)',
         'subtitulo': 'Poder de Compra Global em Moeda Forte',
-        'descricao': 'Elimine o risco-país com ETFs globais (VOO, VT), proteção de US$ 500k pelo SIPC americano e rotina simples de câmbio instantâneo.',
+        'descricao': 'Elimine o risco-país com ETFs e ativos globais (Apple, Microsoft, Realty Income), proteção de US$ 500k pelo SIPC americano e rotina simples de câmbio instantâneo.',
         'icone': 'Globe'
     },
     'modulo-7': {
         'numero': 7,
-        'titulo': 'Módulo 7: A Carteira Hydra & O Algoritmo AM2O',
+        'titulo': 'Módulo 7: A Carteira Antifrágil & O Algoritmo Motor RDM',
         'subtitulo': 'A Engenharia dos Aportes Mecânicos',
-        'descricao': 'A orquestração dos tentáculos, o algoritmo AM2O comprando na baixa com desconto, o ritual de 15 minutos mensais e a conquista do Ponto Mágico.',
+        'descricao': 'A orquestração dos múltiplos motores, o algoritmo Motor RDM comprando na baixa com desconto, o ritual de 15 minutos mensais e a conquista do Ponto Mágico.',
         'icone': 'Sparkles'
     },
     'modulo-8': {
@@ -116,8 +116,8 @@ for f in files:
 curriculum_list = list(modules.values())
 print(f'Módulos processados: {len(curriculum_list)}')
 
-ts_code = '''// Catálogo Tipado da Academia Norte Invest
-// Gerado automaticamente a partir das transcrições do acervo IDV / Método DAVI & Hydra
+ts_code = '''// Catálogo Tipado da Academia MANTFRAI
+// Gerado automaticamente a partir das aulas da Metodologia MANTFRAI (Filtro MFS & Motor RDM)
 
 export interface AcademyLesson {
   id: string;
@@ -157,7 +157,7 @@ export function getModuleById(id: string): AcademyModule | undefined {
 }
 '''
 
-with open('v2/src/data/academy/curriculum.ts', 'w', encoding='utf-8') as out:
+with open('src/data/academy/curriculum.ts', 'w', encoding='utf-8') as out:
     out.write(ts_code)
 
-print('v2/src/data/academy/curriculum.ts regerado com sucesso!')
+print('src/data/academy/curriculum.ts regerado com sucesso!')

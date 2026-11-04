@@ -227,7 +227,7 @@ export default function TermosPage() {
             </Link>
 
             <a
-              href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20gostaria%20de%20esclarecer%20d%C3%BAvidas%20jur%C3%ADdicas%20ou%20contratuais%20sobre%20a%20Norte%20Invest."
+              href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20gostaria%20de%20esclarecer%20d%C3%BAvidas%20jur%C3%ADdicas%20ou%20contratuais%20sobre%20o%20MANTFRAI."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 px-4 py-2 text-xs font-bold text-emerald-400 hover:bg-emerald-500/25 transition-colors"

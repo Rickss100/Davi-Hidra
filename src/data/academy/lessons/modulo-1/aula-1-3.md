@@ -116,7 +116,7 @@ flowchart TD
         A3 --> A4["Giro excessivo de carteira<br/>(Resultado: Perda de patrimônio)"]
     end
 
-    subgraph InvestidorNorte["🛡️ O Caminho MANTFRAI (DCA + Antifrágil)"]
+    subgraph InvestidorAntifragil["🛡️ O Caminho MANTFRAI (DCA + Antifrágil)"]
         B1["Aporte Mensal Constante<br/>(Sem tentar adivinhar timing)"] --> B2["Reinvestimento dos Dividendos<br/>(Efeito Bola de Neve)"]
         B2 --> B3["Algoritmo Motor RDM<br/>(Aporte no Mais Distante do Objetivo)"]
         B3 --> B4["Crescimento Exponencial Seguro<br/>(Ponto Mágico Alcançado 👑)"]

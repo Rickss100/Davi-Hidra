@@ -72,7 +72,7 @@ export default function RecuperarSenhaPage() {
         )}
 
         <a
-          href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20esqueci%20minha%20senha%20de%20acesso%20na%20Norte%20Invest.%20Pode%20me%20ajudar%20a%20redefinir%3F"
+          href="https://api.whatsapp.com/send?phone=5527995263026&text=Ol%C3%A1%2C%20esqueci%20minha%20senha%20de%20acesso%20no%20MANTFRAI.%20Pode%20me%20ajudar%20a%20redefinir%3F"
           target="_blank"
           rel="noopener noreferrer"
           className="flex w-full items-center justify-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 py-2.5 text-xs font-semibold text-emerald-400 transition hover:bg-emerald-500/20"

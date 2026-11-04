@@ -36,7 +36,7 @@ async function cached<T>(key: string, loader: () => Promise<{ value: T; ok: bool
 
 async function fetchJson(url: string): Promise<unknown> {
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 NorteInvest', Accept: 'application/json' },
+    headers: { 'User-Agent': 'Mozilla/5.0 MantfraiPlatform', Accept: 'application/json' },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     cache: 'no-store'
   });

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { getAssetAnalysisUrl } from '@/lib/asset-links';
 
-describe('Asset Analysis External Links Suite (Fundamentus & Bases Consolidadas)', () => {
+describe('Asset Analysis External Links Suite (Fundamentus & Status Invest)', () => {
   it('correctly maps Brazilian B3 stocks to Fundamentus details page', () => {
     const itsa3 = getAssetAnalysisUrl('ITSA3', 'Acao');
     expect(itsa3.url).toBe('https://www.fundamentus.com.br/detalhes.php?papel=ITSA3');
@@ -26,23 +26,34 @@ describe('Asset Analysis External Links Suite (Fundamentus & Bases Consolidadas)
     expect(sapr11.url).toBe('https://www.fundamentus.com.br/detalhes.php?papel=SAPR11');
   });
 
-  it('correctly maps Real Estate Funds (FIIs) to Fundamentus FIIs page', () => {
+  it('correctly maps Real Estate Funds (FIIs) to Status Invest (avoiding Fundamentus PHP bug)', () => {
+    const cacr11 = getAssetAnalysisUrl('CACR11', 'FII');
+    expect(cacr11.url).toBe('https://statusinvest.com.br/fundos-imobiliarios/cacr11');
+    expect(cacr11.provider).toBe('Status Invest (FIIs)');
+
     const hglg11 = getAssetAnalysisUrl('HGLG11', 'FII');
-    expect(hglg11.url).toBe('https://www.fundamentus.com.br/fii_detalhes.php?papel=HGLG11');
-    expect(hglg11.provider).toBe('Fundamentus FIIs');
+    expect(hglg11.url).toBe('https://statusinvest.com.br/fundos-imobiliarios/hglg11');
 
     const alzr11 = getAssetAnalysisUrl('ALZR11', 'FII');
-    expect(alzr11.url).toBe('https://www.fundamentus.com.br/fii_detalhes.php?papel=ALZR11');
+    expect(alzr11.url).toBe('https://statusinvest.com.br/fundos-imobiliarios/alzr11');
   });
 
-  it('correctly maps US Stocks and REITs to Status Invest international pages', () => {
-    const aapl = getAssetAnalysisUrl('AAPL', 'Stock');
-    expect(aapl.url).toBe('https://statusinvest.com.br/acoes/eua/aapl');
-    expect(aapl.provider).toBe('Status Invest');
+  it('correctly maps US REITs to Status Invest /reits/ route (without /eua/ path)', () => {
+    const orc = getAssetAnalysisUrl('ORC', 'REIT');
+    expect(orc.url).toBe('https://statusinvest.com.br/reits/orc');
+    expect(orc.provider).toBe('Status Invest (REITs)');
 
     const o = getAssetAnalysisUrl('O', 'REIT');
-    expect(o.url).toBe('https://statusinvest.com.br/reits/eua/o');
-    expect(o.provider).toBe('Status Invest');
+    expect(o.url).toBe('https://statusinvest.com.br/reits/o');
+
+    const pld = getAssetAnalysisUrl('PLD', 'REIT');
+    expect(pld.url).toBe('https://statusinvest.com.br/reits/pld');
+  });
+
+  it('correctly maps US Stocks to Status Invest /acoes/eua/ page', () => {
+    const aapl = getAssetAnalysisUrl('AAPL', 'Stock');
+    expect(aapl.url).toBe('https://statusinvest.com.br/acoes/eua/aapl');
+    expect(aapl.provider).toBe('Status Invest (EUA)');
   });
 
   it('correctly maps Tesouro Selic to Tesouro Direto portal', () => {

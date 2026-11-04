@@ -1,6 +1,11 @@
 export interface AssetLinkInfo {
   url: string;
-  provider: 'Fundamentus' | 'Fundamentus FIIs' | 'Status Invest' | 'Tesouro Direto';
+  provider:
+    | 'Fundamentus'
+    | 'Status Invest (FIIs)'
+    | 'Status Invest (REITs)'
+    | 'Status Invest (EUA)'
+    | 'Tesouro Direto';
   tooltip: string;
 }
 
@@ -19,7 +24,12 @@ const B3_KNOWN_UNITS = new Set([
 ]);
 
 /**
- * Constrói a URL do provedor fundamentalista oficial (Fundamentus para B3, Status Invest para EUA, Tesouro para Renda Fixa).
+ * Constrói a URL do provedor fundamentalista oficial:
+ * - Ações B3: Fundamentus (detalhes.php?papel=...)
+ * - FIIs B3: Status Invest (fundos-imobiliarios/...) — o script fii_detalhes.php do Fundamentus possui erro interno de MySQL
+ * - REITs EUA: Status Invest (reits/...) — rota sem /eua/
+ * - Stocks EUA: Status Invest (acoes/eua/...)
+ * - Renda Fixa: Tesouro Direto
  */
 export function getAssetAnalysisUrl(
   code: string,
@@ -44,11 +54,11 @@ export function getAssetAnalysisUrl(
     };
   }
 
-  // 2. REITs (Real Estate Investment Trusts - EUA)
+  // 2. REITs (Real Estate Investment Trusts - EUA) -> Rota oficial Status Invest sem /eua/
   if (cat === 'reit' || cat === 'reits') {
     return {
-      url: `https://statusinvest.com.br/reits/eua/${cleanCode.toLowerCase()}`,
-      provider: 'Status Invest',
+      url: `https://statusinvest.com.br/reits/${cleanCode.toLowerCase()}`,
+      provider: 'Status Invest (REITs)',
       tooltip: `Consultar dados e indicadores do REIT ${cleanCode} no Status Invest`
     };
   }
@@ -61,25 +71,26 @@ export function getAssetAnalysisUrl(
   ) {
     return {
       url: `https://statusinvest.com.br/acoes/eua/${cleanCode.toLowerCase()}`,
-      provider: 'Status Invest',
+      provider: 'Status Invest (EUA)',
       tooltip: `Consultar fundamentos de ${cleanCode} no Status Invest (Mercado Americano)`
     };
   }
 
   // 4. Fundos Imobiliários (FIIs - B3)
+  // Usamos Status Invest pois o fii_detalhes.php do Fundamentus possui bug interno de mysqli_query()
   const isFiiCategory = cat === 'fii' || cat === 'fiis';
   const endsWith11 = cleanCode.endsWith('11') || cleanCode.endsWith('11B');
   const isB3Unit = B3_KNOWN_UNITS.has(cleanCode);
 
   if ((isFiiCategory || endsWith11) && !isB3Unit) {
     return {
-      url: `https://www.fundamentus.com.br/fii_detalhes.php?papel=${cleanCode}`,
-      provider: 'Fundamentus FIIs',
-      tooltip: `Consultar dados, vacância e proventos de ${cleanCode} no Fundamentus FIIs`
+      url: `https://statusinvest.com.br/fundos-imobiliarios/${cleanCode.toLowerCase()}`,
+      provider: 'Status Invest (FIIs)',
+      tooltip: `Consultar vacância, portfólio e dividendos de ${cleanCode} no Status Invest`
     };
   }
 
-  // 5. Ações Brasil (B3) — Padrão Ouro Fundamentus
+  // 5. Ações Brasil (B3) — Padrão Ouro Fundamentus estável
   return {
     url: `https://www.fundamentus.com.br/detalhes.php?papel=${cleanCode}`,
     provider: 'Fundamentus',

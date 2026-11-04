@@ -12,6 +12,7 @@ describe('Accessibility & Settings Suite (WCAG AAA)', () => {
     expect(DEFAULT_PREFERENCES.fontDyslexic).toBe(false);
     expect(DEFAULT_PREFERENCES.cursorMagnifier).toBe(false);
     expect(DEFAULT_PREFERENCES.magnifierZoom).toBe(2.0);
+    expect(DEFAULT_PREFERENCES.pageZoom).toBe(1.0);
     expect(DEFAULT_PREFERENCES.clickToSpeech).toBe(false);
     expect(DEFAULT_PREFERENCES.speechRate).toBe(1.0);
     expect(DEFAULT_PREFERENCES.reduceMotion).toBe(false);

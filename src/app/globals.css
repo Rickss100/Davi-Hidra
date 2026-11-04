@@ -24,6 +24,7 @@
 
   /* Tema Alto Contraste Puro (WCAG AAA - Preto e Amarelo Neon) */
   html[data-theme="high_contrast"] {
+    color-scheme: dark;
     --bg-canvas: #000000;
     --bg-surface: #050505;
     --bg-card: #0A0A0A;
@@ -40,6 +41,7 @@
 
   /* Tema Deuteranopia (Daltonismo Verde-Vermelho: Azul Cobalto & Âmbar) */
   html[data-theme="deuteranopia"] {
+    color-scheme: dark;
     --bg-canvas: #070B14;
     --bg-surface: #0C1220;
     --bg-card: #0F172A;
@@ -54,8 +56,9 @@
     --focus-ring: #38BDF8;
   }
 
-  /* Tema Protanopia (Ausência de Cones Vermelhos: Azul Elétrico & Amarelo) */
+  /* Tema Protanopia (Ausência de Cones Vermelhos: Azul Elétrico & Amarelo Solar) */
   html[data-theme="protanopia"] {
+    color-scheme: dark;
     --bg-canvas: #070B14;
     --bg-surface: #0C1220;
     --bg-card: #0F172A;
@@ -72,6 +75,7 @@
 
   /* Tema Tritanopia (Ausência de Cones Azuis: Ciano Água & Magenta) */
   html[data-theme="tritanopia"] {
+    color-scheme: dark;
     --bg-canvas: #090B12;
     --bg-surface: #101422;
     --bg-card: #141B2D;
@@ -88,7 +92,7 @@
 
   /* Tema Titânio Suave (Modo Claro Balanceado sem Brilho Ofuscante) */
   html[data-theme="light_titanium"] {
-    color-scheme: light;
+    color-scheme: light !important;
     --bg-canvas: #F1F5F9;
     --bg-surface: #E2E8F0;
     --bg-card: #FFFFFF;
@@ -155,9 +159,292 @@
   }
 }
 
+/* ============================================================================
+   SOBREPOSIÇÕES SEMÂNTICAS PARA TRANSFORMAÇÃO PROFUNDA DE TEMAS (ACARRETA TUDO)
+   ============================================================================ */
+
+/* ----------------------------------------------------------------------------
+   1. MODO CLARO REAL (Titânio Suave)
+   ---------------------------------------------------------------------------- */
+html[data-theme="light_titanium"] body,
+html[data-theme="light_titanium"] .bg-obsidian-950,
+html[data-theme="light_titanium"] [class*="bg-obsidian-950"] {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light_titanium"] aside {
+  background-color: #FFFFFF !important;
+  border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light_titanium"] header {
+  background-color: rgba(241, 245, 249, 0.95) !important;
+  border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light_titanium"] .bg-obsidian-900,
+html[data-theme="light_titanium"] [class*="bg-obsidian-900"],
+html[data-theme="light_titanium"] .bg-obsidian-800,
+html[data-theme="light_titanium"] [class*="bg-obsidian-800"],
+html[data-theme="light_titanium"] .bg-\[\#0d1527\],
+html[data-theme="light_titanium"] .bg-\[\#0B0F1A\],
+html[data-theme="light_titanium"] .bg-\[\#111c34\],
+html[data-theme="light_titanium"] .bg-\[\#111c34\]\/70,
+html[data-theme="light_titanium"] .bg-\[\#111c34\]\/50,
+html[data-theme="light_titanium"] .bg-\[\#090d18\] {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+  box-shadow: 0 4px 14px -2px rgba(15, 23, 42, 0.06) !important;
+}
+
+html[data-theme="light_titanium"] .border-slate-800,
+html[data-theme="light_titanium"] [class*="border-slate-800"],
+html[data-theme="light_titanium"] .border-slate-700,
+html[data-theme="light_titanium"] [class*="border-slate-700"] {
+  border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light_titanium"] .text-white,
+html[data-theme="light_titanium"] .text-slate-100,
+html[data-theme="light_titanium"] .text-slate-200 {
+  color: #0F172A !important;
+}
+
+html[data-theme="light_titanium"] .text-slate-300,
+html[data-theme="light_titanium"] .text-slate-400 {
+  color: #334155 !important;
+}
+
+html[data-theme="light_titanium"] .text-slate-500 {
+  color: #64748B !important;
+}
+
+html[data-theme="light_titanium"] .hover\:bg-obsidian-800:hover,
+html[data-theme="light_titanium"] .hover\:bg-obsidian-900:hover,
+html[data-theme="light_titanium"] .hover\:bg-slate-800:hover {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light_titanium"] input,
+html[data-theme="light_titanium"] select,
+html[data-theme="light_titanium"] textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light_titanium"] table thead {
+  background-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light_titanium"] table tbody tr:hover {
+  background-color: #F8FAFC !important;
+}
+
+/* ----------------------------------------------------------------------------
+   2. ALTO CONTRASTE PURO (WCAG AAA)
+   ---------------------------------------------------------------------------- */
+html[data-theme="high_contrast"] body,
+html[data-theme="high_contrast"] .bg-obsidian-950,
+html[data-theme="high_contrast"] [class*="bg-obsidian-950"],
+html[data-theme="high_contrast"] aside,
+html[data-theme="high_contrast"] header {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border-color: #FDE047 !important;
+}
+
+html[data-theme="high_contrast"] .bg-obsidian-900,
+html[data-theme="high_contrast"] [class*="bg-obsidian-900"],
+html[data-theme="high_contrast"] .bg-obsidian-800,
+html[data-theme="high_contrast"] [class*="bg-obsidian-800"],
+html[data-theme="high_contrast"] .bg-\[\#0d1527\],
+html[data-theme="high_contrast"] .bg-\[\#0B0F1A\],
+html[data-theme="high_contrast"] .bg-\[\#111c34\] {
+  background-color: #000000 !important;
+  border-color: #FDE047 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="high_contrast"] .border-slate-800,
+html[data-theme="high_contrast"] [class*="border-slate-800"],
+html[data-theme="high_contrast"] .border-slate-700,
+html[data-theme="high_contrast"] [class*="border-slate-700"] {
+  border-color: #FDE047 !important;
+}
+
+html[data-theme="high_contrast"] .text-white,
+html[data-theme="high_contrast"] .text-slate-100,
+html[data-theme="high_contrast"] .text-slate-200 {
+  color: #FFFFFF !important;
+  font-weight: 600;
+}
+
+html[data-theme="high_contrast"] .text-slate-300,
+html[data-theme="high_contrast"] .text-slate-400 {
+  color: #FEF08A !important;
+}
+
+html[data-theme="high_contrast"] table thead {
+  background-color: #1A1A00 !important;
+  color: #FEF08A !important;
+  border-bottom: 2px solid #FDE047 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   3. DALTONISMO: DEUTERANOPIA (Verde -> Azul Cobalto / Vermelho -> Laranja Âmbar)
+   ---------------------------------------------------------------------------- */
+html[data-theme="deuteranopia"] .text-emerald-400,
+html[data-theme="deuteranopia"] .text-emerald-300,
+html[data-theme="deuteranopia"] .text-emerald-500,
+html[data-theme="deuteranopia"] .text-green-400,
+html[data-theme="deuteranopia"] .text-green-500 {
+  color: #38BDF8 !important;
+}
+
+html[data-theme="deuteranopia"] .bg-emerald-500,
+html[data-theme="deuteranopia"] .bg-emerald-600,
+html[data-theme="deuteranopia"] .bg-green-500 {
+  background-color: #0284C7 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="deuteranopia"] .border-emerald-500,
+html[data-theme="deuteranopia"] .border-emerald-400,
+html[data-theme="deuteranopia"] [class*="border-emerald-500"] {
+  border-color: #38BDF8 !important;
+}
+
+html[data-theme="deuteranopia"] .bg-emerald-500\/10,
+html[data-theme="deuteranopia"] .bg-emerald-500\/15,
+html[data-theme="deuteranopia"] .bg-emerald-500\/20 {
+  background-color: rgba(56, 189, 248, 0.18) !important;
+}
+
+html[data-theme="deuteranopia"] .text-rose-400,
+html[data-theme="deuteranopia"] .text-rose-300,
+html[data-theme="deuteranopia"] .text-rose-500,
+html[data-theme="deuteranopia"] .text-red-400,
+html[data-theme="deuteranopia"] .text-red-500 {
+  color: #FB923C !important;
+}
+
+html[data-theme="deuteranopia"] .bg-rose-500,
+html[data-theme="deuteranopia"] .bg-rose-600,
+html[data-theme="deuteranopia"] .bg-red-500 {
+  background-color: #EA580C !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="deuteranopia"] .border-rose-500,
+html[data-theme="deuteranopia"] .border-rose-400,
+html[data-theme="deuteranopia"] [class*="border-rose-500"] {
+  border-color: #FB923C !important;
+}
+
+html[data-theme="deuteranopia"] .bg-rose-500\/10,
+html[data-theme="deuteranopia"] .bg-rose-500\/15,
+html[data-theme="deuteranopia"] .bg-rose-500\/20 {
+  background-color: rgba(251, 146, 60, 0.18) !important;
+}
+
+/* ----------------------------------------------------------------------------
+   4. DALTONISMO: PROTANOPIA (Verde -> Azul Real / Vermelho -> Amarelo Solar)
+   ---------------------------------------------------------------------------- */
+html[data-theme="protanopia"] .text-emerald-400,
+html[data-theme="protanopia"] .text-emerald-300,
+html[data-theme="protanopia"] .text-emerald-500 {
+  color: #60A5FA !important;
+}
+
+html[data-theme="protanopia"] .bg-emerald-500,
+html[data-theme="protanopia"] .bg-emerald-600 {
+  background-color: #2563EB !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="protanopia"] .border-emerald-500,
+html[data-theme="protanopia"] .border-emerald-400 {
+  border-color: #60A5FA !important;
+}
+
+html[data-theme="protanopia"] .bg-emerald-500\/10,
+html[data-theme="protanopia"] .bg-emerald-500\/15,
+html[data-theme="protanopia"] .bg-emerald-500\/20 {
+  background-color: rgba(96, 165, 250, 0.18) !important;
+}
+
+html[data-theme="protanopia"] .text-rose-400,
+html[data-theme="protanopia"] .text-rose-300,
+html[data-theme="protanopia"] .text-rose-500 {
+  color: #FACC15 !important;
+}
+
+html[data-theme="protanopia"] .bg-rose-500,
+html[data-theme="protanopia"] .bg-rose-600 {
+  background-color: #CA8A04 !important;
+  color: #000000 !important;
+}
+
+html[data-theme="protanopia"] .border-rose-500,
+html[data-theme="protanopia"] .border-rose-400 {
+  border-color: #FACC15 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   5. DALTONISMO: TRITANOPIA (Verde -> Ciano / Vermelho -> Magenta Vibrante)
+   ---------------------------------------------------------------------------- */
+html[data-theme="tritanopia"] .text-emerald-400,
+html[data-theme="tritanopia"] .text-emerald-300,
+html[data-theme="tritanopia"] .text-emerald-500 {
+  color: #2DD4BF !important;
+}
+
+html[data-theme="tritanopia"] .bg-emerald-500,
+html[data-theme="tritanopia"] .bg-emerald-600 {
+  background-color: #0D9488 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="tritanopia"] .border-emerald-500,
+html[data-theme="tritanopia"] .border-emerald-400 {
+  border-color: #2DD4BF !important;
+}
+
+html[data-theme="tritanopia"] .text-rose-400,
+html[data-theme="tritanopia"] .text-rose-300,
+html[data-theme="tritanopia"] .text-rose-500 {
+  color: #EC4899 !important;
+}
+
+html[data-theme="tritanopia"] .bg-rose-500,
+html[data-theme="tritanopia"] .bg-rose-600 {
+  background-color: #DB2777 !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="tritanopia"] .border-rose-500,
+html[data-theme="tritanopia"] .border-rose-400 {
+  border-color: #EC4899 !important;
+}
+
+/* ----------------------------------------------------------------------------
+   REALCE DE FOCO DA LUPA ÓPTICA (CURSOR MAGNIFIER TARGET)
+   ---------------------------------------------------------------------------- */
+.magnifier-highlight-target {
+  outline: 2px solid var(--accent-brand, #10B981) !important;
+  outline-offset: 2px !important;
+  border-radius: 4px !important;
+  transition: outline 0.1s ease-in-out;
+}
+
 /* Indicador Visual do Elemento sendo lido por voz (TTS) */
 .speech-highlight-active {
-  outline: 3px solid #10B981 !important;
+  outline: 3px solid var(--accent-brand, #10B981) !important;
   outline-offset: 3px !important;
   background-color: rgba(16, 185, 129, 0.15) !important;
   border-radius: 8px;

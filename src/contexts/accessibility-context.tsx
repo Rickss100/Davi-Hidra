@@ -18,6 +18,7 @@ export interface AccessibilityPreferences {
   fontDyslexic: boolean;
   cursorMagnifier: boolean;
   magnifierZoom: number; // 1.5, 2.0, 2.5
+  pageZoom: number; // 1.0, 1.15, 1.25, 1.5
   highlightClickTargets: boolean;
   clickToSpeech: boolean;
   speechRate: number; // 0.8 a 1.4
@@ -30,6 +31,7 @@ export const DEFAULT_PREFERENCES: AccessibilityPreferences = {
   fontDyslexic: false,
   cursorMagnifier: false,
   magnifierZoom: 2.0,
+  pageZoom: 1.0,
   highlightClickTargets: false,
   clickToSpeech: false,
   speechRate: 1.0,
@@ -47,6 +49,7 @@ interface AccessibilityContextValue {
   toggleDyslexicFont: () => void;
   toggleCursorMagnifier: () => void;
   setMagnifierZoom: (zoom: number) => void;
+  setPageZoom: (zoom: number) => void;
   toggleHighlightTargets: () => void;
   toggleClickToSpeech: () => void;
   setSpeechRate: (rate: number) => void;
@@ -89,8 +92,23 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
 
     const root = document.documentElement;
 
-    // Tema de Cores
+    // Tema de Cores e Classe Dark/Light
     root.setAttribute('data-theme', preferences.colorTheme);
+    if (preferences.colorTheme === 'light_titanium') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    }
+
+    // Zoom Geral da Interface (Página Inteira)
+    const zoomVal = preferences.pageZoom || 1.0;
+    if (zoomVal !== 1.0) {
+      (root.style as any).zoom = String(zoomVal);
+    } else {
+      (root.style as any).zoom = '';
+    }
 
     // Escala Tipográfica
     if (preferences.fontScale === 'standard') {
@@ -145,6 +163,10 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
     setPreferences((prev) => ({ ...prev, magnifierZoom }));
   };
 
+  const setPageZoom = (pageZoom: number) => {
+    setPreferences((prev) => ({ ...prev, pageZoom }));
+  };
+
   const toggleHighlightTargets = () => {
     setPreferences((prev) => ({ ...prev, highlightClickTargets: !prev.highlightClickTargets }));
   };
@@ -163,6 +185,8 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
 
   const resetToDefaults = () => {
     setPreferences(DEFAULT_PREFERENCES);
+    const root = document.documentElement;
+    (root.style as any).zoom = '';
   };
 
   const value = useMemo(
@@ -177,6 +201,7 @@ export function AccessibilityProvider({ children }: { children: React.ReactNode 
       toggleDyslexicFont,
       toggleCursorMagnifier,
       setMagnifierZoom,
+      setPageZoom,
       toggleHighlightTargets,
       toggleClickToSpeech,
       setSpeechRate,

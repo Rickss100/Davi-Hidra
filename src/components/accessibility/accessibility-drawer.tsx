@@ -11,7 +11,8 @@ import {
   Search,
   Check,
   Sparkles,
-  ZapOff
+  ZapOff,
+  ZoomIn
 } from 'lucide-react';
 import {
   useAccessibility,
@@ -65,8 +66,8 @@ const COLOR_THEMES: {
   {
     id: 'light_titanium',
     name: 'Titânio Suave',
-    desc: 'Modo claro com tons de pérola e cinza suave sem brilho ofuscante.',
-    badge: 'Claro',
+    desc: 'Modo claro elegante com tons de pérola e cinza suave sem brilho ofuscante.',
+    badge: 'Modo Claro',
     colors: ['#F1F5F9', '#FFFFFF', '#059669', '#334155']
   }
 ];
@@ -76,6 +77,13 @@ const FONT_SCALES: { id: FontScale; label: string; scale: string }[] = [
   { id: 'medium', label: 'Médio', scale: '115%' },
   { id: 'large', label: 'Grande', scale: '130%' },
   { id: 'extra_large', label: 'Máximo', scale: '145%' }
+];
+
+const PAGE_ZOOMS = [
+  { value: 1.0, label: '100%', desc: 'Normal' },
+  { value: 1.15, label: '115%', desc: 'Médio' },
+  { value: 1.25, label: '125%', desc: 'Grande' },
+  { value: 1.5, label: '150%', desc: 'Máximo' }
 ];
 
 export function AccessibilityDrawer() {
@@ -88,6 +96,7 @@ export function AccessibilityDrawer() {
     toggleDyslexicFont,
     toggleCursorMagnifier,
     setMagnifierZoom,
+    setPageZoom,
     toggleHighlightTargets,
     toggleClickToSpeech,
     setSpeechRate,
@@ -103,6 +112,8 @@ export function AccessibilityDrawer() {
       { rate: preferences.speechRate }
     );
   };
+
+  const currentPageZoom = preferences.pageZoom || 1.0;
 
   return (
     <div
@@ -121,7 +132,7 @@ export function AccessibilityDrawer() {
             </div>
             <div>
               <h2 className="text-base font-bold text-white">Configurações & Acessibilidade</h2>
-              <p className="text-[11px] text-slate-400">Personalize a interface ao seu estilo de visão</p>
+              <p className="text-[11px] text-slate-400">Personalize o tema, zoom e leitura da interface</p>
             </div>
           </div>
           <button
@@ -143,6 +154,9 @@ export function AccessibilityDrawer() {
                 <Palette className="h-4 w-4 text-emerald-400" />
                 Tema & Paleta de Cores
               </label>
+              <span className="text-[11px] font-semibold text-emerald-400">
+                {COLOR_THEMES.find((t) => t.id === preferences.colorTheme)?.badge}
+              </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2.5">
@@ -155,7 +169,7 @@ export function AccessibilityDrawer() {
                     onClick={() => setColorTheme(t.id)}
                     className={`flex flex-col justify-between rounded-xl border p-3 text-left transition-all ${
                       isSelected
-                        ? 'border-emerald-500 bg-emerald-500/10 shadow-sm'
+                        ? 'border-emerald-500 bg-emerald-500/10 shadow-sm ring-1 ring-emerald-500/50'
                         : 'border-slate-800 bg-[#111c34]/70 hover:border-slate-700'
                     }`}
                   >
@@ -184,7 +198,44 @@ export function AccessibilityDrawer() {
             </div>
           </div>
 
-          {/* 2. Escala Tipográfica (Tamanho da Fonte) */}
+          {/* 2. Zoom Geral da Interface (Tela Inteira) */}
+          <div className="space-y-3 border-t border-slate-800/80 pt-5">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                <ZoomIn className="h-4 w-4 text-amber-400" />
+                Zoom da Interface (Tela Inteira)
+              </label>
+              <span className="text-xs font-bold text-amber-400">
+                {(currentPageZoom * 100).toFixed(0)}%
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 gap-2">
+              {PAGE_ZOOMS.map((z) => {
+                const isSelected = Math.abs(currentPageZoom - z.value) < 0.01;
+                return (
+                  <button
+                    key={z.value}
+                    type="button"
+                    onClick={() => setPageZoom(z.value)}
+                    className={`flex flex-col items-center justify-center rounded-xl border py-2 text-center transition-all ${
+                      isSelected
+                        ? 'border-amber-500 bg-amber-500/20 text-white ring-1 ring-amber-500/50'
+                        : 'border-slate-800 bg-[#111c34] text-slate-400 hover:border-slate-700'
+                    }`}
+                  >
+                    <span className="text-xs font-extrabold">{z.label}</span>
+                    <span className="text-[9.5px] font-medium text-slate-400">{z.desc}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-[11px] text-slate-400">
+              Amplia todos os elementos, cards e tabelas da aplicação simultaneamente.
+            </p>
+          </div>
+
+          {/* 3. Escala Tipográfica (Tamanho da Fonte) */}
           <div className="space-y-3 border-t border-slate-800/80 pt-5">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -206,7 +257,7 @@ export function AccessibilityDrawer() {
                     onClick={() => setFontScale(f.id)}
                     className={`rounded-xl border py-2 text-center text-xs font-bold transition-all ${
                       isSelected
-                        ? 'border-sky-500 bg-sky-500/20 text-white'
+                        ? 'border-sky-500 bg-sky-500/20 text-white ring-1 ring-sky-500/50'
                         : 'border-slate-800 bg-[#111c34] text-slate-400 hover:border-slate-700'
                     }`}
                   >
@@ -224,18 +275,18 @@ export function AccessibilityDrawer() {
             </div>
           </div>
 
-          {/* 3. Auxílios Visuais & Lupa Dinâmica */}
+          {/* 4. Auxílios Visuais & Lupa Óptica no Mouse */}
           <div className="space-y-3 border-t border-slate-800/80 pt-5">
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
               <Eye className="h-4 w-4 text-purple-400" />
-              Auxílios Visuais & Lupa
+              Auxílios Visuais & Lupa no Cursor
             </label>
 
             {/* Toggle Lupa */}
             <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-[#111c34] p-3">
               <div>
                 <span className="text-xs font-bold text-white block">Lupa no Mouse</span>
-                <span className="text-[11px] text-slate-400">Lente flutuante de zoom que segue o ponteiro</span>
+                <span className="text-[11px] text-slate-400">Lente flutuante que segue o cursor e amplia valores</span>
               </div>
               <button
                 type="button"
@@ -255,24 +306,29 @@ export function AccessibilityDrawer() {
             </div>
 
             {preferences.cursorMagnifier && (
-              <div className="flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
-                <span className="text-xs text-slate-300 font-semibold">Nível de Zoom da Lupa:</span>
-                <div className="flex items-center gap-1.5">
-                  {[1.5, 2.0, 2.5].map((z) => (
-                    <button
-                      key={z}
-                      type="button"
-                      onClick={() => setMagnifierZoom(z)}
-                      className={`rounded-lg px-2.5 py-1 text-xs font-bold font-mono transition-colors ${
-                        preferences.magnifierZoom === z
-                          ? 'bg-emerald-500 text-white'
-                          : 'border border-slate-700 bg-slate-800 text-slate-300'
-                      }`}
-                    >
-                      {z.toFixed(1)}x
-                    </button>
-                  ))}
+              <div className="space-y-2 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-slate-300 font-semibold">Nível de Zoom da Lupa:</span>
+                  <div className="flex items-center gap-1.5">
+                    {[1.5, 2.0, 2.5].map((z) => (
+                      <button
+                        key={z}
+                        type="button"
+                        onClick={() => setMagnifierZoom(z)}
+                        className={`rounded-lg px-2.5 py-1 text-xs font-bold font-mono transition-colors ${
+                          preferences.magnifierZoom === z
+                            ? 'bg-emerald-500 text-white shadow-md'
+                            : 'border border-slate-700 bg-slate-800 text-slate-300 hover:border-slate-600'
+                        }`}
+                      >
+                        {z.toFixed(1)}x
+                      </button>
+                    ))}
+                  </div>
                 </div>
+                <p className="text-[10.5px] text-slate-400 leading-snug">
+                  A lente óptica amplia os números, códigos B3 e textos diretamente sob a mira do cursor.
+                </p>
               </div>
             )}
 
@@ -323,7 +379,7 @@ export function AccessibilityDrawer() {
             </div>
           </div>
 
-          {/* 4. Leitura em Voz Alta (Text-to-Speech) */}
+          {/* 5. Leitura em Voz Alta (Text-to-Speech) */}
           <div className="space-y-3 border-t border-slate-800/80 pt-5">
             <label className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-400">
               <Volume2 className="h-4 w-4 text-emerald-400" />
@@ -353,50 +409,45 @@ export function AccessibilityDrawer() {
               </button>
             </div>
 
-            {/* Velocidade da Fala */}
-            <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-[#111c34] p-3">
-              <div>
-                <span className="text-xs font-bold text-white block">Velocidade da Voz</span>
-                <span className="text-[11px] text-slate-400">Ritmo da narração em português</span>
+            {/* Velocidade da Voz */}
+            <div className="space-y-2 rounded-xl border border-slate-800 bg-[#111c34] p-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white">Velocidade da Fala:</span>
+                <span className="font-mono text-xs font-bold text-emerald-400">
+                  {preferences.speechRate.toFixed(1)}x
+                </span>
               </div>
-              <div className="flex items-center gap-1">
-                {[0.8, 1.0, 1.2, 1.4].map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => setSpeechRate(r)}
-                    className={`rounded-lg px-2 py-1 text-xs font-bold font-mono transition-colors ${
-                      preferences.speechRate === r
-                        ? 'bg-emerald-500 text-white'
-                        : 'border border-slate-700 bg-slate-800 text-slate-300'
-                    }`}
-                  >
-                    {r.toFixed(1)}x
-                  </button>
-                ))}
+              <input
+                type="range"
+                min="0.8"
+                max="1.4"
+                step="0.1"
+                value={preferences.speechRate}
+                onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+                className="w-full accent-emerald-500"
+                aria-label="Velocidade da narração"
+              />
+              <div className="flex justify-end pt-1">
+                <button
+                  type="button"
+                  onClick={handleTestSpeech}
+                  className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 hover:bg-emerald-500/20 transition-colors"
+                >
+                  🔊 Testar Voz Agora
+                </button>
               </div>
             </div>
-
-            {/* Botão de Teste */}
-            <button
-              type="button"
-              onClick={handleTestSpeech}
-              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 py-2.5 text-xs font-bold text-emerald-400 hover:bg-emerald-500/20 transition-colors"
-            >
-              <Volume2 className="h-4 w-4" />
-              <span>Ouvir Exemplo de Leitura em Voz Alta</span>
-            </button>
           </div>
 
-          {/* 5. Movimento & Animações */}
+          {/* 6. Redução de Movimento */}
           <div className="space-y-3 border-t border-slate-800/80 pt-5">
             <div className="flex items-center justify-between rounded-xl border border-slate-800 bg-[#111c34] p-3">
               <div>
-                <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 text-xs font-bold text-white">
                   <ZapOff className="h-3.5 w-3.5 text-amber-400" />
-                  Reduzir Movimento
+                  Reduzir Animações
                 </span>
-                <span className="text-[11px] text-slate-400">Desativa transições suaves e efeitos animados</span>
+                <span className="text-[11px] text-slate-400">Desativa transições para evitar vertigem</span>
               </div>
               <button
                 type="button"

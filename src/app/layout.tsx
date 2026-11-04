@@ -56,6 +56,41 @@ const DEV_SW_CLEANUP_SCRIPT = `
 })();
 `;
 
+const ACCESSIBILITY_INIT_SCRIPT = `
+(function() {
+  try {
+    var raw = localStorage.getItem('norte_invest_accessibility_v2');
+    if (raw) {
+      var p = JSON.parse(raw);
+      if (p.colorTheme === 'light_titanium') {
+        document.documentElement.setAttribute('data-theme', 'light_titanium');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+      } else if (p.colorTheme) {
+        document.documentElement.setAttribute('data-theme', p.colorTheme);
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+      }
+      if (p.pageZoom && p.pageZoom !== 1.0) {
+        document.documentElement.style.zoom = String(p.pageZoom);
+      }
+      if (p.fontScale && p.fontScale !== 'standard') {
+        document.documentElement.setAttribute('data-font-scale', p.fontScale);
+      }
+      if (p.fontDyslexic) {
+        document.documentElement.setAttribute('data-dyslexic', 'true');
+      }
+      if (p.highlightClickTargets) {
+        document.documentElement.setAttribute('data-highlight-targets', 'true');
+      }
+      if (p.reduceMotion) {
+        document.documentElement.setAttribute('data-reduce-motion', 'true');
+      }
+    }
+  } catch (e) {}
+})();
+`;
+
 export default function RootLayout({
   children
 }: Readonly<{
@@ -65,6 +100,7 @@ export default function RootLayout({
     <html lang="pt-BR" className="dark">
       <head>
         <script dangerouslySetInnerHTML={{ __html: DEV_SW_CLEANUP_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: ACCESSIBILITY_INIT_SCRIPT }} />
       </head>
       <body className="min-h-screen bg-obsidian-950 text-slate-100">
         <AppProviders>{children}</AppProviders>

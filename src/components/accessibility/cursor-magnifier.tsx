@@ -3,30 +3,40 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useAccessibility } from '@/contexts/accessibility-context';
 
-interface InspectedTarget {
-  type: 'money' | 'ticker' | 'metric' | 'action' | 'text';
-  label: string;
-  value: string;
-  sub?: string;
-}
-
 export function CursorMagnifier() {
   const { preferences } = useAccessibility();
   const [position, setPosition] = useState({ x: -300, y: -300 });
   const [visible, setVisible] = useState(false);
-  const [inspected, setInspected] = useState<InspectedTarget | null>(null);
 
   const animFrameRef = useRef<number | null>(null);
-  const lastTargetRef = useRef<HTMLElement | null>(null);
+  const currentTargetRef = useRef<{
+    el: HTMLElement;
+    prevTransform: string;
+    prevTransformOrigin: string;
+    prevZIndex: string;
+    prevPosition: string;
+    prevTransition: string;
+  } | null>(null);
+
+  // Limpa transformações do elemento ampliado
+  const restoreTarget = () => {
+    if (currentTargetRef.current) {
+      const { el, prevTransform, prevTransformOrigin, prevZIndex, prevPosition, prevTransition } =
+        currentTargetRef.current;
+      el.style.transform = prevTransform;
+      el.style.transformOrigin = prevTransformOrigin;
+      el.style.zIndex = prevZIndex;
+      el.style.position = prevPosition;
+      el.style.transition = prevTransition;
+      el.classList.remove('magnifier-highlight-target');
+      currentTargetRef.current = null;
+    }
+  };
 
   useEffect(() => {
     if (!preferences.cursorMagnifier) {
       setVisible(false);
-      setInspected(null);
-      if (lastTargetRef.current) {
-        lastTargetRef.current.classList.remove('magnifier-highlight-target');
-        lastTargetRef.current = null;
-      }
+      restoreTarget();
       return;
     }
 
@@ -42,72 +52,59 @@ export function CursorMagnifier() {
         setPosition({ x: clientX, y: clientY });
         setVisible(true);
 
-        // Inspeciona elemento sob o cursor
-        // Temporariamente oculta ponteiros de auxílio se necessário (a lente já tem pointer-events-none)
-        const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+        const zoom = preferences.magnifierZoom || 1.5;
 
-        if (!el || el.closest('[data-accessibility-drawer="true"]') || el.closest('#cursor-magnifier-lens')) {
-          if (lastTargetRef.current) {
-            lastTargetRef.current.classList.remove('magnifier-highlight-target');
-            lastTargetRef.current = null;
-          }
-          setInspected(null);
+        // Identifica o elemento sob a mira da lente
+        const rawEl = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+
+        if (!rawEl || rawEl.closest('[data-accessibility-drawer="true"]') || rawEl.closest('#cursor-magnifier-lens')) {
+          restoreTarget();
           return;
         }
 
-        // Realce sutil no elemento sob o foco
-        if (lastTargetRef.current && lastTargetRef.current !== el) {
-          lastTargetRef.current.classList.remove('magnifier-highlight-target');
+        const tag = rawEl.tagName.toLowerCase();
+        if (tag === 'html' || tag === 'body' || tag === 'main' || tag === 'section' || tag === 'aside') {
+          restoreTarget();
+          return;
         }
-        el.classList.add('magnifier-highlight-target');
-        lastTargetRef.current = el;
 
-        // Extrai significado do conteúdo sob a mira
-        const ariaLabel = el.getAttribute('aria-label') || el.getAttribute('title');
-        const text = (el.innerText || el.textContent || '').trim();
+        // Localiza o nó mais relevante com texto, botão, link ou valor
+        const target = (rawEl.closest(
+          'button, a, td, th, [role="button"], h1, h2, h3, h4, h5, h6, p, label, span, strong, input'
+        ) || rawEl) as HTMLElement;
 
-        const isButtonOrLink = el.tagName === 'BUTTON' || el.tagName === 'A' || el.getAttribute('role') === 'button';
-        const isMoney = text.includes('R$') || text.includes('USD') || /^\d+[.,]\d{2}%?$/.test(text);
-        const isTicker = /^[A-Z]{4}(3|4|11|11B|5|6)$/.test(text) || /^[A-Z]{1,5}$/.test(text);
+        // Evita aplicar em blocos gigantes de layout
+        if (!target || (target.offsetWidth > 700 && target.offsetHeight > 350)) {
+          restoreTarget();
+          return;
+        }
 
-        if (isMoney) {
-          setInspected({
-            type: 'money',
-            label: ariaLabel || 'Valor / Cotação',
-            value: text.slice(0, 30)
-          });
-        } else if (isTicker) {
-          setInspected({
-            type: 'ticker',
-            label: 'Ativo Identificado',
-            value: text,
-            sub: ariaLabel || undefined
-          });
-        } else if (isButtonOrLink) {
-          setInspected({
-            type: 'action',
-            label: 'Comando Clicável',
-            value: ariaLabel || text.slice(0, 24) || 'Ação Interativa'
-          });
-        } else if (text) {
-          setInspected({
-            type: 'text',
-            label: ariaLabel || el.tagName.toLowerCase(),
-            value: text.slice(0, 60)
-          });
-        } else {
-          setInspected(null);
+        // Se o elemento mudou, restaura o anterior e amplia o novo
+        if (currentTargetRef.current?.el !== target) {
+          restoreTarget();
+
+          currentTargetRef.current = {
+            el: target,
+            prevTransform: target.style.transform || '',
+            prevTransformOrigin: target.style.transformOrigin || '',
+            prevZIndex: target.style.zIndex || '',
+            prevPosition: target.style.position || '',
+            prevTransition: target.style.transition || ''
+          };
+
+          target.style.position = target.style.position && target.style.position !== 'static' ? target.style.position : 'relative';
+          target.style.zIndex = '45';
+          target.style.transformOrigin = 'center center';
+          target.style.transition = 'transform 0.12s cubic-bezier(0.2, 0, 0, 1)';
+          target.style.transform = `scale(${zoom})`;
+          target.classList.add('magnifier-highlight-target');
         }
       });
     };
 
     const handleMouseLeave = () => {
       setVisible(false);
-      setInspected(null);
-      if (lastTargetRef.current) {
-        lastTargetRef.current.classList.remove('magnifier-highlight-target');
-        lastTargetRef.current = null;
-      }
+      restoreTarget();
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -119,21 +116,15 @@ export function CursorMagnifier() {
       if (animFrameRef.current) {
         cancelAnimationFrame(animFrameRef.current);
       }
-      if (lastTargetRef.current) {
-        lastTargetRef.current.classList.remove('magnifier-highlight-target');
-        lastTargetRef.current = null;
-      }
+      restoreTarget();
     };
-  }, [preferences.cursorMagnifier]);
+  }, [preferences.cursorMagnifier, preferences.magnifierZoom]);
 
   if (!preferences.cursorMagnifier || !visible) return null;
 
-  const zoom = preferences.magnifierZoom || 2.0;
-  const size = 200;
+  const zoom = preferences.magnifierZoom || 1.5;
+  const size = 180;
   const half = size / 2;
-
-  // Escala dinâmica de fonte baseada no zoom da lupa
-  const valueFontSize = zoom === 1.5 ? 'text-lg' : zoom === 2.0 ? 'text-xl' : 'text-2xl';
 
   return (
     <div
@@ -147,52 +138,27 @@ export function CursorMagnifier() {
         height: `${size}px`
       }}
     >
-      {/* Lente Óptica Circular de Alta Definição */}
-      <div className="relative flex h-full w-full flex-col items-center justify-between overflow-hidden rounded-full border-2 border-emerald-400 bg-obsidian-950/95 p-3 shadow-[0_0_30px_rgba(16,185,129,0.45),0_16px_40px_rgba(0,0,0,0.95)] backdrop-blur-md">
-        {/* Retículo Óptico Suave (Crosshairs) */}
-        <div className="absolute left-1/2 top-0 h-full w-[1px] -translate-x-1/2 bg-emerald-400/20" />
-        <div className="absolute top-1/2 left-0 h-[1px] w-full -translate-y-1/2 bg-emerald-400/20" />
+      {/* Lente Óptica de Vidro 100% Transparente (Visão desobstruída através do vidro) */}
+      <div className="relative h-full w-full rounded-full border-2 border-emerald-400 bg-emerald-500/[0.03] shadow-[0_0_20px_rgba(16,185,129,0.35),inset_0_0_15px_rgba(16,185,129,0.1),0_12px_32px_rgba(0,0,0,0.55)]">
+        {/* Aro metálico interno de refração óptica */}
+        <div className="absolute inset-1 rounded-full border border-emerald-300/30 pointer-events-none" />
 
-        {/* Anel de foco interno */}
-        <div className="absolute inset-2 rounded-full border border-emerald-500/20 pointer-events-none" />
+        {/* Retículo Óptico Suave (Mira de precisão sem obstruir o centro) */}
+        <div className="absolute left-1/2 top-0 h-3.5 w-[1.5px] -translate-x-1/2 bg-emerald-400/60" />
+        <div className="absolute left-1/2 bottom-0 h-3.5 w-[1.5px] -translate-x-1/2 bg-emerald-400/60" />
+        <div className="absolute top-1/2 left-0 h-[1.5px] w-3.5 -translate-y-1/2 bg-emerald-400/60" />
+        <div className="absolute top-1/2 right-0 h-[1.5px] w-3.5 -translate-y-1/2 bg-emerald-400/60" />
 
-        {/* Topo: Categoria de Leitura */}
-        <div className="relative z-10 mt-1 flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 border border-emerald-500/30">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-[9px] font-extrabold uppercase tracking-wider text-emerald-300">
-            {inspected?.label || 'Lente Óptica'}
-          </span>
-        </div>
+        {/* Ponto central sutil */}
+        <div className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-400/50 bg-emerald-400/20" />
 
-        {/* Centro: Conteúdo Focado com Ampliação Real */}
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-2 text-center">
-          {inspected ? (
-            <>
-              <div
-                className={`font-mono font-black tracking-tight text-white drop-shadow-md break-all leading-tight ${valueFontSize}`}
-              >
-                {inspected.value}
-              </div>
-              {inspected.sub && (
-                <div className="mt-0.5 text-[9.5px] font-semibold text-slate-300 truncate max-w-[150px]">
-                  {inspected.sub}
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-[10px] font-medium text-slate-400">
-              Aponte para texto ou valor
-            </div>
-          )}
-        </div>
-
-        {/* Rodapé: Badge com Nível de Zoom */}
-        <div className="relative z-10 mb-1 flex items-center gap-1 rounded-full border border-emerald-500/40 bg-obsidian-900 px-2.5 py-0.5 shadow-md">
+        {/* Badge do Nível de Zoom no Aro Inferior (fora do campo central de visão) */}
+        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 flex items-center gap-1 rounded-full border border-emerald-500/50 bg-[#070A11] px-2.5 py-0.5 shadow-md">
           <span className="text-[10px] font-mono font-black text-emerald-300">
             {zoom.toFixed(1)}x
           </span>
           <span className="text-[8.5px] font-bold text-slate-400 uppercase">
-            Zoom Ativo
+            Lente
           </span>
         </div>
       </div>

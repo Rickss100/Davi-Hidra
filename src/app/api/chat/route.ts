@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { env } from '@/env';
-import { formatBRL, formatPercent } from '@/lib/money';
+import { formatPercent } from '@/lib/money';
 import { getAuthorizedContextOrNull } from '@/server/dal/auth-dal';
 import { buildPortfolioSnapshot } from '@/server/engines/portfolio.service';
+import {
+  PortfolioAiContext,
+  generateLocalAiResponse,
+  buildGeminiPrompt
+} from '@/server/engines/mantfrai-ai.engine';
 
 export async function POST(request: Request) {
   const ctx = await getAuthorizedContextOrNull();
@@ -21,21 +26,30 @@ export async function POST(request: Request) {
     .map((h) => `${h.code} (${formatPercent(h.portfolioWeightPercent)})`)
     .join(', ');
 
-  const portfolioBrief = [
-    `Cliente: ${ctx.portfolioOwner.name}`,
-    `Patrimônio Total: ${formatBRL(snapshot.totalEquityBrl)}`,
-    `Valor Investido: ${formatBRL(snapshot.totalInvestedBrl)}`,
-    `Resultado Acumulado: ${formatBRL(snapshot.totalProfitBrl)} (${formatPercent(snapshot.totalProfitPercent)})`,
-    `Renda Passiva 12 Meses: ${formatBRL(snapshot.passiveIncome.last12MonthsBrl)} (YoC: ${formatPercent(snapshot.passiveIncome.portfolioYieldOnCostPercent)})`,
-    `Reserva de Emergência: ${formatPercent(snapshot.emergencyReserve.reserveCompletionPercent)} concluída (${snapshot.emergencyReserve.reserveStatus})`,
-    `Maiores Posições: ${topHoldings || 'Carteira vazia'}`
-  ].join('\n');
+  const underweight = [...snapshot.categoryDistances].sort((a, b) => b.distance - a.distance)[0];
+
+  const aiContext: PortfolioAiContext = {
+    userName: ctx.portfolioOwner.name,
+    totalEquityBrl: snapshot.totalEquityBrl,
+    totalInvestedBrl: snapshot.totalInvestedBrl,
+    totalProfitBrl: snapshot.totalProfitBrl,
+    totalProfitPercent: snapshot.totalProfitPercent,
+    last12MonthsIncomeBrl: snapshot.passiveIncome.last12MonthsBrl,
+    yieldOnCostPercent: snapshot.passiveIncome.portfolioYieldOnCostPercent,
+    emergencyReserveCompletedPercent: snapshot.emergencyReserve.reserveCompletionPercent,
+    emergencyReserveStatus: snapshot.emergencyReserve.reserveStatus,
+    underweightCategoryName: underweight?.name || 'Renda Fixa',
+    underweightCategoryDistance: underweight?.distance || 0,
+    topHoldings: topHoldings || 'Nenhum ativo cadastrado',
+    usdToBrl: snapshot.usdToBrl,
+    selicRate: snapshot.selicRate
+  };
 
   if (env.GEMINI_API_KEY) {
     try {
       const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
       const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-      const prompt = `Você é a MANTFRAI AI, especialista no Método Antifrágil de Investimento (foco em valor, renda passiva consistente, Motor RDM de rebalanceamento, Filtro MFS e blindagem da Carteira Antifrágil).\nResponda em Português Brasileiro de forma executiva, elegante e objetiva (máximo 3 parágrafos curtos).\n\nContexto real da carteira:\n${portfolioBrief}\n\nPergunta do investidor: ${message}`;
+      const prompt = buildGeminiPrompt(message, aiContext);
       const result = await model.generateContent(prompt);
       const reply = result.response.text();
       if (reply) {
@@ -46,9 +60,7 @@ export async function POST(request: Request) {
     }
   }
 
-  // Diagnóstico determinístico local caso GEMINI_API_KEY não esteja definida
-  const underweight = [...snapshot.categoryDistances].sort((a, b) => b.distance - a.distance)[0];
-  const fallbackReply = `Analisando a carteira Private de **${ctx.portfolioOwner.name}**, seu patrimônio consolidado está em **${formatBRL(snapshot.totalEquityBrl)}**, com **${formatBRL(snapshot.passiveIncome.last12MonthsBrl)}** recebidos em proventos nos últimos 12 meses (Yield on Cost de **${formatPercent(snapshot.passiveIncome.portfolioYieldOnCostPercent)}**).\n\nPela régua do **Metodologia MANTFRAI**, a classe atualmente mais descontada em relação à meta é **${underweight?.name || 'Renda Fixa'}** (distância de **${formatPercent(underweight?.distance || 0)}**), enquanto sua Reserva de Emergência encontra-se **${formatPercent(snapshot.emergencyReserve.reserveCompletionPercent)}** concluída. Utilize o simulador **Onde Aportar** para distribuir seu próximo aporte com precisão.`;
-
-  return NextResponse.json({ reply: fallbackReply });
+  // Motor determinístico local hiperespecializado (caso GEMINI_API_KEY não esteja configurada ou haja instabilidade de rede)
+  const localReply = generateLocalAiResponse(message, aiContext);
+  return NextResponse.json({ reply: localReply });
 }

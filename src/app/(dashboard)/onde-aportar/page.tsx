@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { usePortfolioData } from '@/hooks/use-portfolio';
 import { Badge, Button, Card, Input, Select, Skeleton } from '@/components/ui/primitives';
+import { AssetTickerLink } from '@/components/ui/asset-ticker-link';
 import { formatBRL } from '@/lib/money';
 import type { InvestmentSuggestionDTO } from '@/server/engines/davi-hydra.engine';
 import {
@@ -482,9 +483,11 @@ export default function OndeAportarPage() {
                         >
                           <td className="px-4 py-3.5">
                             <div className="flex flex-wrap items-center gap-2">
-                              <span className="text-base font-extrabold text-white">
-                                {s.ticker}
-                              </span>
+                              <AssetTickerLink
+                                code={s.ticker}
+                                categoryOrType={s.categoria}
+                                className="text-base"
+                              />
                               {s.isEmergencyReserve && (
                                 <Badge tone="gold" className="text-xs font-bold">
                                   🛡️ Reserva

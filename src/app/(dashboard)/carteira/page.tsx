@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { FileSpreadsheet, Pencil, Plus, Trash2 } from 'lucide-react';
 import { usePortfolioData } from '@/hooks/use-portfolio';
 import { Button, Card, Badge, Skeleton } from '@/components/ui/primitives';
+import { AssetTickerLink } from '@/components/ui/asset-ticker-link';
 import { formatBRL, formatPercent } from '@/lib/money';
 import { NewTransactionModal } from '@/components/portfolio/new-transaction-modal';
 import { B3ImportModal } from '@/components/portfolio/b3-import-modal';
@@ -126,7 +127,11 @@ export default function CarteiraPage() {
                     <tr key={h.code} className="hover:bg-obsidian-800/40">
                       <td className="py-3">
                         <div className="flex items-center gap-1.5">
-                          <span className="font-bold text-white">{h.code}</span>
+                          <AssetTickerLink
+                            code={h.code}
+                            categoryOrType={h.category || (h.market === 'US' ? 'stock' : 'acao')}
+                            className="text-sm"
+                          />
                           <span className="text-[10px] uppercase text-slate-500">{h.market}</span>
                         </div>
                         {hasDistinctName && (

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Compass, Plus, Scale, Trash2 } from 'lucide-react';
 import { Badge, Button, Card, Input } from '@/components/ui/primitives';
+import { AssetTickerLink } from '@/components/ui/asset-ticker-link';
 import { AssetAutocompleteInput } from '@/components/portfolio/asset-autocomplete-input';
 import { resolveAssetDisplayName, resolveAssetSector } from '@/lib/asset-names';
 import { formatPercent } from '@/lib/money';
@@ -141,9 +142,11 @@ export function CategoryTargetCard({
                 className="flex items-center justify-between gap-3 rounded-xl border border-slate-800 bg-obsidian-950 px-3.5 py-2.5"
               >
                 <div className="min-w-0 flex-1">
-                  <span className="block text-sm font-extrabold text-white sm:text-base">
-                    {item.code}
-                  </span>
+                  <AssetTickerLink
+                    code={item.code}
+                    categoryOrType={categoryKey}
+                    className="text-sm sm:text-base"
+                  />
                   {showFullName && (
                     <span className="block truncate text-xs font-medium text-slate-300 sm:text-sm">
                       {fullName}

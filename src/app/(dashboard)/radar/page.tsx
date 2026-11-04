@@ -14,6 +14,7 @@ import {
   X
 } from 'lucide-react';
 import { Badge, Button, Card, Input, Skeleton } from '@/components/ui/primitives';
+import { AssetTickerLink } from '@/components/ui/asset-ticker-link';
 import { formatBRL, formatPercent } from '@/lib/money';
 import { usePortfolioData } from '@/hooks/use-portfolio';
 import {
@@ -655,9 +656,11 @@ export default function RadarAtivosPage() {
                           <td className="pl-3 pr-2 py-2">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <span className="font-extrabold text-white text-xs sm:text-sm tracking-wide">
-                                  {item.code}
-                                </span>
+                                <AssetTickerLink
+                                  code={item.code}
+                                  categoryOrType={item.type}
+                                  className="text-xs sm:text-sm tracking-wide"
+                                />
                                 {isNovoMercadoAsset(item) && (
                                   <span
                                     className="rounded bg-emerald-500/15 border border-emerald-500/30 px-1 py-0.2 text-[9.5px] font-bold text-emerald-400"
